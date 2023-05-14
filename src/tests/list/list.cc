@@ -38,10 +38,18 @@ public:
 };
 
 namespace {
-    TEST(ListTests, Test0DefaultConstructor) {
+    TEST(List, T0DefaultConstructor) {
         s21::List<Item> s21_list;
         std::list<Item> list;
 
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    TEST(List, T0PushBack) {
+        std::list<Item> list;
+        list.push_back(Item(4));
+        s21::List<Item> s21_list;
+        s21_list.Push_back(Item(4));
 
         EXPECT_TRUE(s21_list == list);
     }
