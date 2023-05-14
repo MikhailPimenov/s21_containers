@@ -13,7 +13,7 @@ VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
 # all: s21_matrix_oop.a test gcov_report
 
-all: test
+all: test gcov_report
 
 test: tests/tests_main.exe
 		./tests/tests_main.exe
@@ -35,9 +35,11 @@ tests/tests_main.o: tests/tests_main.cc
 # test: tests/tests_main.exe
 		# ./tests/tests_main.exe
 
+EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*'
+
 gcov_report: test
 		mkdir -p $(REPORT_DIRECTORY)
-		gcovr . --html --html-details --exclude-lines-by-pattern '.*assert.*' -o $(REPORT_DIRECTORY)/coverage_report.html
+		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
 		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 tests/tests_main.exe: tests/tests_main.o tests/list/list.o
@@ -110,6 +112,6 @@ style_WebKit:
 clean:
 		rm -rf *.o *.exe *.out *.oa *.a
 		rm -rf tests/*.o tests/*.exe tests/*.out tests/*/*.o
-		rm -rf *.gcno *.gcda
+		rm -rf *.gcno *.gcda tests/*/*.gcno tests/*/*.gcda
 		rm -rf $(REPORT_DIRECTORY)/*.css $(REPORT_DIRECTORY)/*.html
 		rm -rf $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/*.txt
