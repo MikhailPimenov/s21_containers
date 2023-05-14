@@ -62,6 +62,14 @@ namespace s21 {
             return &(pointer_->data_);
         }
 
+        bool operator==(const ListIterator& iterator) const {
+            return pointer_ == iterator->pointer_;
+        }
+
+        bool operator!=(const ListIterator& iterator) const {
+            return !(*this == iterator);
+        }
+
     private:
         Node_pointer pointer_;
     };
@@ -94,6 +102,8 @@ namespace s21 {
 
     private:
         class Node {
+            friend class ListIterator<List<Type>>;
+
             value_type data_;
             List* next_ = nullptr;
             List* previous_ = nullptr;
@@ -101,8 +111,8 @@ namespace s21 {
 
         size_type size_ = 0;
 
-        List* begin_ = nullptr;
-        List* end_ = nullptr;
+        Node* begin_ = nullptr;
+        Node* end_ = nullptr;
         
     public:
         List() {};
@@ -113,11 +123,11 @@ namespace s21 {
         }
 
         iterator begin() {
-            return iterator(&(begin_->data_));
+            return iterator(begin_);
         }
 
         iterator cbegin() const {
-            return iterator(&(begin_->data_));
+            return iterator(begin_);
         }
     };
 

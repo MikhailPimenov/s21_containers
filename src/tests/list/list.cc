@@ -9,21 +9,32 @@ bool operator==(const s21::List<Type>& s21_list, const std::list<Type>& list) {
     if (s21_list.Size() != list.size())
         return false;
 
-    // const auto iterator = list.cbegin();
-    // const auto s21_iterator = s21_list.cbegin();
+    auto iterator = list.cbegin();
+    auto s21_iterator = s21_list.cbegin();
 
-    // while (iterator != list.cend()) {
-    //     if (*iterator != *s21_iterator)
-    //         return false;
-    //     ++iterator;
-    //     ++s21_iterator;
-    // }    
+    while (iterator != list.cend()) {
+        if (*iterator != *s21_iterator)
+            return false;
+        ++iterator;
+        ++s21_iterator;
+    }    
     
     return true;
 }
 
 class Item {
+private:
+    int number_;
 
+public:
+    Item(int number = 0) : number_{number} {};
+
+    bool operator==(const Item& right) const {
+        return number_ == right.number_;
+    };
+    bool operator!=(const Item& right) const {
+        return !(*this == right);
+    };
 };
 
 namespace {
