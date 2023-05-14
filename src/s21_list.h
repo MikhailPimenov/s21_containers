@@ -101,21 +101,24 @@ namespace s21 {
 
 
     private:
-        class Node {
-            friend class ListIterator<List<Type>>;
-
+        struct Node {
             value_type data_;
-            List* next_ = nullptr;
-            List* previous_ = nullptr;
-        } node_;
+            Node* next_;
+            Node* previous_;
+        };
 
-        size_type size_ = 0;
-
-        Node* begin_ = nullptr;
-        Node* end_ = nullptr;
+        Node* first_existing_;
+        Node* last_existing_;
         
+        size_type size_;
     public:
-        List() {};
+        List() 
+            : first_existing_{nullptr}, 
+              last_existing_{nullptr}, 
+              size_{0ull} {
+
+        };
+
 
 
         size_type Size() const {
@@ -123,12 +126,23 @@ namespace s21 {
         }
 
         iterator begin() {
-            return iterator(begin_);
+            return iterator(first_existing_);
         }
 
         iterator cbegin() const {
-            return iterator(begin_);
+            return iterator(first_existing_);
         }
+
+    
+        void Push_back(const_reference data) {
+            Node* new_node = new Node;
+            new_node->data_ = data;
+            new_node->previous_ = current_;
+            new_node->next = nullptr;
+
+            current_ = new_node;
+            last_existing_ = current_;
+        };
     };
 
 }  // namespace s21
