@@ -22,7 +22,6 @@ template <typename List> class ListIterator
 
   public:
     ListIterator(Node_pointer node_pointer) : node_pointer_{node_pointer}{};
-    ListIterator(Const_node_pointer node_pointer) : node_pointer_{node_pointer}{};
 
     ListIterator &operator++()
     {
@@ -190,7 +189,7 @@ template <typename Type> class List
     //     Node* previous = last_existing_->previous_;
     //     delete last_existing_;
 
-    //     previous->next_ = nullptr;
+    //     previous->next_ = &end_;
     //     last_existing_ = previous;
     // }
 };

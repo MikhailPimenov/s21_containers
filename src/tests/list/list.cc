@@ -5,12 +5,12 @@
 // GCOVR_EXCL_START
 
 template <typename Type>
-bool operator==(const s21::List<Type>& s21_list, const std::list<Type>& list) {
+bool operator==(s21::List<Type>& s21_list, const std::list<Type>& list) {
     if (s21_list.Size() != list.size())
         return false;
 
     auto iterator = list.cbegin();
-    auto s21_iterator = s21_list.cbegin();
+    auto s21_iterator = s21_list.begin();
 
     while (iterator != list.cend()) {
         if (*iterator != *s21_iterator)
@@ -23,8 +23,8 @@ bool operator==(const s21::List<Type>& s21_list, const std::list<Type>& list) {
 }
 
 template <typename Type>
-void print(const s21::List<Type>& s21_list) {
-    for (auto it = s21_list.cbegin(); it != s21_list.cend(); ++it) {
+void print(s21::List<Type>& s21_list) {
+    for (auto it = s21_list.begin(); it != s21_list.end(); ++it) {
         std::cout << *it << '\n';
     }
 }
@@ -66,6 +66,12 @@ namespace {
         EXPECT_TRUE(s21_list == list);
     }
 
+
+
+    // PUSH_BACK ============================================================
+    // PUSH_BACK ============================================================
+    // PUSH_BACK ============================================================
+
     TEST(List, T0PushBack) {
         std::list<Item> list;
         list.push_back(Item(4));
@@ -79,14 +85,30 @@ namespace {
         std::list<Item> list;
         list.push_back(Item(0));
         list.push_back(Item(10));
-        // list.push_back(Item(20));
+        list.push_back(Item(20));
         
         s21::List<Item> s21_list;
         s21_list.Push_back(Item(0));
         s21_list.Push_back(Item(10));
-        // s21_list.Push_back(Item(20));
+        s21_list.Push_back(Item(20));
 
-        print(s21_list);
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    TEST(List, T2PushBack) {
+        std::list<Item> list;
+        list.push_back(Item(0));
+        list.push_back(Item(10));
+        list.push_back(Item(20));
+        list.push_back(Item(30));
+        list.push_back(Item(40));
+        
+        s21::List<Item> s21_list;
+        s21_list.Push_back(Item(0));
+        s21_list.Push_back(Item(10));
+        s21_list.Push_back(Item(20));
+        s21_list.Push_back(Item(30));
+        s21_list.Push_back(Item(40));
 
         EXPECT_TRUE(s21_list == list);
     }
