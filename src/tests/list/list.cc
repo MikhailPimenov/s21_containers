@@ -12,6 +12,11 @@ namespace {
         std::list<Item> list;
 
         EXPECT_TRUE(s21_list == list);
+
+        s21_list.Push_back(Item(0));
+        s21_list.Push_back(Item(10));
+        s21_list.Push_back(Item(20));
+        print(s21_list);
     }
 }   //  namespace
 

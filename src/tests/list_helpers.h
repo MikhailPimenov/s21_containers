@@ -9,12 +9,12 @@
 // GCOVR_EXCL_START
 
 template <typename Type>
-bool operator==(s21::List<Type>& s21_list, const std::list<Type>& list) {
+bool operator==(const s21::List<Type>& s21_list, const std::list<Type>& list) {
     if (s21_list.Size() != list.size())
         return false;
 
     auto iterator = list.cbegin();
-    auto s21_iterator = s21_list.begin();
+    auto s21_iterator = s21_list.cbegin();
 
     while (iterator != list.cend()) {
         if (*iterator != *s21_iterator)
@@ -27,10 +27,9 @@ bool operator==(s21::List<Type>& s21_list, const std::list<Type>& list) {
 }
 
 template <typename Type>
-void print(s21::List<Type>& s21_list) {
-    for (auto it = s21_list.begin(); it != s21_list.end(); ++it) {
+void print(const s21::List<Type>& s21_list) {
+    for (auto it = s21_list.cbegin(); it != s21_list.cend(); ++it)
         std::cout << *it << '\n';
-    }
 }
 
 // GCOVR_EXCL_STOP

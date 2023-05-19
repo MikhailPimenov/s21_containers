@@ -10,18 +10,89 @@ namespace s21
 
 
 
+template <typename List> class ConstListIterator
+{
+  private:
+    using Value_type = typename List::value_type;
+    // using Reference = typename List::reference;
+    using Const_reference = typename List::const_reference;
+    // using Pointer = typename List::pointer;
+    using Const_pointer = typename List::const_pointer;
+    using Node_type = typename List::Node;
+    // using Node_pointer = Node_type *;
+    using Const_node_pointer = const Node_type *;
+    using Node_reference = Node_type &;
+
+  public:
+    ConstListIterator(Const_node_pointer node_pointer) : node_pointer_{node_pointer} {};
+
+    ConstListIterator &operator++()
+    {
+        node_pointer_ = node_pointer_->next_;
+        return *this;
+    }
+
+    ConstListIterator operator++(int)
+    {
+        ConstListIterator temporary(*this);
+        node_pointer_ = node_pointer_->next_;
+        return temporary;
+    }
+
+    ConstListIterator &operator--()
+    {
+        node_pointer_ = node_pointer_->previous_;
+        return *this;
+    }
+
+    ConstListIterator operator--(int)
+    {
+        ConstListIterator temporary(*this);
+        node_pointer_ = node_pointer_->previous_;
+        return temporary;
+    }
+
+    Const_reference operator*() const
+    {
+        return node_pointer_->data_;
+    }
+
+    // Pointer operator->()
+    // {
+    //     return &(node_pointer_->data_);
+    // }
+
+    // Const_pointer operator->() const
+    // {
+    //     return &(node_pointer_->data_);
+    // }
+
+    bool operator==(const ConstListIterator &iterator) const
+    {
+        return node_pointer_ == iterator.node_pointer_;
+    }
+
+    bool operator!=(const ConstListIterator &iterator) const
+    {
+        return !(*this == iterator);
+    }
+
+  private:
+    Const_node_pointer node_pointer_;
+};
+
 
 template <typename List> class ListIterator
 {
   private:
     using Value_type = typename List::value_type;
     using Reference = typename List::reference;
-    using Const_reference = typename List::const_reference;
+    // using Const_reference = typename List::const_reference;
     using Pointer = typename List::pointer;
-    using Const_pointer = typename List::const_pointer;
+    // using Const_pointer = typename List::const_pointer;
     using Node_type = typename List::Node;
     using Node_pointer = Node_type *;
-    using Const_node_pointer = const Node_pointer;  // the wrong place of * after expanding: should be const List::Node* but actually List::Node* const
+    // using Const_node_pointer = const Node_pointer;
     using Node_reference = Node_type &;
 
   public:
@@ -29,7 +100,6 @@ template <typename List> class ListIterator
 
     ListIterator &operator++()
     {
-        // TODO: check if the next node exists?
         node_pointer_ = node_pointer_->next_;
         return *this;
     }
@@ -37,14 +107,12 @@ template <typename List> class ListIterator
     ListIterator operator++(int)
     {
         ListIterator temporary(*this);
-        // TODO: check if the next node exists?
         node_pointer_ = node_pointer_->next_;
         return temporary;
     }
 
     ListIterator &operator--()
     {
-        // TODO: check if the previous node exists?
         node_pointer_ = node_pointer_->previous_;
         return *this;
     }
@@ -52,7 +120,6 @@ template <typename List> class ListIterator
     ListIterator operator--(int)
     {
         ListIterator temporary(*this);
-        // TODO: check if the previous node exists?
         node_pointer_ = node_pointer_->previous_;
         return temporary;
     }
@@ -62,10 +129,10 @@ template <typename List> class ListIterator
         return node_pointer_->data_;
     }
 
-    Const_reference operator*() const
-    {
-        return node_pointer_->data_;
-    }
+    // Const_reference operator*() const
+    // {
+    //     return node_pointer_->data_;
+    // }
 
     // Pointer operator->()
     // {
@@ -94,6 +161,7 @@ template <typename List> class ListIterator
 template <typename Type> class List
 {
     friend class ListIterator<List<Type>>;
+    friend class ConstListIterator<List<Type>>;
 
   private:
     using value_type = Type;
@@ -112,6 +180,7 @@ template <typename Type> class List
     // std::allocator_traits<Allocator>::const_pointer	(since C++11)
 
     using iterator = ListIterator<List<Type>>;
+    using const_iterator = ConstListIterator<List<Type>>;
     // iterator	LegacyBidirectionalIterator to value_type
     // const_iterator	LegacyBidirectionalIterator to const value_type
     // reverse_iterator	std::reverse_iterator<iterator>
@@ -140,16 +209,19 @@ template <typename Type> class List
 
     };
 
-    ~List() {
+    ~List() 
+    {
         Clear();
     }
 
-    void Clear() {
+    void Clear() 
+    {
         while(!Empty())
             Pop_back();
     }
 
-    bool Empty() const noexcept {
+    bool Empty() const noexcept 
+    {
         return size_ == 0ull;
     }
 
@@ -163,20 +235,20 @@ template <typename Type> class List
         return iterator(first_existing_);
     }
 
-    // iterator cbegin() const
-    // {
-    //     return const_iterator(first_existing_);
-    // }
+    const_iterator cbegin() const
+    {
+        return const_iterator(first_existing_);
+    }
 
     iterator end() 
     {
         return iterator(&end_);
     }
 
-    // iterator cend() const
-    // {
-    //     return const_iterator(&end_);
-    // }
+    const_iterator cend() const
+    {
+        return const_iterator(&end_);
+    }
 
     void Push_back(const_reference data)
     {
@@ -204,7 +276,6 @@ template <typename Type> class List
 
     void Pop_back()
     {
-        // std::cout << "Pop_back(): size_ is " << size_ << '\n';
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
         if (size_ == 1ull) {
