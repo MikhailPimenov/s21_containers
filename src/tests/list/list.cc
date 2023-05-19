@@ -12,11 +12,30 @@ namespace {
         std::list<Item> list;
 
         EXPECT_TRUE(s21_list == list);
+    }
 
-        s21_list.Push_back(Item(0));
-        s21_list.Push_back(Item(10));
-        s21_list.Push_back(Item(20));
-        print(s21_list);
+    TEST(List, T0ConstructorInitializerList) {
+        s21::List<Item> s21_list = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        std::list<Item> list = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    TEST(List, T0Modify) {
+        s21::List<Item> s21_list = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        std::list<Item> list = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+
+        auto it = list.begin();
+        ++it;
+        ++it;
+        *it = Item(666);
+
+        auto s21_it = s21_list.begin();
+        ++s21_it;
+        ++s21_it;
+        *s21_it = Item(666);
+
+        EXPECT_TRUE(s21_list == list);
     }
 }   //  namespace
 

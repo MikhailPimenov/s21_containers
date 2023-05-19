@@ -20,7 +20,7 @@ BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
 
 all: test
 
-test: run_test gcov_report
+test: run_tests gcov_report
 
 tests/tests_main.exe: $(BINARIES)
 		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS)
@@ -28,7 +28,7 @@ tests/tests_main.exe: $(BINARIES)
 %.o: %.cc tests/item.h tests/list_helpers.h s21_list.h
 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS)
 
-run_test: tests/tests_main.exe
+run_tests: tests/tests_main.exe
 		./tests/tests_main.exe
 
 
@@ -39,7 +39,7 @@ run_test: tests/tests_main.exe
 
 EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*'
 
-gcov_report: run_test
+gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
 		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
@@ -49,13 +49,13 @@ gcov_report: run_test
 
 #valgrind
 
-valgrind: tests/tests_main.exe
+valgrind: run_tests
 		mkdir -p $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)
 		-valgrind --leak-check=full --show-reachable=no --track-origins=yes --log-file=$(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/valgrind_report.txt -s ./tests/tests_main.exe > $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/test_report.txt
 		cat $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/test_report.txt
 		cat $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/valgrind_report.txt
 
-valgrind_full: tests/tests_main.exe
+valgrind_full: run_tests
 		mkdir -p $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)
 		-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=$(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/valgrind_full_report.txt -s ./tests/tests_main.exe > $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/test_report.txt
 		cat $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/test_report.txt

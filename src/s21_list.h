@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <new>
+#include <initializer_list>
 
 namespace s21
 {
@@ -208,6 +209,12 @@ template <typename Type> class List
           size_{0ull} {
 
     };
+
+    List(const std::initializer_list<value_type>& list) : List() {
+        for (const auto& element : list)
+            Push_back(element);
+    };
+
 
     ~List() 
     {
