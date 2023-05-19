@@ -12,45 +12,42 @@ GTEST_LFLAGS=-lgtest -lgtest_main
 REPORT_DIRECTORY=report
 VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
-# all: s21_matrix_oop.a test gcov_report
-
-all: test gcov_report
-
-test: tests/tests_main.exe
-		./tests/tests_main.exe
-
-# s21_list.o: s21_list.h
-# 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS)
+SOURCES=tests/list/list.cc tests/list/push_back.cc tests/item.cc
+BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
 
 
-# tests/tests_transpose.o: tests/tests_transpose.cc s21_matrix_oop.h
-# 		$(CC) -c -o $@ $< $(GTEST_CFLAGS)
+#test
 
-tests/list/list.o: tests/list/list.cc s21_list.h
+all: test
+
+test: run_test gcov_report
+
+tests/tests_main.exe: $(BINARIES)
+		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS)
+
+%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h
 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS)
 
+run_test: tests/tests_main.exe
+		./tests/tests_main.exe
 
-tests/tests_main.o: tests/tests_main.cc
-		$(CC) -c -o $@ $< $(GTEST_CFLAGS)
 
-# test: tests/tests_main.exe
-		# ./tests/tests_main.exe
+
+
+
+#gcov_report
 
 EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*'
 
-gcov_report: test
+gcov_report: run_test
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
 		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
-tests/tests_main.exe: tests/tests_main.o tests/list/list.o
-		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS)
-
-# s21_matrix_oop.o: s21_matrix_oop.cc s21_matrix_oop.h
-# 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS)
 
 
 
+#valgrind
 
 valgrind: tests/tests_main.exe
 		mkdir -p $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)
@@ -66,6 +63,9 @@ valgrind_full: tests/tests_main.exe
 
 
 
+
+#style
+
 check_style:
 		clang-format --style=Google -n *.cc
 		clang-format --style=Google -n *.h
@@ -73,6 +73,8 @@ check_style:
 		clang-format --style=Google -n tests/*.h
 		clang-format --style=Google -n tests/*/*.cc
 		clang-format --style=Google -n tests/*/*.h
+		clang-format --style=Google -n tests/*.cc
+		clang-format --style=Google -n tests/*.h
 
 style: style_google
 
@@ -83,6 +85,8 @@ style_google:
 		clang-format --style=Google -i tests/*.h
 		clang-format --style=Google -i tests/*/*.cc
 		clang-format --style=Google -i tests/*/*.h
+		clang-format --style=Google -i tests/*.cc
+		clang-format --style=Google -i tests/*.h
 
 style_microsoft:
 		clang-format --style=Microsoft -i *.cc
@@ -91,6 +95,8 @@ style_microsoft:
 		clang-format --style=Microsoft -i tests/*.h
 		clang-format --style=Microsoft -i tests/*/*.cc
 		clang-format --style=Microsoft -i tests/*/*.h
+		clang-format --style=Microsoft -i tests/*.cc
+		clang-format --style=Microsoft -i tests/*.h
 
 style_llvm:
 		clang-format --style=LLVM -i *.cc
@@ -99,6 +105,8 @@ style_llvm:
 		clang-format --style=LLVM -i tests/*.h
 		clang-format --style=LLVM -i tests/*/*.cc
 		clang-format --style=LLVM -i tests/*/*.h
+		clang-format --style=LLVM -i tests/*.cc
+		clang-format --style=LLVM -i tests/*.h
 
 style_chromium:
 		clang-format --style=Chromium -i *.cc
@@ -106,7 +114,9 @@ style_chromium:
 		clang-format --style=Chromium -i tests/*.cc
 		clang-format --style=Chromium -i tests/*.h
 		clang-format --style=Chromium -i tests/*/*.cc
-		clang-format --style=Chromium -i tests/*/*.h
+		clang-format --style=Chromium -i tests/*/*.cc
+		clang-format --style=Chromium -i tests/*.h
+		clang-format --style=Chromium -i tests/*.cc
 
 style_mozilla:
 		clang-format --style=Mozilla -i *.cc
@@ -115,6 +125,8 @@ style_mozilla:
 		clang-format --style=Mozilla -i tests/*.h
 		clang-format --style=Mozilla -i tests/*/*.cc
 		clang-format --style=Mozilla -i tests/*/*.h
+		clang-format --style=Mozilla -i tests/*.cc
+		clang-format --style=Mozilla -i tests/*.h
 
 style_WebKit:
 		clang-format --style=WebKit -i *.cc
@@ -123,10 +135,17 @@ style_WebKit:
 		clang-format --style=WebKit -i tests/*.h
 		clang-format --style=WebKit -i tests/*/*.cc
 		clang-format --style=WebKit -i tests/*/*.h
+		clang-format --style=WebKit -i tests/*.cc
+		clang-format --style=WebKit -i tests/*.h
+
+
+
+
+#clean
 
 clean:
 		rm -rf *.o *.exe *.out *.oa *.a
-		rm -rf tests/*.o tests/*.exe tests/*.out tests/*/*.o
-		rm -rf *.gcno *.gcda tests/*/*.gcno tests/*/*.gcda
+		rm -rf tests/*.o tests/*.exe tests/*.out tests/*/*.o tests/*.o
+		rm -rf *.gcno *.gcda tests/*/*.gcno tests/*/*.gcda tests/*.gcno tests/*.gcda
 		rm -rf $(REPORT_DIRECTORY)/*.css $(REPORT_DIRECTORY)/*.html
 		rm -rf $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/*.txt

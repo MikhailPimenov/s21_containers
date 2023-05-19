@@ -7,6 +7,10 @@
 namespace s21
 {
 
+
+
+
+
 template <typename List> class ListIterator
 {
   private:
@@ -136,6 +140,19 @@ template <typename Type> class List
 
     };
 
+    ~List() {
+        Clear();
+    }
+
+    void Clear() {
+        while(!Empty())
+            Pop_back();
+    }
+
+    bool Empty() const noexcept {
+        return size_ == 0ull;
+    }
+
     size_type Size() const
     {
         return size_;
@@ -169,10 +186,13 @@ template <typename Type> class List
         new_node->previous_ = last_existing_;
         new_node->next_ = nullptr;
 
-        if (size_)
+        if (size_) {
+            assert(last_existing_ && "Last existing node is nullptr!");
             last_existing_->next_ = new_node;
-        else
+        }
+        else {
             first_existing_ = new_node;
+        }
 
         last_existing_ = new_node;
 
@@ -182,16 +202,26 @@ template <typename Type> class List
         ++size_;
     };
 
-    // void Pop_back()
-    // {
-    //     assert(size_ >= 1ull && "Pop_back() from empty list!\n");
+    void Pop_back()
+    {
+        // std::cout << "Pop_back(): size_ is " << size_ << '\n';
+        assert(size_ >= 1ull && "Pop_back() from empty list!");
 
-    //     Node* previous = last_existing_->previous_;
-    //     delete last_existing_;
+        if (size_ == 1ull) {
+            delete last_existing_;
+            --size_;
+            return;
+        }
 
-    //     previous->next_ = &end_;
-    //     last_existing_ = previous;
-    // }
+        assert(last_existing_->previous_ && "Previous pointer in last existing node is nullptr!");
+        Node* previous = last_existing_->previous_;
+        delete last_existing_;
+
+        previous->next_ = &end_;
+        last_existing_ = previous;
+
+        --size_;
+    }
 };
 
 } // namespace s21
