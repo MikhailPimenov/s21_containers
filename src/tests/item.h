@@ -19,4 +19,13 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Item& object);
 };
 
+// class ItemArray {
+// private:
+//     int length_;
+//     double* array_;
+
+// public:
+//     ItemArray
+// };
+
 #endif  //  _TESTS_ITEM_H_
