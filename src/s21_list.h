@@ -312,13 +312,26 @@ template <typename Type> class List
     // Front()
     reference Front() 
     {
+        assert(!Empty() && "Front() from empty list!");
         return *begin();
     }
     const_reference Front() const 
     {
+        assert(!Empty() && "Front() from empty list!");
         return *cbegin();
     }
     // Back()
+    reference Back() 
+    {
+        assert(!Empty() && "Back() from empty list!");
+        return *(--end());
+    }
+    const_reference Back() const 
+    {
+        assert(!Empty() && "Back() from empty list!");
+        return *(--cend());
+    }
+
     // Erase()
     // Sort()
     // Unique()
