@@ -12,7 +12,8 @@ GTEST_LFLAGS=-lgtest -lgtest_main
 REPORT_DIRECTORY=report
 VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
-SOURCES=tests/list/list.cc tests/list/push_back.cc tests/item.cc
+SOURCES=tests/item.cc tests/list/list.cc tests/list/push_back.cc  tests/list/access.cc
+# SOURCES=*/*.cc
 BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
 
 

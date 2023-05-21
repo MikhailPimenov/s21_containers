@@ -300,6 +300,31 @@ template <typename Type> class List
 
         --size_;
     }
+
+    // Max_size()
+    // Insert()
+    // Assign()
+    // Merge()
+    // Push_front()
+    // Pop_front()
+    // Swap()
+    // Rule of 5
+    // Front()
+    reference Front() 
+    {
+        return *begin();
+    }
+    const_reference Front() const 
+    {
+        return *cbegin();
+    }
+    // Back()
+    // Erase()
+    // Sort()
+    // Unique()
+    // Splice()
+    // Emplace_back()
+    // Emplace_front()
 };
 
 } // namespace s21
