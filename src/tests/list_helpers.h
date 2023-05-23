@@ -27,6 +27,11 @@ bool operator==(const s21::List<Type>& s21_list, const std::list<Type>& list) {
 }
 
 template <typename Type>
+bool operator==(const std::list<Type>& list, const s21::List<Type>& s21_list) {
+    return s21_list == list;
+}
+
+template <typename Type>
 void print(const s21::List<Type>& s21_list) {
     for (auto it = s21_list.cbegin(); it != s21_list.cend(); ++it)
         std::cout << *it << '\n';

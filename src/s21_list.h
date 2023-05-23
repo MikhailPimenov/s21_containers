@@ -239,12 +239,12 @@ template <typename Type> class List
 
     iterator begin()
     {
-        return iterator(first_existing_);
+        return first_existing_ ? iterator(first_existing_) : iterator(&end_);
     }
 
     const_iterator cbegin() const
     {
-        return const_iterator(first_existing_);
+        return first_existing_ ? const_iterator(first_existing_) : const_iterator(&end_);
     }
 
     iterator end() 
@@ -306,7 +306,44 @@ template <typename Type> class List
     // Assign()
     // Merge()
     // Push_front()
-    // Pop_front()
+    void Push_front(const_reference data)
+    {
+        Node *new_node = new Node;
+        new_node->data_ = data;
+
+        new_node->previous_ = nullptr;
+        new_node->next_ = first_existing_;
+
+        if (size_) {
+            assert(first_existing_ && "First existing node is nullptr!");
+            first_existing_->previous_ = new_node;
+        }
+        else {
+            last_existing_ = new_node;
+        }
+
+        first_existing_ = new_node;
+
+        ++size_;
+    };
+    void Pop_front()
+    {
+        assert(size_ >= 1ull && "Pop_back() from empty list!");
+
+        if (size_ == 1ull) {
+            delete first_existing_;
+            --size_;
+            return;
+        }
+
+        assert(first_existing_->next_ && "Next pointer in first existing node is nullptr!");
+        Node* next = first_existing_->next_;
+        delete first_existing_;
+
+        first_existing_ = next;
+
+        --size_;
+    }
     // Swap()
     // Rule of 5
     // Front()
@@ -339,6 +376,26 @@ template <typename Type> class List
     // Emplace_back()
     // Emplace_front()
 };
+
+template<typename Type>
+bool operator==(const List<Type>& left, const List<Type>& right) {
+    if (left.Size() != right.Size())
+        return false;
+
+
+    auto left_iterator = left.cbegin();
+    auto right_iterator = right.cbegin();
+
+    while (left_iterator != left.cend()) {
+        if (*left_iterator != *right_iterator)
+            return false;
+        ++left_iterator;
+        ++right_iterator;
+    }
+
+    return true;
+}
+
 
 } // namespace s21
 
