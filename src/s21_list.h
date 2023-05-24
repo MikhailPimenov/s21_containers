@@ -210,6 +210,52 @@ template <typename Type> class List
 
     };
 
+    // TODO: refactor rule of 5
+    List(const List& other) : List() {
+        for (auto it = other.cbegin(); it != other.cend(); ++it)
+            Push_back(*it);
+    }
+    // TODO: refactor rule of 5
+    List(List&& other) : 
+    first_existing_{other.first_existing_}, 
+    last_existing_{other.last_existing_},
+    size_{other.size_}{
+        last_existing_->next_ = &end_;
+
+        other.first_existing_ = nullptr;
+        other.last_existing_ = nullptr;
+        other.size_ = 0ull;
+    }
+
+    // TODO: refactor rule of 5
+    List& operator=(const List& other) {
+        if (this == &other)
+            return *this;
+
+        List copy(other);
+        *this = std::move(copy);   // operator=(List&&)
+        return *this;
+    }
+
+    // TODO: refactor rule of 5
+    List& operator=(List&& other) {
+        if (this == &other) // TODO: remove??
+            return *this;
+
+        Clear();
+
+        first_existing_ = other.first_existing_;
+        last_existing_ = other.last_existing_;
+        last_existing_->next_ = &end_;
+        size_ = other.size_;
+
+        other.first_existing_ = nullptr;
+        other.last_existing_ = nullptr;
+        other.size_ = 0ull;
+
+        return *this;
+    }
+
     List(const std::initializer_list<value_type>& list) : List() {
         for (const auto& element : list)
             Push_back(element);

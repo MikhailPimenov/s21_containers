@@ -139,14 +139,63 @@ namespace {
     }
 
 
-
+    // RULE OF 5 =============================================================================
+    // RULE OF 5 =============================================================================
+    // RULE OF 5 =============================================================================
 
     TEST(RuleOf5, T0CopyConstructor) {
         const s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
-        // s21::List<Item> s21_list2(s21_list1);
+        s21::List<Item> s21_list2(s21_list1);
 
 
-        // EXPECT_TRUE(s21_list2 == s21_list1);
+        EXPECT_TRUE(s21_list2 == s21_list1);
+    }
+
+    TEST(RuleOf5, T0MoveConstructor) {
+        s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        const s21::List<Item> s21_list_copy(s21_list1);
+        s21::List<Item> s21_list2(std::move(s21_list1));
+
+        const s21::List<Item> s21_list_empty;
+        EXPECT_TRUE(s21_list2 == s21_list_copy);
+        EXPECT_TRUE(s21_list1 == s21_list_empty);
+    }
+
+    TEST(RuleOf5, T0CopyAssignmentOperator) {
+        const s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        s21::List<Item> s21_list2;
+        s21_list2 = s21_list1;
+
+
+        EXPECT_TRUE(s21_list2 == s21_list1);
+    }
+
+    TEST(RuleOf5, T1CopyAssignmentOperatorSelf) {
+        s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        const s21::List<Item> s21_list_copy(s21_list1);
+        s21_list1 = s21_list1;
+
+
+        EXPECT_TRUE(s21_list1 == s21_list_copy);
+    }
+
+    TEST(RuleOf5, T0MoveAssignmentOperator) {
+        s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        const s21::List<Item> s21_list_copy(s21_list1);
+        s21::List<Item> s21_list2;
+        s21_list2 = std::move(s21_list1);
+
+        const s21::List<Item> s21_list_empty;
+        EXPECT_TRUE(s21_list2 == s21_list_copy);
+        EXPECT_TRUE(s21_list1 == s21_list_empty);
+    }
+
+    TEST(RuleOf5, T1MoveAssignmentOperatorSelf) {
+        s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+        const s21::List<Item> s21_list_copy(s21_list1);
+        s21_list1 = std::move(s21_list1);
+
+        EXPECT_TRUE(s21_list1 == s21_list_copy);
     }
 }   //  namespace
 
