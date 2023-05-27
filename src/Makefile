@@ -12,7 +12,13 @@ GTEST_LFLAGS=-lgtest -lgtest_main
 REPORT_DIRECTORY=report
 VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
-SOURCES=tests/item.cc tests/list/list.cc tests/list/push_back.cc tests/list/push_front.cc tests/list/access.cc
+SOURCES=tests/item.cc tests/list/list.cc 
+SOURCES+=tests/list/push_back.cc 
+SOURCES+=tests/list/push_front.cc
+SOURCES+=tests/list/access.cc 
+SOURCES+=tests/list/assign.cc
+SOURCES+=tests/list/insert.cc
+
 # SOURCES=*/*.cc
 BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
 
@@ -24,13 +30,13 @@ all: test
 test: run_tests gcov_report
 
 tests/tests_main.exe: $(BINARIES)
-		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS)
+		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS) -g
 
 %.o: %.cc tests/item.h tests/list_helpers.h s21_list.h
-		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS)
+		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS) -g
 
 run_tests: tests/tests_main.exe
-		./tests/tests_main.exe
+		-./tests/tests_main.exe
 
 
 

@@ -21,6 +21,13 @@ namespace {
         EXPECT_TRUE(s21_list == list);
     }
 
+    TEST(List, T1ConstructorInitializerList) {
+        s21::List<Item> s21_list = {};
+        std::list<Item> list = {};
+
+        EXPECT_TRUE(s21_list == list);
+    }
+
     TEST(List, T0Size) {
         s21::List<Item> s21_list = {Item(11), Item(22), Item(33), Item(44), Item(55)};
         std::list<Item> list = {Item(11), Item(22), Item(33), Item(44), Item(55)};

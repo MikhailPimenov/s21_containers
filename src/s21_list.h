@@ -22,6 +22,8 @@ template <typename List,
           >
 class ListIteratorBase
 {
+    friend List;
+
 public:
     using difference_type = Difference_type;
     using value_type = Value_type;
@@ -58,32 +60,6 @@ public:
         return *this;
     }
 
-    // ListIterator &operator++()
-    // {
-    //     node_pointer_ = node_pointer_->next_;
-    //     return *this;
-    // }
-
-    // ListIterator operator++(int)
-    // {
-    //     ListIterator temporary(*this);
-    //     node_pointer_ = node_pointer_->next_;
-    //     return temporary;
-    // }
-
-    // ListIterator &operator--()
-    // {
-    //     node_pointer_ = node_pointer_->previous_;
-    //     return *this;
-    // }
-
-    // ListIterator operator--(int)
-    // {
-    //     ListIterator temporary(*this);
-    //     node_pointer_ = node_pointer_->previous_;
-    //     return temporary;
-    // }
-
     reference operator*() const
     {
         return node_pointer_->data_;
@@ -108,6 +84,12 @@ public:
     {
         return node_pointer_;
     }
+
+private:
+    node_pointer get() 
+    {
+        return node_pointer_;
+    }
     
 protected:
     node_pointer node_pointer_;
@@ -115,18 +97,17 @@ protected:
 
 template <typename List, 
           typename Pointer = typename List::pointer, 
-          typename Reference = typename List::reference,
-          typename Node_pointer = typename List::node_pointer> 
+          typename Reference = typename List::reference> 
 class ListIterator : 
 public ListIteratorBase <List,
                          Pointer, 
                          Reference, 
-                         Node_pointer, 
+                         typename List::node_pointer, 
                          typename List::difference_type, 
                          typename List::value_type> {
 
 private:
-    using Base = ListIteratorBase <List, Pointer, Reference, Node_pointer, typename List::difference_type, typename List::value_type>;
+    using Base = ListIteratorBase <List, Pointer, Reference, typename List::node_pointer, typename List::difference_type, typename List::value_type>;
 
 public:
     using Base::Base;
@@ -160,18 +141,17 @@ public:
 
 template <typename List, 
           typename Pointer = typename List::pointer, 
-          typename Reference = typename List::reference,
-          typename Node_pointer = typename List::node_pointer> 
+          typename Reference = typename List::reference> 
 class ListReverseIterator : 
 public ListIteratorBase <List,
                          Pointer, 
                          Reference, 
-                         Node_pointer, 
+                         typename List::node_pointer, 
                          typename List::difference_type, 
                          typename List::value_type> {
 
 private:
-    using Base = ListIteratorBase <List, Pointer, Reference, Node_pointer, typename List::difference_type, typename List::value_type>;
+    using Base = ListIteratorBase <List, Pointer, Reference, typename List::node_pointer, typename List::difference_type, typename List::value_type>;
 
 public:
     using Base::Base;
@@ -207,8 +187,6 @@ template <typename Type> class List
 {
     
     struct Node;
-    using node_pointer = Node*;
-    using const_node_pointer = const Node*;
 
   public:
     using value_type = Type;
@@ -217,20 +195,27 @@ template <typename Type> class List
     using reference = value_type &;
     using const_reference = const value_type &;
     using pointer = value_type *;
+
     using const_pointer = const value_type *;
 
+    using node_pointer = Node*;
+    // using const_node_pointer = const Node*;
 public:
     // friend class ListIteratorBase<List<Type>>;
     friend class ListIterator<List<Type>>;
-    friend class ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    // friend class ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    friend class ListIterator<List<Type>, const_pointer, const_reference>;
     friend class ListReverseIterator<List<Type>>;
-    friend class ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>; 
+    // friend class ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>; 
+    friend class ListReverseIterator<List<Type>, const_pointer, const_reference>; 
 
   public:
     using iterator = ListIterator<List<Type>>;
-    using const_iterator = ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    // using const_iterator = ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    using const_iterator = ListIterator<List<Type>, const_pointer, const_reference>;
     using reverse_iterator = ListReverseIterator<List<Type>>;
-    using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    // using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference>;
 
 
   private:
@@ -262,16 +247,17 @@ public:
 
 
 
-    Node *first_existing_;
-    Node *last_existing_;
-    Node end_;
-    Node rend_;
+    // Node *first_existing_;
+    // Node *last_existing_;
+    mutable Node end_;
+    mutable Node rend_;
     size_type size_;
 
   public:
     List() 
-        : first_existing_{nullptr}, 
-          last_existing_{nullptr}, 
+        : 
+        // first_existing_{nullptr}, 
+        //   last_existing_{nullptr}, 
           end_{},
           rend_{},
           size_{0ull} {
@@ -288,8 +274,8 @@ public:
             Push_back(value);
     }
 
-    template<typename IntupIterator>
-    List(IntupIterator first, IntupIterator last) : List() {
+    template<typename InputIterator>
+    List(InputIterator first, InputIterator last) : List() {
         for (auto it = first; it != last; ++it)
             Push_back(*it);
     }
@@ -301,14 +287,21 @@ public:
     }
     // TODO: refactor rule of 5
     List(List&& other) : 
-    first_existing_{other.first_existing_}, 
-    last_existing_{other.last_existing_},
+    // first_existing_{other.first_existing_}, 
+    // last_existing_{other.last_existing_},
     size_{other.size_}{
-        connect(last_existing_, &end_);
-        connect(&rend_, first_existing_);
 
-        other.first_existing_ = nullptr;
-        other.last_existing_ = nullptr;
+        Node* other_first = nextOf(&(other.rend_));
+        Node* other_last = previousOf(&(other.end_));
+
+        connect(&rend_, other_first);
+        connect(other_last, &end_);
+        // connect(last_existing_, &end_);
+        // connect(&rend_, first_existing_);
+
+        // other.first_existing_ = nullptr;
+        // other.last_existing_ = nullptr;
+        connect(&(other.rend_), &(other.end_));
         other.size_ = 0ull;
     }
 
@@ -329,14 +322,23 @@ public:
 
         Clear();
 
-        first_existing_ = other.first_existing_;
-        last_existing_ = other.last_existing_;
-        connect(last_existing_, &end_);
-        connect(&rend_, first_existing_);
+
         size_ = other.size_;
 
-        other.first_existing_ = nullptr;
-        other.last_existing_ = nullptr;
+        Node* other_first = nextOf(&(other.rend_));
+        Node* other_last = previousOf(&(other.end_));
+        // if (size_) {
+        connect(&rend_, other_first);
+        connect(other_last, &end_);
+            // first_existing_ = other.first_existing_;
+            // last_existing_ = other.last_existing_;
+            // connect(last_existing_, &end_);
+            // connect(&rend_, first_existing_);
+        // }
+
+        // other.first_existing_ = nullptr;
+        // other.last_existing_ = nullptr;
+        connect(&(other.rend_), &(other.end_));
         other.size_ = 0ull;
 
         return *this;
@@ -371,22 +373,30 @@ public:
 
     iterator begin()
     {
-        return first_existing_ ? iterator(first_existing_) : iterator(&end_);
+        // return first_existing_ ? iterator(first_existing_) : iterator(&end_);
+        // return nextOf(&rend_) ? iterator(nextOf(&rend_)) : iterator(&end_);
+        // return iterator(nextOf(&rend_));
+        return ++iterator(&rend_);
     }
 
     reverse_iterator rbegin()
     {
-        return last_existing_ ? reverse_iterator(last_existing_) : reverse_iterator(&rend_);
+        // return last_existing_ ? reverse_iterator(last_existing_) : reverse_iterator(&rend_);
+        // return previousOf(&end_) ? reverse_iterator(previousOf(&end_)) : reverse_iterator(&rend_);
+        // return reverse_iterator(previousOf(&end_));
+        return ++reverse_iterator(&end_);
     }
 
     const_iterator cbegin() const
     {
-        return first_existing_ ? const_iterator(first_existing_) : const_iterator(&end_);
+        // return first_existing_ ? const_iterator(first_existing_) : const_iterator(&end_);
+        return ++const_iterator(&rend_);
     }
 
     const_reverse_iterator crbegin() const
     {
-        return last_existing_ ? const_reverse_iterator(last_existing_) : const_reverse_iterator(&rend_);
+        // return last_existing_ ? const_reverse_iterator(last_existing_) : const_reverse_iterator(&rend_);
+        return ++const_reverse_iterator(&end_);
     }
 
     iterator end() 
@@ -411,20 +421,23 @@ public:
 
     void Push_back(const_reference data)
     {
-        Node *new_node = new Node;
-        new_node->data_ = data;
+        Node* old_last = previousOf(&end_);
 
-        connect(new_node, &end_);
+        Node *new_last = new Node;
+        new_last->data_ = data;
+
+        connect(old_last, new_last);
+        connect(new_last, &end_);
         
-        if (size_) {
-            assert(last_existing_ && "Last existing node is nullptr!");
-            connect(last_existing_, new_node);
-        } else {
-            connect(&rend_, new_node);
-            first_existing_ = new_node;
-        }
+        // if (size_) {
+            // assert(last_existing_ && "Last existing node is nullptr!");
+            // connect(last_existing_, new_node);
+        // } else {
+            // connect(&rend_, new_node);
+            // first_existing_ = new_node;
+        // }
 
-        last_existing_ = new_node;
+        // last_existing_ = new_node;
         ++size_;
     };
 
@@ -432,66 +445,114 @@ public:
     {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
-        if (size_ == 1ull) {
-            delete last_existing_;
-            last_existing_ = nullptr;
-            first_existing_ = nullptr;
-            connect(&rend_, &end_);
-            --size_;
-            return;
-        }
+        Node* old_last = previousOf(&end_);
+        Node* new_last = previousOf(old_last);
+        delete old_last;
 
-        assert(previousOf(last_existing_) && "Previous pointer in last existing node is nullptr!");
-        Node* previous = previousOf(last_existing_);
-        delete last_existing_;
+        connect(new_last, &end_);
 
-        connect(previous, &end_);
-        last_existing_ = previous;
+        // if (size_ == 1ull) {
+        //     delete last_existing_;
+        //     last_existing_ = nullptr;
+        //     first_existing_ = nullptr;
+        //     connect(&rend_, &end_);
+        //     --size_;
+        //     return;
+        // }
+
+        // assert(previousOf(last_existing_) && "Previous pointer in last existing node is nullptr!");
+        // Node* previous = previousOf(last_existing_);
+        // delete last_existing_;
+
+        // connect(previous, &end_);
+        // last_existing_ = previous;
         --size_;
     }
 
     // Max_size()
     // Insert()
-    // Assign()
+    iterator Insert(const_iterator pos, const_reference value) {
+        Node* new_node = new Node;
+        new_node->data_ = value;
+
+        Node* next = pos.get();
+        Node* previous = previousOf(next);
+        connect(previous, new_node); 
+        connect(new_node, next);
+
+        ++size_;
+        return iterator(new_node);
+    }
+
+    void Assign(size_type count, const_reference value) 
+    {
+        List temporary(count, value);
+        *this = temporary;  // operator=(List&&)
+    }
+
+    template<typename InputIterator>
+    void Assign(InputIterator first, InputIterator last) 
+    {
+        List temporary(first, last);
+        *this = temporary;  // operator=(List&&)
+    }
+
+    void Assign(const std::initializer_list<value_type>& list) 
+    {
+        List temporary(list);
+        *this = temporary;  // operator=(List&&)
+    };
+
     // Merge()
     // Push_front()
     void Push_front(const_reference data)
     {
-        Node *new_node = new Node;
-        new_node->data_ = data;
+        Node* old_first = nextOf(&rend_);
+        
+        Node *new_first = new Node;
+        new_first->data_ = data;
 
-        connect(&rend_, new_node);
+        connect(&rend_, new_first);
+        connect(new_first, old_first);
+        
 
-        if (size_) {
-            assert(first_existing_ && "First existing node is nullptr!");
-            connect(new_node, first_existing_);
-        } else {
-            connect(new_node, &end_);
-            last_existing_ = new_node;
-        }
+        // if (size_) {
+        //     assert(first_existing_ && "First existing node is nullptr!");
+        //     connect(new_node, first_existing_);
+        // } else {
+        //     connect(new_node, &end_);
+        //     last_existing_ = new_node;
+        // }
 
-        first_existing_ = new_node;        
+        // first_existing_ = new_node;        
         ++size_;
     };
     void Pop_front()
     {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
-        if (size_ == 1ull) {
-            delete first_existing_;
-            first_existing_ = nullptr;
-            last_existing_ = nullptr;
-            connect(&rend_, &end_);
-            --size_;
-            return;
-        }
+        Node* old_first = nextOf(&rend_);
+        Node* new_first = nextOf(old_first);
 
-        assert(nextOf(first_existing_) && "Next pointer in first existing node is nullptr!");
-        Node* next = nextOf(first_existing_);
-        delete first_existing_;
+        delete old_first;
 
-        connect(&rend_, next);
-        first_existing_ = next;
+        connect(&rend_, new_first);
+
+        // if (size_ == 1ull) {
+        //     delete first_existing_;
+        //     first_existing_ = nullptr;
+        //     last_existing_ = nullptr;
+        //     connect(&rend_, &end_);
+        //     --size_;
+        //     return;
+        // }
+
+        // assert(nextOf(first_existing_) && "Next pointer in first existing node is nullptr!");
+        // Node* next = nextOf(first_existing_);
+        // delete first_existing_;
+
+        // connect(&rend_, next);
+        // first_existing_ = next;
         --size_;
     }
     // Swap()
