@@ -247,18 +247,13 @@ public:
 
 
 
-    // Node *first_existing_;
-    // Node *last_existing_;
     mutable Node end_;
     mutable Node rend_;
     size_type size_;
 
   public:
     List() 
-        : 
-        // first_existing_{nullptr}, 
-        //   last_existing_{nullptr}, 
-          end_{},
+        : end_{},
           rend_{},
           size_{0ull} {
         connect(&rend_, &end_);
@@ -296,11 +291,7 @@ public:
 
         connect(&rend_, other_first);
         connect(other_last, &end_);
-        // connect(last_existing_, &end_);
-        // connect(&rend_, first_existing_);
 
-        // other.first_existing_ = nullptr;
-        // other.last_existing_ = nullptr;
         connect(&(other.rend_), &(other.end_));
         other.size_ = 0ull;
     }
@@ -322,22 +313,14 @@ public:
 
         Clear();
 
-
         size_ = other.size_;
 
         Node* other_first = nextOf(&(other.rend_));
         Node* other_last = previousOf(&(other.end_));
-        // if (size_) {
+
         connect(&rend_, other_first);
         connect(other_last, &end_);
-            // first_existing_ = other.first_existing_;
-            // last_existing_ = other.last_existing_;
-            // connect(last_existing_, &end_);
-            // connect(&rend_, first_existing_);
-        // }
 
-        // other.first_existing_ = nullptr;
-        // other.last_existing_ = nullptr;
         connect(&(other.rend_), &(other.end_));
         other.size_ = 0ull;
 
@@ -373,29 +356,21 @@ public:
 
     iterator begin()
     {
-        // return first_existing_ ? iterator(first_existing_) : iterator(&end_);
-        // return nextOf(&rend_) ? iterator(nextOf(&rend_)) : iterator(&end_);
-        // return iterator(nextOf(&rend_));
         return ++iterator(&rend_);
     }
 
     reverse_iterator rbegin()
     {
-        // return last_existing_ ? reverse_iterator(last_existing_) : reverse_iterator(&rend_);
-        // return previousOf(&end_) ? reverse_iterator(previousOf(&end_)) : reverse_iterator(&rend_);
-        // return reverse_iterator(previousOf(&end_));
         return ++reverse_iterator(&end_);
     }
 
     const_iterator cbegin() const
     {
-        // return first_existing_ ? const_iterator(first_existing_) : const_iterator(&end_);
         return ++const_iterator(&rend_);
     }
 
     const_reverse_iterator crbegin() const
     {
-        // return last_existing_ ? const_reverse_iterator(last_existing_) : const_reverse_iterator(&rend_);
         return ++const_reverse_iterator(&end_);
     }
 
@@ -429,15 +404,6 @@ public:
         connect(old_last, new_last);
         connect(new_last, &end_);
         
-        // if (size_) {
-            // assert(last_existing_ && "Last existing node is nullptr!");
-            // connect(last_existing_, new_node);
-        // } else {
-            // connect(&rend_, new_node);
-            // first_existing_ = new_node;
-        // }
-
-        // last_existing_ = new_node;
         ++size_;
     };
 
@@ -451,21 +417,6 @@ public:
 
         connect(new_last, &end_);
 
-        // if (size_ == 1ull) {
-        //     delete last_existing_;
-        //     last_existing_ = nullptr;
-        //     first_existing_ = nullptr;
-        //     connect(&rend_, &end_);
-        //     --size_;
-        //     return;
-        // }
-
-        // assert(previousOf(last_existing_) && "Previous pointer in last existing node is nullptr!");
-        // Node* previous = previousOf(last_existing_);
-        // delete last_existing_;
-
-        // connect(previous, &end_);
-        // last_existing_ = previous;
         --size_;
     }
 
@@ -482,6 +433,41 @@ public:
 
         ++size_;
         return iterator(new_node);
+    }
+    iterator Insert(const_iterator pos, size_type count, const_reference value ) {
+        assert(static_cast<signed long long>(count) >= 0 && "Probably negative number of elements!");
+        for (size_type i = 0ull; i < count; ++i)
+            Insert(pos, value);
+
+        iterator result(pos.get());
+        for (size_type i = 0ull; i < count; ++i)
+            --result;
+
+        return result;
+    }
+    template<typename InputIterator>
+    iterator Insert(const_iterator pos, InputIterator first, InputIterator last) {
+        size_type count = 0ull;
+        for (InputIterator it = first; it != last; ++it) {
+            Insert(pos, *it);
+            ++count;
+        }
+
+        iterator result(pos.get());
+        for (size_type i = 0ull; i < count; ++i)
+            --result;
+
+        return result;
+    }
+    iterator Insert(const_iterator pos, const std::initializer_list<Type>& list) {
+        for (const auto& element : list)
+            Insert(pos, element);
+            
+        iterator result(pos.get());
+        for (size_type i = 0ull; i < list.size(); ++i)
+            --result;
+
+        return result;
     }
 
     void Assign(size_type count, const_reference value) 
@@ -515,16 +501,6 @@ public:
         connect(&rend_, new_first);
         connect(new_first, old_first);
         
-
-        // if (size_) {
-        //     assert(first_existing_ && "First existing node is nullptr!");
-        //     connect(new_node, first_existing_);
-        // } else {
-        //     connect(new_node, &end_);
-        //     last_existing_ = new_node;
-        // }
-
-        // first_existing_ = new_node;        
         ++size_;
     };
     void Pop_front()
@@ -538,21 +514,6 @@ public:
 
         connect(&rend_, new_first);
 
-        // if (size_ == 1ull) {
-        //     delete first_existing_;
-        //     first_existing_ = nullptr;
-        //     last_existing_ = nullptr;
-        //     connect(&rend_, &end_);
-        //     --size_;
-        //     return;
-        // }
-
-        // assert(nextOf(first_existing_) && "Next pointer in first existing node is nullptr!");
-        // Node* next = nextOf(first_existing_);
-        // delete first_existing_;
-
-        // connect(&rend_, next);
-        // first_existing_ = next;
         --size_;
     }
     // Swap()
@@ -598,7 +559,6 @@ public:
         Node* nextOf(Node* node) {
             return node->next_;
         }
-
 
 };
 
