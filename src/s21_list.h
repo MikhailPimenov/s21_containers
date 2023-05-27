@@ -13,72 +13,76 @@ namespace s21
 
 
 template <typename List, 
-          typename Pointer = typename List::pointer, 
-          typename Reference = typename List::reference,
-          typename Node_pointer = typename List::node_pointer> 
-class ListIterator
+          typename Pointer, 
+          typename Reference,
+          typename Node_pointer,
+          typename Difference_type,
+          typename Value_type
+        //   typename Node_type
+          >
+class ListIteratorBase
 {
 public:
-    using difference_type = typename List::difference_type;
-    using value_type = typename List::value_type;
+    using difference_type = Difference_type;
+    using value_type = Value_type;
     using pointer = Pointer;
     using reference = Reference;
     using iterator_category = std::bidirectional_iterator_tag;
 
-    using node_type = typename List::Node;
+    // using node_type = Node_type;
     using node_pointer = Node_pointer;
 
   public:
-    ListIterator(node_pointer node_pointer) : node_pointer_{node_pointer} {};
+    ListIteratorBase(node_pointer node_pointer) : node_pointer_{node_pointer} {};
 
-    ListIterator(const ListIterator& other) : ListIterator(other.node_pointer_) {};
-    ListIterator(ListIterator&& other) : ListIterator(other.node_pointer_) {
+    ListIteratorBase(const ListIteratorBase& other) : ListIteratorBase(other.node_pointer_) {};
+    ListIteratorBase(ListIteratorBase&& other) : ListIteratorBase(other.node_pointer_) {
         other.node_pointer_ = nullptr;
     };
 
-    friend void swap(ListIterator& left, ListIterator& right) {
+    friend void swap(ListIteratorBase& left, ListIteratorBase& right) {
         using namespace std;    // to enable ADL
         swap(left.node_pointer_, right.node_pointer_);
     };
 
-    ListIterator& operator=(const ListIterator& other)
+    ListIteratorBase& operator=(const ListIteratorBase& other)
     {
         node_pointer_ = other->node_pointer_;
         return *this;
     };
 
-    ListIterator& operator=(ListIterator&& other)
+    ListIteratorBase& operator=(ListIteratorBase&& other)
     {
         node_pointer_ = other->node_pointer_;
         other->node_pointer_ = nullptr;
         return *this;
     }
 
-    ListIterator &operator++()
-    {
-        node_pointer_ = node_pointer_->next_;
-        return *this;
-    }
+    // ListIterator &operator++()
+    // {
+    //     node_pointer_ = node_pointer_->next_;
+    //     return *this;
+    // }
 
-    ListIterator operator++(int)
-    {
-        ListIterator temporary(*this);
-        node_pointer_ = node_pointer_->next_;
-        return temporary;
-    }
+    // ListIterator operator++(int)
+    // {
+    //     ListIterator temporary(*this);
+    //     node_pointer_ = node_pointer_->next_;
+    //     return temporary;
+    // }
 
-    ListIterator &operator--()
-    {
-        node_pointer_ = node_pointer_->previous_;
-        return *this;
-    }
+    // ListIterator &operator--()
+    // {
+    //     node_pointer_ = node_pointer_->previous_;
+    //     return *this;
+    // }
 
-    ListIterator operator--(int)
-    {
-        ListIterator temporary(*this);
-        node_pointer_ = node_pointer_->previous_;
-        return temporary;
-    }
+    // ListIterator operator--(int)
+    // {
+    //     ListIterator temporary(*this);
+    //     node_pointer_ = node_pointer_->previous_;
+    //     return temporary;
+    // }
 
     reference operator*() const
     {
@@ -90,12 +94,12 @@ public:
         return &(node_pointer_->data_);
     }
 
-    bool operator==(const ListIterator &other) const
+    bool operator==(const ListIteratorBase &other) const
     {
         return node_pointer_ == other.node_pointer_;
     }
 
-    bool operator!=(const ListIterator &other) const
+    bool operator!=(const ListIteratorBase &other) const
     {
         return !(*this == other);
     }
@@ -105,8 +109,98 @@ public:
         return node_pointer_;
     }
     
-private:
+protected:
     node_pointer node_pointer_;
+};
+
+template <typename List, 
+          typename Pointer = typename List::pointer, 
+          typename Reference = typename List::reference,
+          typename Node_pointer = typename List::node_pointer> 
+class ListIterator : 
+public ListIteratorBase <List,
+                         Pointer, 
+                         Reference, 
+                         Node_pointer, 
+                         typename List::difference_type, 
+                         typename List::value_type> {
+
+private:
+    using Base = ListIteratorBase <List, Pointer, Reference, Node_pointer, typename List::difference_type, typename List::value_type>;
+
+public:
+    using Base::Base;
+
+    ListIterator &operator++()
+    {
+        this->node_pointer_ = this->node_pointer_->next_;
+        return *this;
+    }
+
+    ListIterator operator++(int)
+    {
+        ListIterator temporary(*this);
+        this->node_pointer_ = this->node_pointer_->next_;
+        return temporary;
+    }
+
+    ListIterator &operator--()
+    {
+        this->node_pointer_ = this->node_pointer_->previous_;
+        return *this;
+    }
+
+    ListIterator operator--(int)
+    {
+        ListIterator temporary(*this);
+        this->node_pointer_ = this->node_pointer_->previous_;
+        return temporary;
+    }
+};
+
+template <typename List, 
+          typename Pointer = typename List::pointer, 
+          typename Reference = typename List::reference,
+          typename Node_pointer = typename List::node_pointer> 
+class ListReverseIterator : 
+public ListIteratorBase <List,
+                         Pointer, 
+                         Reference, 
+                         Node_pointer, 
+                         typename List::difference_type, 
+                         typename List::value_type> {
+
+private:
+    using Base = ListIteratorBase <List, Pointer, Reference, Node_pointer, typename List::difference_type, typename List::value_type>;
+
+public:
+    using Base::Base;
+
+    ListReverseIterator &operator++()
+    {
+        this->node_pointer_ = this->node_pointer_->previous_;
+        return *this;
+    }
+
+    ListReverseIterator operator++(int)
+    {
+        ListReverseIterator temporary(*this);
+        this->node_pointer_ = this->node_pointer_->previous_;
+        return temporary;
+    }
+
+    ListReverseIterator &operator--()
+    {
+        this->node_pointer_ = this->node_pointer_->next_;
+        return *this;
+    }
+
+    ListReverseIterator operator--(int)
+    {
+        ListReverseIterator temporary(*this);
+        this->node_pointer_ = this->node_pointer_->next_;
+        return temporary;
+    }
 };
 
 template <typename Type> class List
@@ -116,7 +210,7 @@ template <typename Type> class List
     using node_pointer = Node*;
     using const_node_pointer = const Node*;
 
-  private:
+  public:
     using value_type = Type;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
@@ -126,34 +220,62 @@ template <typename Type> class List
     using const_pointer = const value_type *;
 
 public:
+    // friend class ListIteratorBase<List<Type>>;
     friend class ListIterator<List<Type>>;
-    friend class ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>; 
+    friend class ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    friend class ListReverseIterator<List<Type>>;
+    friend class ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>; 
 
   public:
     using iterator = ListIterator<List<Type>>;
     using const_iterator = ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+    using reverse_iterator = ListReverseIterator<List<Type>>;
+    using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
+
 
   private:
     struct Node
     {
+        template<typename T>
+        friend void List<T>::connect(typename List<T>::Node*, typename List<T>::Node*);
+
+        template<typename T>
+        friend typename List<T>::Node* List<T>::previousOf(typename List<T>::Node*);
+        
+        template<typename T>
+        friend typename List<T>::Node* List<T>::nextOf(typename List<T>::Node*);
+
+        friend iterator;
+        friend const_iterator;
+        friend reverse_iterator;
+        friend const_reverse_iterator;
+
+    public:
         value_type data_;
+
+    private:
         Node *next_;
         Node *previous_;
     };
 
+
+
+
+
     Node *first_existing_;
     Node *last_existing_;
     Node end_;
-
+    Node rend_;
     size_type size_;
 
   public:
     List() 
         : first_existing_{nullptr}, 
           last_existing_{nullptr}, 
-          end_{}, 
+          end_{},
+          rend_{},
           size_{0ull} {
-
+        connect(&rend_, &end_);
     };
 
     explicit List(size_type count) : List() {
@@ -182,7 +304,8 @@ public:
     first_existing_{other.first_existing_}, 
     last_existing_{other.last_existing_},
     size_{other.size_}{
-        last_existing_->next_ = &end_;
+        connect(last_existing_, &end_);
+        connect(&rend_, first_existing_);
 
         other.first_existing_ = nullptr;
         other.last_existing_ = nullptr;
@@ -208,7 +331,8 @@ public:
 
         first_existing_ = other.first_existing_;
         last_existing_ = other.last_existing_;
-        last_existing_->next_ = &end_;
+        connect(last_existing_, &end_);
+        connect(&rend_, first_existing_);
         size_ = other.size_;
 
         other.first_existing_ = nullptr;
@@ -250,9 +374,19 @@ public:
         return first_existing_ ? iterator(first_existing_) : iterator(&end_);
     }
 
+    reverse_iterator rbegin()
+    {
+        return last_existing_ ? reverse_iterator(last_existing_) : reverse_iterator(&rend_);
+    }
+
     const_iterator cbegin() const
     {
         return first_existing_ ? const_iterator(first_existing_) : const_iterator(&end_);
+    }
+
+    const_reverse_iterator crbegin() const
+    {
+        return last_existing_ ? const_reverse_iterator(last_existing_) : const_reverse_iterator(&rend_);
     }
 
     iterator end() 
@@ -260,9 +394,19 @@ public:
         return iterator(&end_);
     }
 
+    reverse_iterator rend() 
+    {
+        return reverse_iterator(&rend_);
+    }
+
     const_iterator cend() const
     {
         return const_iterator(&end_);
+    }
+
+    const_reverse_iterator crend() const
+    {
+        return const_reverse_iterator(&rend_);
     }
 
     void Push_back(const_reference data)
@@ -270,22 +414,17 @@ public:
         Node *new_node = new Node;
         new_node->data_ = data;
 
-        new_node->previous_ = last_existing_;
-        new_node->next_ = nullptr;
-
+        connect(new_node, &end_);
+        
         if (size_) {
             assert(last_existing_ && "Last existing node is nullptr!");
-            last_existing_->next_ = new_node;
-        }
-        else {
+            connect(last_existing_, new_node);
+        } else {
+            connect(&rend_, new_node);
             first_existing_ = new_node;
         }
 
         last_existing_ = new_node;
-
-        last_existing_->next_ = &end_;
-        end_.previous_ = last_existing_;
-
         ++size_;
     };
 
@@ -295,17 +434,19 @@ public:
 
         if (size_ == 1ull) {
             delete last_existing_;
+            last_existing_ = nullptr;
+            first_existing_ = nullptr;
+            connect(&rend_, &end_);
             --size_;
             return;
         }
 
-        assert(last_existing_->previous_ && "Previous pointer in last existing node is nullptr!");
-        Node* previous = last_existing_->previous_;
+        assert(previousOf(last_existing_) && "Previous pointer in last existing node is nullptr!");
+        Node* previous = previousOf(last_existing_);
         delete last_existing_;
 
-        previous->next_ = &end_;
+        connect(previous, &end_);
         last_existing_ = previous;
-
         --size_;
     }
 
@@ -319,19 +460,17 @@ public:
         Node *new_node = new Node;
         new_node->data_ = data;
 
-        new_node->previous_ = nullptr;
-        new_node->next_ = first_existing_;
+        connect(&rend_, new_node);
 
         if (size_) {
             assert(first_existing_ && "First existing node is nullptr!");
-            first_existing_->previous_ = new_node;
-        }
-        else {
+            connect(new_node, first_existing_);
+        } else {
+            connect(new_node, &end_);
             last_existing_ = new_node;
         }
 
-        first_existing_ = new_node;
-
+        first_existing_ = new_node;        
         ++size_;
     };
     void Pop_front()
@@ -340,16 +479,19 @@ public:
 
         if (size_ == 1ull) {
             delete first_existing_;
+            first_existing_ = nullptr;
+            last_existing_ = nullptr;
+            connect(&rend_, &end_);
             --size_;
             return;
         }
 
-        assert(first_existing_->next_ && "Next pointer in first existing node is nullptr!");
-        Node* next = first_existing_->next_;
+        assert(nextOf(first_existing_) && "Next pointer in first existing node is nullptr!");
+        Node* next = nextOf(first_existing_);
         delete first_existing_;
 
+        connect(&rend_, next);
         first_existing_ = next;
-
         --size_;
     }
     // Swap()
@@ -383,7 +525,23 @@ public:
     // Splice()
     // Emplace_back()
     // Emplace_front()
+
+    private:
+        void connect(Node* node, Node* next_node) {
+            node->next_ = next_node;
+            next_node->previous_ = node;
+        }
+        Node* previousOf(Node* node) {
+            return node->previous_;
+        }
+        Node* nextOf(Node* node) {
+            return node->next_;
+        }
+
+
 };
+
+
 
 template<typename Type>
 bool operator==(const List<Type>& left, const List<Type>& right) {

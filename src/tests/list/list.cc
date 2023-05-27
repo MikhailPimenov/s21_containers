@@ -255,6 +255,48 @@ namespace {
 
         EXPECT_TRUE(s21_list == list);
     }
+
+    TEST(Constructor, T3ConstructorReverseIterator) {
+        const s21::List<Item> s21_source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        const std::list<Item> source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        
+        s21::List<Item>::const_reverse_iterator s21_first = s21_source.crbegin();
+        s21::List<Item>::const_reverse_iterator s21_last = s21_source.crend();
+        --s21_last;
+        --s21_last;
+
+        std::list<Item>::const_reverse_iterator first = source.crbegin();
+        std::list<Item>::const_reverse_iterator last = source.crend();
+        --last;
+        --last;
+
+        const s21::List<Item> s21_list(s21_first, s21_last);
+        const std::list<Item> list(first, last);
+
+
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    TEST(Constructor, T4ConstructorReverseIterator) {
+        const s21::List<Item> s21_source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        const std::list<Item> source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        
+        s21::List<Item>::const_reverse_iterator s21_first = s21_source.crbegin();
+        s21::List<Item>::const_reverse_iterator s21_last = s21_source.crend();
+        --s21_last;
+        --s21_last;
+
+        std::list<Item>::const_reverse_iterator first = source.crbegin();
+        std::list<Item>::const_reverse_iterator last = source.crend();
+        --last;
+        --last;
+
+        const s21::List<Item> s21_list(first, last);
+        const std::list<Item> list(s21_first, s21_last);
+
+
+        EXPECT_TRUE(s21_list == list);
+    }
 }   //  namespace
 
 // GCOVR_EXCL_STOP
