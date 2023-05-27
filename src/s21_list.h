@@ -12,136 +12,47 @@ namespace s21
 
 
 
-template <typename List> class ConstListIterator
+template <typename List, 
+          typename Pointer = typename List::pointer, 
+          typename Reference = typename List::reference,
+          typename Node_pointer = typename List::node_pointer> 
+class ListIterator
 {
 public:
-        // using std::iterator_traits<ConstListIterator>::difference_type = typename List::difference_type;
-        // using std::iterator_traits<ConstListIterator>::value_type = typename List::value_type;
-        // using std::iterator_traits<ConstListIterator>::pointer = typename List::const_pointer;
-        // using std::iterator_traits<ConstListIterator>::reference = typename List::const_reference;
-        // using std::iterator_traits<ConstListIterator>::iterator_category = bidirectional_iterator_tag;
+    using difference_type = typename List::difference_type;
+    using value_type = typename List::value_type;
+    using pointer = Pointer;
+    using reference = Reference;
+    using iterator_category = std::bidirectional_iterator_tag;
 
-        using difference_type = typename List::difference_type;
-        using value_type = typename List::value_type;
-        using pointer = typename List::const_pointer;
-        using reference = typename List::const_reference;
-        using iterator_category = std::bidirectional_iterator_tag;
-
-    // std::iterator_traits<It>::reference
+    using node_type = typename List::Node;
+    using node_pointer = Node_pointer;
 
   public:
-    // using iterator_category = std::bidirectional_iterator_tag;
-//   private:
-    using Value_type = typename List::value_type;
-    // using value_type = Value_type;
-    // using Reference = typename List::reference;
-    using Const_reference = typename List::const_reference;
-    using const_reference = Const_reference;
-    // using Pointer = typename List::pointer;
-    using Const_pointer = typename List::const_pointer;
-    using const_pointer = Const_pointer;
-    using Node_type = typename List::Node;
-    // using Node_pointer = Node_type *;
-    using Const_node_pointer = const Node_type *;
-    using Node_reference = Node_type &;
+    ListIterator(node_pointer node_pointer) : node_pointer_{node_pointer} {};
 
-  public:
-    ConstListIterator(Const_node_pointer node_pointer) : node_pointer_{node_pointer} {};
-
-    ConstListIterator(const ConstListIterator& other) : ConstListIterator(other.node_pointer_) {};
-    ConstListIterator(ConstListIterator&& other) : ConstListIterator(other.node_pointer_) {
+    ListIterator(const ListIterator& other) : ListIterator(other.node_pointer_) {};
+    ListIterator(ListIterator&& other) : ListIterator(other.node_pointer_) {
         other.node_pointer_ = nullptr;
     };
-    friend void swap(ConstListIterator& left, ConstListIterator& right) {
+
+    friend void swap(ListIterator& left, ListIterator& right) {
         using namespace std;    // to enable ADL
         swap(left.node_pointer_, right.node_pointer_);
     };
 
-    ConstListIterator& operator=(const ConstListIterator& other)
+    ListIterator& operator=(const ListIterator& other)
     {
         node_pointer_ = other->node_pointer_;
         return *this;
     };
 
-    ConstListIterator& operator=(ConstListIterator&& other)
+    ListIterator& operator=(ListIterator&& other)
     {
         node_pointer_ = other->node_pointer_;
         other->node_pointer_ = nullptr;
         return *this;
     }
-
-
-    ConstListIterator &operator++()
-    {
-        node_pointer_ = node_pointer_->next_;
-        return *this;
-    }
-
-    ConstListIterator operator++(int)
-    {
-        ConstListIterator temporary(*this);
-        node_pointer_ = node_pointer_->next_;
-        return temporary;
-    }
-
-    ConstListIterator &operator--()
-    {
-        node_pointer_ = node_pointer_->previous_;
-        return *this;
-    }
-
-    ConstListIterator operator--(int)
-    {
-        ConstListIterator temporary(*this);
-        node_pointer_ = node_pointer_->previous_;
-        return temporary;
-    }
-
-    Const_reference operator*() const
-    {
-        return node_pointer_->data_;
-    }
-
-    Const_pointer operator->() const
-    {
-        return &(node_pointer_->data_);
-    }
-
-    bool operator==(const ConstListIterator &other) const
-    {
-        return node_pointer_ == other.node_pointer_;
-    }
-
-    bool operator!=(const ConstListIterator &other) const
-    {
-        return !(*this == other);
-    }
-
-    operator bool() const
-    {
-        return node_pointer_;
-    }
-    
-  private:
-    Const_node_pointer node_pointer_;
-};
-
-
-template <typename List> class ListIterator
-{
-  private:
-    using Value_type = typename List::value_type;
-    using Reference = typename List::reference;
-    // using Const_reference = typename List::const_reference;
-    using Pointer = typename List::pointer;
-    // using Const_pointer = typename List::const_pointer;
-    using Node_type = typename List::Node;
-    using Node_pointer = Node_type *;
-    // using Const_node_pointer = const Node_pointer;
-    using Node_reference = Node_type &;
-
-  public:
-    ListIterator(Node_pointer node_pointer) : node_pointer_{node_pointer}{};
 
     ListIterator &operator++()
     {
@@ -169,68 +80,58 @@ template <typename List> class ListIterator
         return temporary;
     }
 
-    Reference operator*()
+    reference operator*() const
     {
         return node_pointer_->data_;
     }
 
-    // Const_reference operator*() const
-    // {
-    //     return node_pointer_->data_;
-    // }
-
-    // Pointer operator->()
-    // {
-    //     return &(node_pointer_->data_);
-    // }
-
-    // Const_pointer operator->() const
-    // {
-    //     return &(node_pointer_->data_);
-    // }
-
-    bool operator==(const ListIterator &iterator) const
+    pointer operator->() const
     {
-        return node_pointer_ == iterator.node_pointer_;
+        return &(node_pointer_->data_);
     }
 
-    bool operator!=(const ListIterator &iterator) const
+    bool operator==(const ListIterator &other) const
     {
-        return !(*this == iterator);
+        return node_pointer_ == other.node_pointer_;
     }
 
-  private:
-    Node_pointer node_pointer_;
+    bool operator!=(const ListIterator &other) const
+    {
+        return !(*this == other);
+    }
+
+    operator bool() const
+    {
+        return node_pointer_;
+    }
+    
+private:
+    node_pointer node_pointer_;
 };
 
 template <typename Type> class List
 {
-    friend class ListIterator<List<Type>>;
-    friend class ConstListIterator<List<Type>>;
+    
+    struct Node;
+    using node_pointer = Node*;
+    using const_node_pointer = const Node*;
 
   private:
     using value_type = Type;
-    // allocator_type	Allocator
-    using size_type = std::size_t; //	Unsigned integer type (usually
-                                   // std::size_t)
+    using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using reference = value_type &;
     using const_reference = const value_type &;
     using pointer = value_type *;
-    // Allocator::pointer	(until C++11)
-    // std::allocator_traits<Allocator>::pointer	(since C++11)
-
     using const_pointer = const value_type *;
-    // Allocator::const_pointer	(until C++11)
-    // std::allocator_traits<Allocator>::const_pointer	(since C++11)
+
+public:
+    friend class ListIterator<List<Type>>;
+    friend class ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>; 
 
   public:
     using iterator = ListIterator<List<Type>>;
-    using const_iterator = ConstListIterator<List<Type>>;
-    // iterator	LegacyBidirectionalIterator to value_type
-    // const_iterator	LegacyBidirectionalIterator to const value_type
-    // reverse_iterator	std::reverse_iterator<iterator>
-    // const_reverse_iterator	std::reverse_iterator<const_iterator>
+    using const_iterator = ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
 
   private:
     struct Node
