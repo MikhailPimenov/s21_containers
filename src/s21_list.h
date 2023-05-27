@@ -4,6 +4,7 @@
 #include <cassert>
 #include <new>
 #include <initializer_list>
+#include <iterator>
 
 namespace s21
 {
@@ -13,12 +14,32 @@ namespace s21
 
 template <typename List> class ConstListIterator
 {
-  private:
+public:
+        // using std::iterator_traits<ConstListIterator>::difference_type = typename List::difference_type;
+        // using std::iterator_traits<ConstListIterator>::value_type = typename List::value_type;
+        // using std::iterator_traits<ConstListIterator>::pointer = typename List::const_pointer;
+        // using std::iterator_traits<ConstListIterator>::reference = typename List::const_reference;
+        // using std::iterator_traits<ConstListIterator>::iterator_category = bidirectional_iterator_tag;
+
+        using difference_type = typename List::difference_type;
+        using value_type = typename List::value_type;
+        using pointer = typename List::const_pointer;
+        using reference = typename List::const_reference;
+        using iterator_category = std::bidirectional_iterator_tag;
+
+    // std::iterator_traits<It>::reference
+
+  public:
+    // using iterator_category = std::bidirectional_iterator_tag;
+//   private:
     using Value_type = typename List::value_type;
+    // using value_type = Value_type;
     // using Reference = typename List::reference;
     using Const_reference = typename List::const_reference;
+    using const_reference = Const_reference;
     // using Pointer = typename List::pointer;
     using Const_pointer = typename List::const_pointer;
+    using const_pointer = Const_pointer;
     using Node_type = typename List::Node;
     // using Node_pointer = Node_type *;
     using Const_node_pointer = const Node_type *;
@@ -26,6 +47,29 @@ template <typename List> class ConstListIterator
 
   public:
     ConstListIterator(Const_node_pointer node_pointer) : node_pointer_{node_pointer} {};
+
+    ConstListIterator(const ConstListIterator& other) : ConstListIterator(other.node_pointer_) {};
+    ConstListIterator(ConstListIterator&& other) : ConstListIterator(other.node_pointer_) {
+        other.node_pointer_ = nullptr;
+    };
+    friend void swap(ConstListIterator& left, ConstListIterator& right) {
+        using namespace std;    // to enable ADL
+        swap(left.node_pointer_, right.node_pointer_);
+    };
+
+    ConstListIterator& operator=(const ConstListIterator& other)
+    {
+        node_pointer_ = other->node_pointer_;
+        return *this;
+    };
+
+    ConstListIterator& operator=(ConstListIterator&& other)
+    {
+        node_pointer_ = other->node_pointer_;
+        other->node_pointer_ = nullptr;
+        return *this;
+    }
+
 
     ConstListIterator &operator++()
     {
@@ -58,26 +102,26 @@ template <typename List> class ConstListIterator
         return node_pointer_->data_;
     }
 
-    // Pointer operator->()
-    // {
-    //     return &(node_pointer_->data_);
-    // }
-
-    // Const_pointer operator->() const
-    // {
-    //     return &(node_pointer_->data_);
-    // }
-
-    bool operator==(const ConstListIterator &iterator) const
+    Const_pointer operator->() const
     {
-        return node_pointer_ == iterator.node_pointer_;
+        return &(node_pointer_->data_);
     }
 
-    bool operator!=(const ConstListIterator &iterator) const
+    bool operator==(const ConstListIterator &other) const
     {
-        return !(*this == iterator);
+        return node_pointer_ == other.node_pointer_;
     }
 
+    bool operator!=(const ConstListIterator &other) const
+    {
+        return !(*this == other);
+    }
+
+    operator bool() const
+    {
+        return node_pointer_;
+    }
+    
   private:
     Const_node_pointer node_pointer_;
 };
@@ -169,7 +213,7 @@ template <typename Type> class List
     // allocator_type	Allocator
     using size_type = std::size_t; //	Unsigned integer type (usually
                                    // std::size_t)
-    // difference_type	Signed integer type (usually std::ptrdiff_t)
+    using difference_type = std::ptrdiff_t;
     using reference = value_type &;
     using const_reference = const value_type &;
     using pointer = value_type *;
@@ -180,6 +224,7 @@ template <typename Type> class List
     // Allocator::const_pointer	(until C++11)
     // std::allocator_traits<Allocator>::const_pointer	(since C++11)
 
+  public:
     using iterator = ListIterator<List<Type>>;
     using const_iterator = ConstListIterator<List<Type>>;
     // iterator	LegacyBidirectionalIterator to value_type
@@ -209,6 +254,22 @@ template <typename Type> class List
           size_{0ull} {
 
     };
+
+    explicit List(size_type count) : List() {
+        for (size_type i = 0ull; i < count; ++i)
+            Push_back(value_type());
+    }
+
+    List(size_type count, const_reference value) : List() {
+        for (size_type i = 0ull; i < count; ++i)
+            Push_back(value);
+    }
+
+    template<typename IntupIterator>
+    List(IntupIterator first, IntupIterator last) : List() {
+        for (auto it = first; it != last; ++it)
+            Push_back(*it);
+    }
 
     // TODO: refactor rule of 5
     List(const List& other) : List() {

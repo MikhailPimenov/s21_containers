@@ -197,6 +197,64 @@ namespace {
 
         EXPECT_TRUE(s21_list1 == s21_list_copy);
     }
+
+    TEST(Constructor, T0ConstructorCount) {
+        const s21::List<Item> s21_list(5);
+        const std::list<Item> list(5);
+        
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    TEST(Constructor, T0ConstructorCountValue) {
+        const s21::List<Item> s21_list(5, Item(11));
+        const std::list<Item> list(5, Item(11));
+        
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    
+    
+    TEST(Constructor, T1ConstructorIterator) {
+        const s21::List<Item> s21_source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        const std::list<Item> source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        
+        s21::List<Item>::const_iterator s21_first = s21_source.cbegin();
+        s21::List<Item>::const_iterator s21_last = s21_source.cend();
+        --s21_last;
+        --s21_last;
+
+        std::list<Item>::const_iterator first = source.cbegin();
+        std::list<Item>::const_iterator last = source.cend();
+        --last;
+        --last;
+
+        const s21::List<Item> s21_list(s21_first, s21_last);
+        const std::list<Item> list(first, last);
+
+
+        EXPECT_TRUE(s21_list == list);
+    }
+
+    TEST(Constructor, T2ConstructorIterator) {
+        const s21::List<Item> s21_source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        const std::list<Item> source = {Item(11), Item(22), Item(33), Item(44), Item(55),};
+        
+        s21::List<Item>::const_iterator s21_first = s21_source.cbegin();
+        s21::List<Item>::const_iterator s21_last = s21_source.cend();
+        --s21_last;
+        --s21_last;
+
+        std::list<Item>::const_iterator first = source.cbegin();
+        std::list<Item>::const_iterator last = source.cend();
+        --last;
+        --last;
+
+        const s21::List<Item> s21_list(first, last);
+        const std::list<Item> list(s21_first, s21_last);
+
+
+        EXPECT_TRUE(s21_list == list);
+    }
 }   //  namespace
 
 // GCOVR_EXCL_STOP
