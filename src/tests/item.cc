@@ -26,4 +26,18 @@ std::ostream& operator<<(std::ostream& out, const Item& object) {
     return out;
 }
 
+
+ItemMove::ItemMove(int number) : Item(number) {};
+ItemMove::ItemMove(ItemMove&& other) : Item(other.number_) {}; 
+
+ItemMove& ItemMove::operator=(ItemMove&& other){
+    Item::operator=(other);
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream& out, const ItemMove& object) {
+    out << "ItemMove(" << object.number_ << ')';
+    return out;
+}
+
 // GCOVR_EXCL_STOP

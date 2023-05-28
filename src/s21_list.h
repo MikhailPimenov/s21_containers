@@ -197,24 +197,17 @@ template <typename Type> class List
     using pointer = value_type *;
 
     using const_pointer = const value_type *;
-
     using node_pointer = Node*;
-    // using const_node_pointer = const Node*;
 public:
-    // friend class ListIteratorBase<List<Type>>;
     friend class ListIterator<List<Type>>;
-    // friend class ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
     friend class ListIterator<List<Type>, const_pointer, const_reference>;
     friend class ListReverseIterator<List<Type>>;
-    // friend class ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>; 
     friend class ListReverseIterator<List<Type>, const_pointer, const_reference>; 
 
   public:
     using iterator = ListIterator<List<Type>>;
-    // using const_iterator = ListIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
     using const_iterator = ListIterator<List<Type>, const_pointer, const_reference>;
     using reverse_iterator = ListReverseIterator<List<Type>>;
-    // using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference, const_node_pointer>;
     using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference>;
 
 
@@ -242,10 +235,6 @@ public:
         Node *next_;
         Node *previous_;
     };
-
-
-
-
 
     mutable Node end_;
     mutable Node rend_;
@@ -282,8 +271,6 @@ public:
     }
     // TODO: refactor rule of 5
     List(List&& other) : 
-    // first_existing_{other.first_existing_}, 
-    // last_existing_{other.last_existing_},
     size_{other.size_}{
 
         Node* other_first = nextOf(&(other.rend_));

@@ -5,7 +5,7 @@
 
 
 class Item {
-private:
+protected:
     int number_;
 
 public:
@@ -19,6 +19,21 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Item& object);
 };
 
+class ItemMove : public Item {
+public:
+    ItemMove(int number);
+    ItemMove(const ItemMove&) = delete;
+    ItemMove(ItemMove&&);
+
+    ItemMove& operator=(const ItemMove&) = delete;
+    ItemMove& operator=(ItemMove&& other);
+
+    bool operator==(const ItemMove& right) const;
+    bool operator!=(const ItemMove& right) const;
+
+
+    friend std::ostream& operator<<(std::ostream& out, const ItemMove& object);
+};
 // class ItemArray {
 // private:
 //     int length_;
