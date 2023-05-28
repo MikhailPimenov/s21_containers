@@ -3,36 +3,36 @@
 
 #include <iostream>
 
-
-class Item {
-protected:
+class Item
+{
+  protected:
     int number_;
 
-public:
-    Item(int number = 0);
-    Item(const Item& other);
+  public:
+    explicit Item(int number = 0);
+    Item(const Item &other);
 
-    Item& operator=(const Item& other);
-    bool operator==(const Item& right) const;
-    bool operator!=(const Item& right) const;
+    Item &operator=(const Item &other);
+    bool operator==(const Item &right) const;
+    bool operator!=(const Item &right) const;
 
-    friend std::ostream& operator<<(std::ostream& out, const Item& object);
+    friend std::ostream &operator<<(std::ostream &out, const Item &object);
 };
 
-class ItemMove : public Item {
-public:
+class ItemMove : public Item
+{
+  public:
     ItemMove(int number);
-    ItemMove(const ItemMove&) = delete;
-    ItemMove(ItemMove&&);
+    ItemMove(const ItemMove &) = delete;
+    ItemMove(ItemMove &&);
 
-    ItemMove& operator=(const ItemMove&) = delete;
-    ItemMove& operator=(ItemMove&& other);
+    ItemMove &operator=(const ItemMove &) = delete;
+    ItemMove &operator=(ItemMove &&other);
 
-    bool operator==(const ItemMove& right) const;
-    bool operator!=(const ItemMove& right) const;
+    bool operator==(const ItemMove &right) const;
+    bool operator!=(const ItemMove &right) const;
 
-
-    friend std::ostream& operator<<(std::ostream& out, const ItemMove& object);
+    friend std::ostream &operator<<(std::ostream &out, const ItemMove &object);
 };
 // class ItemArray {
 // private:
@@ -43,4 +43,4 @@ public:
 //     ItemArray
 // };
 
-#endif  //  _TESTS_ITEM_H_
+#endif //  _TESTS_ITEM_H_

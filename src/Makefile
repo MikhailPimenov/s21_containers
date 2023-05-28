@@ -18,6 +18,8 @@ SOURCES+=tests/list/push_front.cc
 SOURCES+=tests/list/access.cc 
 SOURCES+=tests/list/assign.cc
 SOURCES+=tests/list/insert.cc
+SOURCES+=tests/list/emplace.cc
+SOURCES+=tests/list/swap.cc
 
 # SOURCES=*/*.cc
 BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
@@ -68,82 +70,79 @@ valgrind_full: run_tests
 		cat $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/test_report.txt
 		cat $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/valgrind_full_report.txt
 
-
-
-
 #style
 
 check_style:
-		clang-format --style=Google -n *.cc
-		clang-format --style=Google -n *.h
-		clang-format --style=Google -n tests/*.cc
-		clang-format --style=Google -n tests/*.h
-		clang-format --style=Google -n tests/*/*.cc
-		clang-format --style=Google -n tests/*/*.h
-		clang-format --style=Google -n tests/*.cc
-		clang-format --style=Google -n tests/*.h
+		-clang-format --style=Google -n *.cc
+		-clang-format --style=Google -n *.h
+		-clang-format --style=Google -n tests/*.cc
+		-clang-format --style=Google -n tests/*.h
+		-clang-format --style=Google -n tests/*/*.cc
+		-clang-format --style=Google -n tests/*/*.h
+		-clang-format --style=Google -n tests/*.cc
+		-clang-format --style=Google -n tests/*.h
 
 style: style_google
 
 style_google:
-		clang-format --style=Google -i *.cc
-		clang-format --style=Google -i *.h
-		clang-format --style=Google -i tests/*.cc
-		clang-format --style=Google -i tests/*.h
-		clang-format --style=Google -i tests/*/*.cc
-		clang-format --style=Google -i tests/*/*.h
-		clang-format --style=Google -i tests/*.cc
-		clang-format --style=Google -i tests/*.h
+		-clang-format --style=Google -i *.cc
+		-clang-format --style=Google -i *.h
+		-clang-format --style=Google -i tests/*.cc
+		-clang-format --style=Google -i tests/*.h
+		-clang-format --style=Google -i tests/*/*.cc
+		-clang-format --style=Google -i tests/*/*.h
+		-clang-format --style=Google -i tests/*.cc
+		-clang-format --style=Google -i tests/*.h
 
 style_microsoft:
-		clang-format --style=Microsoft -i *.cc
-		clang-format --style=Microsoft -i *.h
-		clang-format --style=Microsoft -i tests/*.cc
-		clang-format --style=Microsoft -i tests/*.h
-		clang-format --style=Microsoft -i tests/*/*.cc
-		clang-format --style=Microsoft -i tests/*/*.h
-		clang-format --style=Microsoft -i tests/*.cc
-		clang-format --style=Microsoft -i tests/*.h
+		-clang-format --style=Microsoft -i *.cc
+		-clang-format --style=Microsoft -i *.h
+		-clang-format --style=Microsoft -i tests/*.cc
+		-clang-format --style=Microsoft -i tests/*.h
+		-clang-format --style=Microsoft -i tests/*/*.cc
+		-clang-format --style=Microsoft -i tests/*/*.h
+		-clang-format --style=Microsoft -i tests/*.cc
+		-clang-format --style=Microsoft -i tests/*.h
 
 style_llvm:
-		clang-format --style=LLVM -i *.cc
-		clang-format --style=LLVM -i *.h
-		clang-format --style=LLVM -i tests/*.cc
-		clang-format --style=LLVM -i tests/*.h
-		clang-format --style=LLVM -i tests/*/*.cc
-		clang-format --style=LLVM -i tests/*/*.h
-		clang-format --style=LLVM -i tests/*.cc
-		clang-format --style=LLVM -i tests/*.h
+		-clang-format --style=LLVM -i *.cc
+		-clang-format --style=LLVM -i *.h
+		-clang-format --style=LLVM -i tests/*.cc
+		-clang-format --style=LLVM -i tests/*.h
+		-clang-format --style=LLVM -i tests/*/*.cc
+		-clang-format --style=LLVM -i tests/*/*.h
+		-clang-format --style=LLVM -i tests/*.cc
+		-clang-format --style=LLVM -i tests/*.h
 
 style_chromium:
-		clang-format --style=Chromium -i *.cc
-		clang-format --style=Chromium -i *.h
-		clang-format --style=Chromium -i tests/*.cc
-		clang-format --style=Chromium -i tests/*.h
-		clang-format --style=Chromium -i tests/*/*.cc
-		clang-format --style=Chromium -i tests/*/*.cc
-		clang-format --style=Chromium -i tests/*.h
-		clang-format --style=Chromium -i tests/*.cc
+		-clang-format --style=Chromium -i *.cc
+		-clang-format --style=Chromium -i *.h
+		-clang-format --style=Chromium -i tests/*.cc
+		-clang-format --style=Chromium -i tests/*.h
+		-clang-format --style=Chromium -i tests/*/*.cc
+		-clang-format --style=Chromium -i tests/*/*.cc
+		-clang-format --style=Chromium -i tests/*.h
+		-clang-format --style=Chromium -i tests/*.cc
 
 style_mozilla:
-		clang-format --style=Mozilla -i *.cc
-		clang-format --style=Mozilla -i *.h
-		clang-format --style=Mozilla -i tests/*.cc
-		clang-format --style=Mozilla -i tests/*.h
-		clang-format --style=Mozilla -i tests/*/*.cc
-		clang-format --style=Mozilla -i tests/*/*.h
-		clang-format --style=Mozilla -i tests/*.cc
-		clang-format --style=Mozilla -i tests/*.h
+		-clang-format --style=Mozilla -i *.cc
+		-clang-format --style=Mozilla -i *.h
+		-clang-format --style=Mozilla -i tests/*.cc
+		-clang-format --style=Mozilla -i tests/*.h
+		-clang-format --style=Mozilla -i tests/*/*.cc
+		-clang-format --style=Mozilla -i tests/*/*.h
+		-clang-format --style=Mozilla -i tests/*.cc
+		-clang-format --style=Mozilla -i tests/*.h
 
-style_WebKit:
-		clang-format --style=WebKit -i *.cc
-		clang-format --style=WebKit -i *.h
-		clang-format --style=WebKit -i tests/*.cc
-		clang-format --style=WebKit -i tests/*.h
-		clang-format --style=WebKit -i tests/*/*.cc
-		clang-format --style=WebKit -i tests/*/*.h
-		clang-format --style=WebKit -i tests/*.cc
-		clang-format --style=WebKit -i tests/*.h
+style_webkit:
+		-clang-format --style=WebKit -i *.cc
+		-clang-format --style=WebKit -i *.h
+		-clang-format --style=WebKit -i tests/*.cc
+		-clang-format --style=WebKit -i tests/*.h
+		-clang-format --style=WebKit -i tests/*/*.cc
+		-clang-format --style=WebKit -i tests/*/*.h
+		-clang-format --style=WebKit -i tests/*.cc
+		-clang-format --style=WebKit -i tests/*.h
 
 
 
@@ -151,8 +150,8 @@ style_WebKit:
 #clean
 
 clean:
-		rm -rf *.o *.exe *.out *.oa *.a
-		rm -rf tests/*.o tests/*.exe tests/*.out tests/*/*.o tests/*.o
-		rm -rf *.gcno *.gcda tests/*/*.gcno tests/*/*.gcda tests/*.gcno tests/*.gcda
+		rm -rf *.o *.exe *.out *.oa *.a *.gcov
+		rm -rf tests/*.o tests/*.exe tests/*.out tests/*/*.o tests/*.o 
+		rm -rf *.gcno *.gcda tests/*/*.gcno tests/*/*.gcda tests/*.gcno tests/*.gcda tests/*.gcov tests/*/*.gcov
 		rm -rf $(REPORT_DIRECTORY)/*.css $(REPORT_DIRECTORY)/*.html
 		rm -rf $(VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER)/*.txt

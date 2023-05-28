@@ -2,58 +2,50 @@
 #define _S21_LIST_H_
 
 #include <cassert>
-#include <new>
 #include <initializer_list>
 #include <iterator>
+#include <new>
 
 namespace s21
 {
 
-
-
-
-template <typename List, 
-          typename Pointer, 
-          typename Reference,
-          typename Node_pointer,
-          typename Difference_type,
-          typename Value_type
-        //   typename Node_type
-          >
+template <typename List, typename Pointer, typename Reference, typename Node_pointer, typename Difference_type,
+          typename Value_type>
 class ListIteratorBase
 {
     friend List;
 
-public:
+  public:
     using difference_type = Difference_type;
     using value_type = Value_type;
     using pointer = Pointer;
     using reference = Reference;
     using iterator_category = std::bidirectional_iterator_tag;
 
-    // using node_type = Node_type;
     using node_pointer = Node_pointer;
 
   public:
     ListIteratorBase(node_pointer node_pointer) : node_pointer_{node_pointer} {};
 
-    ListIteratorBase(const ListIteratorBase& other) : ListIteratorBase(other.node_pointer_) {};
-    ListIteratorBase(ListIteratorBase&& other) : ListIteratorBase(other.node_pointer_) {
+    ListIteratorBase(const ListIteratorBase &other) : ListIteratorBase(other.node_pointer_){};
+    ListIteratorBase(ListIteratorBase &&other) : ListIteratorBase(other.node_pointer_)
+    {
         other.node_pointer_ = nullptr;
     };
 
-    friend void swap(ListIteratorBase& left, ListIteratorBase& right) {
-        using namespace std;    // to enable ADL
+    friend void swap(ListIteratorBase &left, ListIteratorBase &right)
+    {
+        using namespace std; // to enable ADL
         swap(left.node_pointer_, right.node_pointer_);
     };
 
-    ListIteratorBase& operator=(const ListIteratorBase& other)
+    ListIteratorBase &operator=(const ListIteratorBase &other)
     {
         node_pointer_ = other->node_pointer_;
         return *this;
     };
 
-    ListIteratorBase& operator=(ListIteratorBase&& other)
+    ListIteratorBase &operator=(ListIteratorBase &&other)
     {
         node_pointer_ = other->node_pointer_;
         other->node_pointer_ = nullptr;
@@ -85,31 +77,25 @@ public:
         return node_pointer_;
     }
 
-private:
-    node_pointer get() 
+  private:
+    node_pointer get()
     {
         return node_pointer_;
     }
-    
-protected:
+
+  protected:
     node_pointer node_pointer_;
 };
 
-template <typename List, 
-          typename Pointer = typename List::pointer, 
-          typename Reference = typename List::reference> 
-class ListIterator : 
-public ListIteratorBase <List,
-                         Pointer, 
-                         Reference, 
-                         typename List::node_pointer, 
-                         typename List::difference_type, 
-                         typename List::value_type> {
+template <typename List, typename Pointer = typename List::pointer, typename Reference = typename List::reference>
+class ListIterator : public ListIteratorBase<List, Pointer, Reference, typename List::node_pointer,
+                                             typename List::difference_type, typename List::value_type>
+{
+  private:
+    using Base = ListIteratorBase<List, Pointer, Reference, typename List::node_pointer, typename List::difference_type,
+                                  typename List::value_type>;
 
-private:
-    using Base = ListIteratorBase <List, Pointer, Reference, typename List::node_pointer, typename List::difference_type, typename List::value_type>;
-
-public:
+  public:
     using Base::Base;
 
     ListIterator &operator++()
@@ -139,21 +125,15 @@ public:
     }
 };
 
-template <typename List, 
-          typename Pointer = typename List::pointer, 
-          typename Reference = typename List::reference> 
-class ListReverseIterator : 
-public ListIteratorBase <List,
-                         Pointer, 
-                         Reference, 
-                         typename List::node_pointer, 
-                         typename List::difference_type, 
-                         typename List::value_type> {
+template <typename List, typename Pointer = typename List::pointer, typename Reference = typename List::reference>
+class ListReverseIterator : public ListIteratorBase<List, Pointer, Reference, typename List::node_pointer,
+                                                    typename List::difference_type, typename List::value_type>
+{
+  private:
+    using Base = ListIteratorBase<List, Pointer, Reference, typename List::node_pointer, typename List::difference_type,
+                                  typename List::value_type>;
 
-private:
-    using Base = ListIteratorBase <List, Pointer, Reference, typename List::node_pointer, typename List::difference_type, typename List::value_type>;
-
-public:
+  public:
     using Base::Base;
 
     ListReverseIterator &operator++()
@@ -185,7 +165,6 @@ public:
 
 template <typename Type> class List
 {
-    
     struct Node;
 
   public:
@@ -197,12 +176,13 @@ template <typename Type> class List
     using pointer = value_type *;
 
     using const_pointer = const value_type *;
-    using node_pointer = Node*;
-public:
+    using node_pointer = Node *;
+
+  public:
     friend class ListIterator<List<Type>>;
     friend class ListIterator<List<Type>, const_pointer, const_reference>;
     friend class ListReverseIterator<List<Type>>;
-    friend class ListReverseIterator<List<Type>, const_pointer, const_reference>; 
+    friend class ListReverseIterator<List<Type>, const_pointer, const_reference>;
 
   public:
     using iterator = ListIterator<List<Type>>;
@@ -210,28 +190,24 @@ public:
     using reverse_iterator = ListReverseIterator<List<Type>>;
     using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference>;
 
-
   private:
     struct Node
     {
-        template<typename T>
-        friend void List<T>::connect(typename List<T>::Node*, typename List<T>::Node*);
+        template <typename T> friend void List<T>::connect(typename List<T>::Node *, typename List<T>::Node *);
 
-        template<typename T>
-        friend typename List<T>::Node* List<T>::previousOf(typename List<T>::Node*);
-        
-        template<typename T>
-        friend typename List<T>::Node* List<T>::nextOf(typename List<T>::Node*);
+        template <typename T> friend typename List<T>::Node *List<T>::previousOf(typename List<T>::Node *);
+
+        template <typename T> friend typename List<T>::Node *List<T>::nextOf(typename List<T>::Node *);
 
         friend iterator;
         friend const_iterator;
         friend reverse_iterator;
         friend const_reverse_iterator;
 
-    public:
+      public:
         value_type data_;
 
-    private:
+      private:
         Node *next_;
         Node *previous_;
     };
@@ -241,40 +217,38 @@ public:
     size_type size_;
 
   public:
-    List() 
-        : end_{},
-          rend_{},
-          size_{0ull} {
+    List() : end_{}, rend_{}, size_{0ull}
+    {
         connect(&rend_, &end_);
     };
 
-    explicit List(size_type count) : List() {
-        for (size_type i = 0ull; i < count; ++i)
-            Push_back(value_type());
+    explicit List(size_type count) : List(count, value_type())
+    {      
     }
 
-    List(size_type count, const_reference value) : List() {
+    List(size_type count, const_reference value) : List()
+    {
         for (size_type i = 0ull; i < count; ++i)
             Push_back(value);
     }
 
-    template<typename InputIterator>
-    List(InputIterator first, InputIterator last) : List() {
+    template <typename InputIterator> List(InputIterator first, InputIterator last) : List()
+    {
         for (auto it = first; it != last; ++it)
             Push_back(*it);
     }
 
     // TODO: refactor rule of 5
-    List(const List& other) : List() {
+    List(const List &other) : List()
+    {
         for (auto it = other.cbegin(); it != other.cend(); ++it)
             Push_back(*it);
     }
     // TODO: refactor rule of 5
-    List(List&& other) : 
-    size_{other.size_}{
-
-        Node* other_first = nextOf(&(other.rend_));
-        Node* other_last = previousOf(&(other.end_));
+    List(List &&other) : size_{other.size_}
+    {
+        Node *other_first = nextOf(&(other.rend_));
+        Node *other_last = previousOf(&(other.end_));
 
         connect(&rend_, other_first);
         connect(other_last, &end_);
@@ -284,17 +258,19 @@ public:
     }
 
     // TODO: refactor rule of 5
-    List& operator=(const List& other) {
+    List &operator=(const List &other)
+    {
         if (this == &other)
             return *this;
 
         List copy(other);
-        *this = std::move(copy);   // operator=(List&&)
+        *this = std::move(copy); // operator=(List&&)
         return *this;
     }
 
     // TODO: refactor rule of 5
-    List& operator=(List&& other) {
+    List &operator=(List &&other)
+    {
         if (this == &other) // TODO: remove??
             return *this;
 
@@ -302,8 +278,8 @@ public:
 
         size_ = other.size_;
 
-        Node* other_first = nextOf(&(other.rend_));
-        Node* other_last = previousOf(&(other.end_));
+        Node *other_first = nextOf(&(other.rend_));
+        Node *other_last = previousOf(&(other.end_));
 
         connect(&rend_, other_first);
         connect(other_last, &end_);
@@ -314,24 +290,24 @@ public:
         return *this;
     }
 
-    List(const std::initializer_list<value_type>& list) : List() {
-        for (const auto& element : list)
+    List(const std::initializer_list<value_type> &list) : List()
+    {
+        for (const auto &element : list)
             Push_back(element);
     };
 
-
-    ~List() 
+    ~List()
     {
         Clear();
     }
 
-    void Clear() 
+    void Clear()
     {
-        while(!Empty())
+        while (!Empty())
             Pop_back();
     }
 
-    bool Empty() const noexcept 
+    bool Empty() const noexcept
     {
         return size_ == 0ull;
     }
@@ -361,12 +337,12 @@ public:
         return ++const_reverse_iterator(&end_);
     }
 
-    iterator end() 
+    iterator end()
     {
         return iterator(&end_);
     }
 
-    reverse_iterator rend() 
+    reverse_iterator rend()
     {
         return reverse_iterator(&rend_);
     }
@@ -383,14 +359,14 @@ public:
 
     void Push_back(const_reference data)
     {
-        Node* old_last = previousOf(&end_);
+        Node *old_last = previousOf(&end_);
 
         Node *new_last = new Node;
         new_last->data_ = data;
 
         connect(old_last, new_last);
         connect(new_last, &end_);
-        
+
         ++size_;
     };
 
@@ -398,8 +374,8 @@ public:
     {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
-        Node* old_last = previousOf(&end_);
-        Node* new_last = previousOf(old_last);
+        Node *old_last = previousOf(&end_);
+        Node *new_last = previousOf(old_last);
         delete old_last;
 
         connect(new_last, &end_);
@@ -408,20 +384,42 @@ public:
     }
 
     // Max_size()
+    // Resize()
+    void Resize(size_type count, const_reference value)
+    {
+        assert(static_cast<signed long long>(count) >= 0 && "Probably negative number of elements!");
+
+        if (count == size_)
+            return;
+
+        if (count < size_)
+            for (size_type i = 0ull; i < size_ - count; ++i)
+                Pop_back();
+        else
+            for (size_type i = 0ull; i < count - size_; ++i)
+                Push_back(value);
+    }
+    void Resize(size_type count)
+    {
+        Resize(count, value_type());
+    }
+
     // Insert()
-    iterator Insert(const_iterator pos, const_reference value) {
-        Node* new_node = new Node;
+    iterator Insert(const_iterator pos, const_reference value)
+    {
+        Node *new_node = new Node;
         new_node->data_ = value;
 
-        Node* next = pos.get();
-        Node* previous = previousOf(next);
-        connect(previous, new_node); 
+        Node *next = pos.get();
+        Node *previous = previousOf(next);
+        connect(previous, new_node);
         connect(new_node, next);
 
         ++size_;
         return iterator(new_node);
     }
-    iterator Insert(const_iterator pos, size_type count, const_reference value ) {
+    iterator Insert(const_iterator pos, size_type count, const_reference value)
+    {
         assert(static_cast<signed long long>(count) >= 0 && "Probably negative number of elements!");
         for (size_type i = 0ull; i < count; ++i)
             Insert(pos, value);
@@ -432,10 +430,11 @@ public:
 
         return result;
     }
-    template<typename InputIterator>
-    iterator Insert(const_iterator pos, InputIterator first, InputIterator last) {
+    template <typename InputIterator> iterator Insert(const_iterator pos, InputIterator first, InputIterator last)
+    {
         size_type count = 0ull;
-        for (InputIterator it = first; it != last; ++it) {
+        for (InputIterator it = first; it != last; ++it)
+        {
             Insert(pos, *it);
             ++count;
         }
@@ -446,10 +445,11 @@ public:
 
         return result;
     }
-    iterator Insert(const_iterator pos, const std::initializer_list<Type>& list) {
-        for (const auto& element : list)
+    iterator Insert(const_iterator pos, const std::initializer_list<Type> &list)
+    {
+        for (const auto &element : list)
             Insert(pos, element);
-            
+
         iterator result(pos.get());
         for (size_type i = 0ull; i < list.size(); ++i)
             --result;
@@ -457,45 +457,44 @@ public:
         return result;
     }
 
-    void Assign(size_type count, const_reference value) 
+    void Assign(size_type count, const_reference value)
     {
         List temporary(count, value);
-        *this = temporary;  // operator=(List&&)
+        *this = temporary; // operator=(List&&)
     }
 
-    template<typename InputIterator>
-    void Assign(InputIterator first, InputIterator last) 
+    template <typename InputIterator> void Assign(InputIterator first, InputIterator last)
     {
         List temporary(first, last);
-        *this = temporary;  // operator=(List&&)
+        *this = temporary; // operator=(List&&)
     }
 
-    void Assign(const std::initializer_list<value_type>& list) 
+    void Assign(const std::initializer_list<value_type> &list)
     {
         List temporary(list);
-        *this = temporary;  // operator=(List&&)
+        *this = temporary; // operator=(List&&)
     };
 
     // Merge()
     // Push_front()
     void Push_front(const_reference data)
     {
-        Node* old_first = nextOf(&rend_);
-        
+        Node *old_first = nextOf(&rend_);
+
         Node *new_first = new Node;
         new_first->data_ = data;
 
         connect(&rend_, new_first);
         connect(new_first, old_first);
-        
+
         ++size_;
     };
     void Pop_front()
     {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
-        Node* old_first = nextOf(&rend_);
-        Node* new_first = nextOf(old_first);
+        Node *old_first = nextOf(&rend_);
+        Node *new_first = nextOf(old_first);
 
         delete old_first;
 
@@ -504,25 +503,50 @@ public:
         --size_;
     }
     // Swap()
+    void Swap(List& other) noexcept 
+    {
+        Node* other_first = nextOf(&(other.rend_));
+        Node* other_last = previousOf(&(other.end_));
+
+        Node* first = nextOf(&rend_);
+        Node* last = previousOf(&end_);
+
+        if (size_) {
+            connect(&(other.rend_), first);
+            connect(last, &(other.end_));
+        } else {
+            connect(&(other.rend_), &(other.end_));
+        }
+
+        if (other.size_) {
+            connect(other_last, &end_);
+            connect(&rend_, other_first);
+        } else {
+            connect(&rend_, &end_);
+        }
+        
+        std::swap(size_, other.size_);
+    }
+
     // Rule of 5
     // Front()
-    reference Front() 
+    reference Front()
     {
         assert(!Empty() && "Front() from empty list!");
         return *begin();
     }
-    const_reference Front() const 
+    const_reference Front() const
     {
         assert(!Empty() && "Front() from empty list!");
         return *cbegin();
     }
     // Back()
-    reference Back() 
+    reference Back()
     {
         assert(!Empty() && "Back() from empty list!");
         return *(--end());
     }
-    const_reference Back() const 
+    const_reference Back() const
     {
         assert(!Empty() && "Back() from empty list!");
         return *(--cend());
@@ -532,35 +556,77 @@ public:
     // Sort()
     // Unique()
     // Splice()
+    // Emplace()
+    template <class... Args> iterator Emplace(const_iterator pos, Args &&...args)
+    {
+        Node *new_node = new Node;
+        new_node->data_ = value_type(std::forward<Args>(args)...);
+
+        Node *next = pos.get();
+        Node *previous = previousOf(next);
+
+        connect(previous, new_node);
+        connect(new_node, next);
+        ++size_;
+
+        return iterator(new_node);
+    }
+
     // Emplace_back()
+    template <class... Args> reference Emplace_back(Args &&...args)
+    {
+        Node *new_last = new Node;
+        new_last->data_ = value_type(std::forward<Args>(args)...);
+
+        Node *old_last = previousOf(&end_);
+
+        connect(old_last, new_last);
+        connect(new_last, &end_);
+        ++size_;
+
+        return new_last->data_;
+    }
     // Emplace_front()
+    template <class... Args> reference Emplace_front(Args &&...args)
+    {
+        Node *new_first = new Node;
+        new_first->data_ = value_type(std::forward<Args>(args)...);
 
-    private:
-        void connect(Node* node, Node* next_node) {
-            node->next_ = next_node;
-            next_node->previous_ = node;
-        }
-        Node* previousOf(Node* node) {
-            return node->previous_;
-        }
-        Node* nextOf(Node* node) {
-            return node->next_;
-        }
+        Node *old_first = nextOf(&rend_);
 
+        connect(&rend_, new_first);
+        connect(new_first, old_first);
+        ++size_;
+
+        return new_first->data_;
+    }
+
+  private:
+    void connect(Node *node, Node *next_node)
+    {
+        node->next_ = next_node;
+        next_node->previous_ = node;
+    }
+    Node *previousOf(Node *node)
+    {
+        return node->previous_;
+    }
+    Node *nextOf(Node *node)
+    {
+        return node->next_;
+    }
 };
 
-
-
-template<typename Type>
-bool operator==(const List<Type>& left, const List<Type>& right) {
+template <typename Type> bool operator==(const List<Type> &left, const List<Type> &right)
+{
     if (left.Size() != right.Size())
         return false;
-
 
     auto left_iterator = left.cbegin();
     auto right_iterator = right.cbegin();
 
-    while (left_iterator != left.cend()) {
+    while (left_iterator != left.cend())
+    {
         if (*left_iterator != *right_iterator)
             return false;
         ++left_iterator;
@@ -569,7 +635,6 @@ bool operator==(const List<Type>& left, const List<Type>& right) {
 
     return true;
 }
-
 
 } // namespace s21
 
