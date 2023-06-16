@@ -4,12 +4,13 @@
 
 // GCOVR_EXCL_START
 
-Item::Item(int number /* = 0*/) : number_{number}
-{
-}
 Item::Item(const Item &other) : number_{other.number_}
 {
 }
+Item::Item(int number /* = 0*/, char symbol /* = 'a'*/, double fraction /* = 0.5*/) : number_{number}, symbol_{symbol}, fraction_{fraction}  
+{
+}
+    
 
 Item &Item::operator=(const Item &other)
 {
@@ -31,7 +32,7 @@ bool Item::operator!=(const Item &right) const
 
 std::ostream &operator<<(std::ostream &out, const Item &object)
 {
-    out << "Item(" << object.number_ << ')';
+    out << "Item(" << object.number_ << ", " << object.symbol_ << ", " << object.fraction_ << ')';
     return out;
 }
 

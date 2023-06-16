@@ -553,6 +553,24 @@ template <typename Type> class List
     }
 
     // Erase()
+    iterator Erase(const_iterator pos)
+    {
+        Node* previous = previousOf(pos.get());
+        Node* next = nextOf(pos.get());
+
+        delete pos.get();
+        --size_;
+
+        connect(previous, next);
+        return iterator(next);
+    }
+    iterator Erase(const_iterator first, const_iterator last)
+    {
+        for (const_iterator it = first; it != last; ++it)
+            Erase(it);
+
+        return iterator(last.get());
+    }
     // Sort()
     // Unique()
     // Splice()

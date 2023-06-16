@@ -227,6 +227,38 @@ TEST(List, T0EmplaceMixed)
     EXPECT_TRUE(s21_list == list);
     EXPECT_TRUE(s21_item == item);
 }
+
+TEST(List, T0EmplaceMixedVariadic)
+{
+    std::list<Item> list = {
+        Item(11),
+        Item(22),
+        Item(33),
+    };
+    list.emplace_front(444, 'c', 0.75);
+    list.emplace_back(888, 'd', 0.666);
+    list.emplace_front(555, 'e');
+    list.emplace_back(999);
+    list.pop_back();
+    const Item &item = list.emplace_front(666);
+    list.emplace_front(777);
+
+    s21::List<Item> s21_list = {
+        Item(11),
+        Item(22),
+        Item(33),
+    };
+    s21_list.Emplace_front(444, 'c', 0.75);
+    s21_list.Emplace_back(888, 'd', 0.666);
+    s21_list.Emplace_front(555, 'e');
+    s21_list.Emplace_back(999);
+    s21_list.Pop_back();
+    const Item &s21_item = s21_list.Emplace_front(666);
+    s21_list.Emplace_front(777);
+
+    EXPECT_TRUE(s21_list == list);
+    EXPECT_TRUE(s21_item == item);
+}
 } // namespace
 
 // GCOVR_EXCL_STOP

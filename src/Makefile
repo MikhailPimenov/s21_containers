@@ -20,6 +20,7 @@ SOURCES+=tests/list/assign.cc
 SOURCES+=tests/list/insert.cc
 SOURCES+=tests/list/emplace.cc
 SOURCES+=tests/list/swap.cc
+SOURCES+=tests/list/erase.cc
 
 # SOURCES=*/*.cc
 BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
