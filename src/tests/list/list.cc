@@ -341,6 +341,84 @@ TEST(Constructor, T4ConstructorReverseIterator)
 
     EXPECT_TRUE(s21_list == list);
 }
+
+
+TEST(Size, T0Size)
+{
+    const s21::List<Item> s21_list = {
+        Item(11), Item(22), Item(33), Item(44), Item(55),
+    };
+    const std::list<Item> list = {
+        Item(11), Item(22), Item(33), Item(44), Item(55),
+    };
+
+
+    EXPECT_EQ(s21_list.Size(), list.size());
+}
+
+TEST(Size, T1Size)
+{
+    const s21::List<Item> s21_list = {
+        Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
+    };
+    const std::list<Item> list = {
+        Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
+    };
+
+
+    EXPECT_EQ(s21_list.Size(), list.size());
+}
+
+TEST(Size, T2Size)
+{
+    const s21::List<Item> s21_list = {
+        Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
+    };
+    const std::list<Item> list = {
+        Item(0), Item(0), Item(0), Item(0), Item(0), Item(0),
+    };
+
+
+    EXPECT_EQ(s21_list.Size(), list.size());
+}
+
+TEST(Size, T3Size)
+{
+    const s21::List<Item> s21_list;
+    const std::list<Item> list;
+
+    EXPECT_EQ(s21_list.Size(), list.size());
+}
+
+TEST(MaxSize, T0MaxSize)
+{
+    const s21::List<Item> s21_list = {
+        Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
+    };
+    const std::list<Item> list = {
+        Item(0), Item(0), Item(0), Item(0), Item(0), Item(0),
+    };
+
+    EXPECT_EQ(s21_list.Max_size(), list.max_size());
+}
+
+TEST(MaxSize, T1MaxSize)
+{
+    const s21::List<double> s21_list;
+    const std::list<double> list;
+
+    EXPECT_EQ(s21_list.Max_size(), list.max_size());
+}
+
+TEST(MaxSize, T2MaxSize)
+{
+    const s21::List<int> s21_list;
+    const std::list<int> list;
+
+    EXPECT_EQ(s21_list.Max_size(), list.max_size());
+}
+
+
 } //  namespace
 
 // GCOVR_EXCL_STOP

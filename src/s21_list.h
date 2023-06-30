@@ -384,6 +384,9 @@ template <typename Type> class List
     }
 
     // Max_size()
+    size_type Max_size() const noexcept {
+        return std::numeric_limits<difference_type>::max();
+    }
     // Resize()
     void Resize(size_type count, const_reference value)
     {
@@ -528,7 +531,7 @@ template <typename Type> class List
         std::swap(size_, other.size_);
     }
 
-    // Rule of 5
+   
     // Front()
     reference Front()
     {
