@@ -4,7 +4,7 @@
 
 // GCOVR_EXCL_START
 
-Item::Item(const Item &other) : number_{other.number_}
+Item::Item(const Item &other) : number_{other.number_}, symbol_{other.symbol_}, fraction_{other.fraction_}
 {
 }
 Item::Item(int number /* = 0*/, char symbol /* = 'a'*/, double fraction /* = 0.5*/) : number_{number}, symbol_{symbol}, fraction_{fraction}  
@@ -18,12 +18,16 @@ Item &Item::operator=(const Item &other)
         return *this;
 
     number_ = other.number_;
+    symbol_ = other.symbol_;
+    fraction_ = other.fraction_;
     return *this;
 }
 
 bool Item::operator==(const Item &right) const
 {
-    return number_ == right.number_;
+    return number_ == right.number_ &&
+           symbol_ == right.symbol_ &&
+           fraction_ == right.fraction_;
 }
 bool Item::operator!=(const Item &right) const
 {

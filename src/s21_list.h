@@ -370,6 +370,19 @@ template <typename Type> class List
         ++size_;
     };
 
+    void Push_back(value_type&& data)
+    {
+        Node *old_last = previousOf(&end_);
+
+        Node *new_last = new Node;
+        new_last->data_ = std::move(data);
+
+        connect(old_last, new_last);
+        connect(new_last, &end_);
+
+        ++size_;
+    };
+
     void Pop_back()
     {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
@@ -492,6 +505,20 @@ template <typename Type> class List
 
         ++size_;
     };
+
+    void Push_front(value_type&& data)
+    {
+        Node *old_first = nextOf(&rend_);
+
+        Node *new_first = new Node;
+        new_first->data_ = std::move(data);
+
+        connect(&rend_, new_first);
+        connect(new_first, old_first);
+
+        ++size_;
+    };
+
     void Pop_front()
     {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
