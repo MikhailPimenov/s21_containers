@@ -17,8 +17,11 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/stack/constructors.cc
 # SOURCES+=tests/stack/methods.cc
 
-SOURCES+=tests/queue/constructors.cc
-SOURCES+=tests/queue/methods.cc
+# SOURCES+=tests/queue/constructors.cc
+# SOURCES+=tests/queue/methods.cc
+
+SOURCES+=tests/vector/constructors.cc
+
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
@@ -43,7 +46,7 @@ test: run_tests gcov_report
 tests/tests_main.exe: $(BINARIES)
 		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS) -g
 
-%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h
+%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h tests/vector_helpers.h s21_vector.h
 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS) -g
 
 run_tests: tests/tests_main.exe
