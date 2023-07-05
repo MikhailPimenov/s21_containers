@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <iterator>
 #include <new>
+#include <cstring>
 
 namespace s21
 {
@@ -365,6 +366,7 @@ template <typename Type> class Vector
         void deallocate() noexcept
         {
             delete[] data_;
+            data_ = nullptr;
             capacity_ = 0;
             size_ = 0;
         }
@@ -566,30 +568,43 @@ template <typename Type> class Vector
         return const_reverse_iterator(data_ - 1);
     }
 
-    // void Push_back(const_reference data)
+    constexpr void Push_back(const_reference element)
+    {
+        size_type old_size = size_;
+        size_type new_size = size_ + 1;
+
+        if (new_size <= capacity_)
+        {
+            data_[old_size] = element;
+        }
+        else
+        {
+            size_type new_capacity = calculate_capacity(new_size);
+            pointer new_data = new Type[new_capacity];
+            // std::memcpy(new_data, data_, old_size);
+
+            for (size_type i = 0; i < old_size; ++i)
+                new_data[i] = data_[i];
+
+            new_data[old_size] = element;
+            deallocate();
+            data_ = new_data;
+            capacity_ = new_capacity;
+        }
+        size_ = new_size;
+    };
+
+    // constexpr void Push_back(value_type&& data)
     // {
-    //     Node *old_last = previousOf(&end_);
+    //     // Node *old_last = previousOf(&end_);
 
-    //     Node *new_last = new Node;
-    //     new_last->data_ = data;
+    //     // Node *new_last = new Node;
+    //     // new_last->data_ = std::move(data);
 
-    //     connect(old_last, new_last);
-    //     connect(new_last, &end_);
+    //     // connect(old_last, new_last);
+    //     // connect(new_last, &end_);
 
-    //     ++size_;
-    // };
-
-    // void Push_back(value_type&& data)
-    // {
-    //     Node *old_last = previousOf(&end_);
-
-    //     Node *new_last = new Node;
-    //     new_last->data_ = std::move(data);
-
-    //     connect(old_last, new_last);
-    //     connect(new_last, &end_);
-
-    //     ++size_;
+    //     // ++size_;
     // };
 
     // void Pop_back()

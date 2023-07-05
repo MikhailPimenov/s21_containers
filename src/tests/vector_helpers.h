@@ -15,8 +15,7 @@ bool operator==(const s21::Vector<Type>& s21_vector, const std::vector<Type>& ve
 
     auto s21_it = s21_vector.cbegin();
     auto it = vector.cbegin();
-    // while (s21_it != s21_vector.cend())
-    while (it != vector.cend())
+    while (s21_it != s21_vector.cend())
     {
         if (*s21_it != *it)
             return false;
