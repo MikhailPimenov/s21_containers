@@ -13,8 +13,10 @@ class Item
   public:
     Item(int number = 0, char symbol = 'a', double fraction = 0.5);        // just to test emplace-functions which take variadic number of arguments
     Item(const Item &other);
+    Item(Item &&other);
 
     Item &operator=(const Item &other);
+    Item &operator=(Item &&other);
     bool operator==(const Item &right) const;
     bool operator!=(const Item &right) const;
 

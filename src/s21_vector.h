@@ -363,6 +363,18 @@ template <typename Type> class Vector
             data_ = new value_type[exact_count];
             capacity_ = exact_count;
         }
+        void reallocate(size_type exact_count)
+        {
+            pointer new_data = new Type[exact_count];
+            size_type new_size = size_;
+            for (size_type i = 0; i < size_; ++i)
+                new_data[i] = data_[i];
+            
+            deallocate();
+            data_ = new_data;
+            size_ = new_size;
+            capacity_ = exact_count;
+        }
         void deallocate() noexcept
         {
             delete[] data_;
@@ -573,39 +585,28 @@ template <typename Type> class Vector
         size_type old_size = size_;
         size_type new_size = size_ + 1;
 
-        if (new_size <= capacity_)
-        {
-            data_[old_size] = element;
-        }
-        else
+        if (new_size > capacity_)
         {
             size_type new_capacity = calculate_capacity(new_size);
-            pointer new_data = new Type[new_capacity];
-            // std::memcpy(new_data, data_, old_size);
-
-            for (size_type i = 0; i < old_size; ++i)
-                new_data[i] = data_[i];
-
-            new_data[old_size] = element;
-            deallocate();
-            data_ = new_data;
-            capacity_ = new_capacity;
+            reallocate(new_capacity);
         }
+        data_[old_size] = element;
         size_ = new_size;
     };
 
-    // constexpr void Push_back(value_type&& data)
-    // {
-    //     // Node *old_last = previousOf(&end_);
+    constexpr void Push_back(value_type&& element)
+    {
+        size_type old_size = size_;
+        size_type new_size = size_ + 1;
 
-    //     // Node *new_last = new Node;
-    //     // new_last->data_ = std::move(data);
-
-    //     // connect(old_last, new_last);
-    //     // connect(new_last, &end_);
-
-    //     // ++size_;
-    // };
+        if (new_size > capacity_)
+        {
+            size_type new_capacity = calculate_capacity(new_size);
+            reallocate(new_capacity);
+        }
+        data_[old_size] = std::move(element);
+        size_ = new_size;
+    };
 
     // void Pop_back()
     // {
