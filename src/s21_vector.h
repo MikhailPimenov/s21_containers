@@ -229,7 +229,7 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     }
     VectorReverseIterator operator+(difference_type n)
     {
-        return VectorIterator(this->pointer_ - n);
+        return VectorReverseIterator(this->pointer_ - n);
     }
     VectorReverseIterator operator-(difference_type n)
     {
@@ -328,15 +328,15 @@ template <typename Type> class Vector
     using node_pointer = Node *;
 
   public:
-    friend class VectorIterator<Vector<Type>>;
+    friend class VectorIterator<Vector<Type> >;
     friend class VectorIterator<Vector<Type>, const_pointer, const_reference>;
-    friend class VectorReverseIterator<Vector<Type>>;
+    friend class VectorReverseIterator<Vector<Type> >;
     friend class VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
 
   public:
-    using iterator = VectorIterator<Vector<Type>>;
+    using iterator = VectorIterator<Vector<Type> >;
     using const_iterator = VectorIterator<Vector<Type>, const_pointer, const_reference>;
-    using reverse_iterator = VectorReverseIterator<Vector<Type>>;
+    using reverse_iterator = VectorReverseIterator<Vector<Type> >;
     using const_reverse_iterator = VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
 
   private:
