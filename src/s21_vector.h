@@ -513,11 +513,10 @@ template <typename Type> class Vector
     //     Clear();
     // }
 
-    // void Clear()
-    // {
-    //     while (!Empty())
-    //         Pop_back();
-    // }
+    void Clear()
+    {
+        deallocate();
+    }
 
     bool Empty() const noexcept
     {
@@ -607,6 +606,21 @@ template <typename Type> class Vector
         data_[old_size] = std::move(element);
         size_ = new_size;
     };
+
+    template<typename... Args>
+    constexpr void Emplace_back(Args&&... args)
+    {
+        size_type old_size = size_;
+        size_type new_size = size_ + 1;
+
+        if (new_size > capacity_)
+        {
+            size_type new_capacity = calculate_capacity(new_size);
+            reallocate(new_capacity);
+        }
+        data_[old_size] = value_type(std::forward<Args>(args)...);
+        size_ = new_size;
+    }
 
     // void Pop_back()
     // {
