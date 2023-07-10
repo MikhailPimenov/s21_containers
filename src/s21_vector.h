@@ -233,7 +233,7 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     }
     VectorReverseIterator operator+(difference_type n)
     {
-        return VectorIterator(this->pointer_ - n);
+        return VectorReverseIterator(this->pointer_ - n);
     }
     VectorReverseIterator operator-(difference_type n)
     {
@@ -286,15 +286,15 @@ template <typename Type> class Vector
     using const_pointer = const value_type *;
 
   public:
-    // friend class VectorIterator<Vector<Type>>;
-    // friend class VectorIterator<Vector<const Type>, const_pointer, const_reference>;
-    // friend class VectorReverseIterator<Vector<Type>>;
-    // friend class VectorReverseIterator<Vector<const Type>, const_pointer, const_reference>;
+    friend class VectorIterator<Vector<Type> >;
+    friend class VectorIterator<Vector<Type>, const_pointer, const_reference>;
+    friend class VectorReverseIterator<Vector<Type> >;
+    friend class VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
 
   public:
-    using iterator = VectorIterator<Vector<Type>>;
+    using iterator = VectorIterator<Vector<Type> >;
     using const_iterator = VectorIterator<Vector<Type>, const_pointer, const_reference>;
-    using reverse_iterator = VectorReverseIterator<Vector<Type>>;
+    using reverse_iterator = VectorReverseIterator<Vector<Type> >;
     using const_reverse_iterator = VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
 
   private:
@@ -451,7 +451,10 @@ template <typename Type> class Vector
             reallocate(size_);
     }
 
-   
+    void Clear()
+    {
+        deallocate();
+    }
 
     bool Empty() const noexcept
     {
@@ -587,6 +590,20 @@ constexpr iterator Insert(const_iterator pos, const_reference value)
         size_ = new_size;
     };
 
+    template<typename... Args>
+    constexpr void Emplace_back(Args&&... args)
+    {
+        size_type old_size = size_;
+        size_type new_size = size_ + 1;
+
+        if (new_size > capacity_)
+        {
+            size_type new_capacity = calculate_capacity(new_size);
+            reallocate(new_capacity);
+        }
+        data_[old_size] = value_type(std::forward<Args>(args)...);
+        size_ = new_size;
+    }
 };
 
 template <typename Type> bool operator==(const Vector<Type> &left, const Vector<Type> &right)
