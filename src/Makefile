@@ -21,7 +21,7 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/queue/methods.cc
 
 SOURCES+=tests/vector/constructors.cc
-SOURCES+=tests/vector/push_back.cc
+SOURCES+=tests/vector/modifiers.cc
 
 
 # SOURCES+=tests/list/list.cc 
