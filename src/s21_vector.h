@@ -40,14 +40,14 @@ class VectorIteratorBase
 
     VectorIteratorBase &operator=(const VectorIteratorBase &other)
     {
-        pointer_ = other->pointer_;
+        pointer_ = other.pointer_;
         return *this;
     };
 
     VectorIteratorBase &operator=(VectorIteratorBase &&other)
     {
-        pointer_ = other->pointer_;
-        other->pointer_ = nullptr;
+        pointer_ = other.pointer_;
+        other.pointer_ = nullptr;
         return *this;
     }
 
@@ -71,12 +71,12 @@ class VectorIteratorBase
         return !(*this == other);
     }
 
-    operator bool() const
+    explicit operator bool() const
     {
         return pointer_;
     }
 
-    operator int() const = delete;
+    // operator int() const = delete;
 
   protected:
     pointer pointer_;
@@ -120,62 +120,70 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
         return temporary;
     }
 
-    
-    VectorIterator& operator+=(difference_type n) 
+    template<typename IntegralType> 
+    VectorIterator& operator+=(IntegralType n) 
     {
         this->pointer_ += n;
         return *this;
     }
-    VectorIterator& operator-=(difference_type n) 
+    template<typename IntegralType>
+    VectorIterator& operator-=(IntegralType n) 
     {
         this->pointer_ -= n;
         return *this;
     }
-    VectorIterator operator+(difference_type n)
+    template<typename IntegralType> // otherwise for iterator + 1  operator+(int, int) is called
+    VectorIterator operator+(IntegralType n)
     {
         return VectorIterator(this->pointer_ + n);
     }
-    VectorIterator operator-(difference_type n)
+    template<typename IntegralType>
+    VectorIterator operator-(IntegralType n)
     {
         return VectorIterator(this->pointer_ - n);
     }
-    difference_type operator-(const VectorIterator& other)
+    template<typename PointerType, typename ReferenceType> // to compare const_iterator with iterator
+    difference_type operator-(const VectorIterator<PointerType, ReferenceType>& other)
     {
-        return this->poiner_ - other.pointer_;
+        return this->pointer_ - other.pointer_;
     }
     reference operator[](difference_type n)
     {
         return this->operator*(n);
     }
-    bool operator<(const VectorIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator<(const VectorIterator<PointerType, ReferenceType>& other)
     {
         return this->pointer_ - other->pointer_ < 0;
     }
-    bool operator>(const VectorIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator>(const VectorIterator<PointerType, ReferenceType>& other)
     {
         return other < *this;
     }
-    bool operator<=(const VectorIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator<=(const VectorIterator<PointerType, ReferenceType>& other)
     {
         return !(*this > other);
     }
-    bool operator>=(const VectorIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator>=(const VectorIterator<PointerType, ReferenceType>& other)
     {
         return !(*this < other);
     }
 
     
-    operator int() const = delete;
+    // operator int() const = delete;
 };
 
-template <typename Vector, 
-          typename Pointer = typename Vector::pointer, 
-          typename Reference = typename Vector::reference>
-VectorIterator<Vector, Pointer, Reference> operator+(typename VectorIterator<Vector, Pointer, Reference>::difference_type n, 
-                         const VectorIterator<Vector, Pointer, Reference>& it)
-{
-    return VectorIterator<Vector, Pointer, Reference>(it + n); 
-}
+// template <typename Vector, 
+//           typename Pointer = typename Vector::pointer, 
+//           typename Reference = typename Vector::reference>
+// VectorIterator<Vector, Pointer, Reference> operator+(typename VectorIterator<Vector, Pointer, Reference>::difference_type n, 
+//                          const VectorIterator<Vector, Pointer, Reference>& it)
+// {
+//     return VectorIterator<Vector, Pointer, Reference>(it + n); 
+// }
 
 
 
@@ -220,22 +228,25 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
         return temporary;
     }
 
-    
-    VectorReverseIterator& operator+=(difference_type n) 
+    template<typename IntegralType>
+    VectorReverseIterator& operator+=(IntegralType n) 
     {
         this->pointer_ -= n;
         return *this;
     }
-    VectorReverseIterator& operator-=(difference_type n) 
+    template<typename IntegralType>
+    VectorReverseIterator& operator-=(IntegralType n) 
     {
         this->pointer_ += n;
         return *this;
     }
-    VectorReverseIterator operator+(difference_type n)
+    template<typename IntegralType>
+    VectorReverseIterator operator+(IntegralType n)
     {
         return VectorReverseIterator(this->pointer_ - n);
     }
-    VectorReverseIterator operator-(difference_type n)
+    template<typename IntegralType>
+    VectorReverseIterator operator-(IntegralType n)
     {
         return VectorReverseIterator(this->pointer_ + n);
     }
@@ -265,7 +276,7 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     }
 
     
-    operator int() const = delete;
+    // operator int() const = delete;
 };
 
 
@@ -526,19 +537,22 @@ template <typename Type> class Vector
 constexpr iterator Insert(const_iterator pos, const_reference value)
 {
     const size_type new_size = size_ + 1;
-    if (new_size > capacity_)
-        reallocate(new_size);
-
     
-    auto it = rbegin(); 
-    while(it <= pos) 
-    {
-        *it = std::move(*(it + 1));
-        ++it;
-    } 
+    if (new_size > capacity_) {
+        const size_type pos_index = pos - cbegin();
+        reallocate(new_size);
+        pos = cbegin() + pos_index;
+    }
 
-    ++it;
+    auto it = end() - 1;
+    while (it >= pos)
+    {
+        *it = std::move(*(it - 1));
+        --it;
+    }    
+
     *it = value;
+    return it;
 }
 
 
