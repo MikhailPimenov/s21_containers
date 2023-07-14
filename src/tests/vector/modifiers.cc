@@ -130,22 +130,20 @@ TEST(Vector, T4EmplaceBack)
 
 TEST(Vector, T4Insert)
 {
-    const Item item1(111);
-    const Item item2(222, 'b');
-    const Item item3(333, 'c', 0.333);
+    const Item item(666);
 
-    s21::Vector<Item> s21_vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
-    std::vector<Item> vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
 
 
     s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 1;
     // s21::Vector<Item>::const_iterator s21_it = s21_vector.begin();  // TODO:  так тоже должно работать, но не работает
     std::vector<Item>::const_iterator it = vector.cbegin() + 1;
 
-    s21_vector.Insert(s21_it, item1);
-    vector.insert(it, item1);
+    s21_vector.Insert(s21_it, item);
+    vector.insert(it, item);
 
-    // EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(s21_vector, vector);
 }
 
 
