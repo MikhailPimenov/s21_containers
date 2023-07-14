@@ -143,7 +143,7 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
         return VectorIterator(this->pointer_ - n);
     }
     template<typename PointerType, typename ReferenceType> // to compare const_iterator with iterator
-    difference_type operator-(const VectorIterator<PointerType, ReferenceType>& other)
+    difference_type operator-(const VectorIterator<Vector, PointerType, ReferenceType>& other)
     {
         return this->pointer_ - other.pointer_;
     }
@@ -152,24 +152,24 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
         return this->operator*(n);
     }
     template<typename PointerType, typename ReferenceType>
-    bool operator<(const VectorIterator<PointerType, ReferenceType>& other)
+    bool operator<(const VectorIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return this->pointer_ - other->pointer_ < 0;
+        return this->pointer_ - other.pointer_ < 0;
     }
     template<typename PointerType, typename ReferenceType>
-    bool operator>(const VectorIterator<PointerType, ReferenceType>& other)
+    bool operator>(const VectorIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return other < *this;
+        return other.operator<(*this);
     }
     template<typename PointerType, typename ReferenceType>
-    bool operator<=(const VectorIterator<PointerType, ReferenceType>& other)
+    bool operator<=(const VectorIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return !(*this > other);
+        return !(this->operator>(other));
     }
     template<typename PointerType, typename ReferenceType>
-    bool operator>=(const VectorIterator<PointerType, ReferenceType>& other)
+    bool operator>=(const VectorIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return !(*this < other);
+        return !(this->operator<(other));
     }
 
     
@@ -250,7 +250,8 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     {
         return VectorReverseIterator(this->pointer_ + n);
     }
-    difference_type operator-(const VectorReverseIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    difference_type operator-(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other)
     {
         return other.pointer_ - this->poiner_;
     }
@@ -258,21 +259,25 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     {
         return this->operator*(n);
     }
-    bool operator<(const VectorReverseIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator<(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return other->pointer_ - this->pointer_ < 0;
+        return other.pointer_ - this->pointer_ < 0;
     }
-    bool operator>(const VectorReverseIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator>(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return other < *this;
+        return other.operator<(*this);
     }
-    bool operator<=(const VectorReverseIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator<=(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return !(*this > other);
+        return !(this->operator>(other));
     }
-    bool operator>=(const VectorReverseIterator& other)
+    template<typename PointerType, typename ReferenceType>
+    bool operator>=(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other)
     {
-        return !(*this < other);
+        return !(this->operator<(other));
     }
 
     
@@ -297,10 +302,10 @@ template <typename Type> class Vector
     using const_pointer = const value_type *;
 
   public:
-    friend class VectorIterator<Vector<Type> >;
-    friend class VectorIterator<Vector<Type>, const_pointer, const_reference>;
-    friend class VectorReverseIterator<Vector<Type> >;
-    friend class VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
+    // friend class VectorIterator<Vector<Type> >;
+    // friend class VectorIterator<Vector<Type>, const_pointer, const_reference>;
+    // friend class VectorReverseIterator<Vector<Type> >;
+    // friend class VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
 
   public:
     using iterator = VectorIterator<Vector<Type> >;
@@ -551,7 +556,7 @@ constexpr iterator Insert(const_iterator pos, const_reference value)
         --it;
     }    
 
-    *it = value;
+    // *it = value;
     return it;
 }
 
