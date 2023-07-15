@@ -507,7 +507,18 @@ TEST(Vector, T25InsertRangeIterators)
 TEST(Vector, T26InsertRangeIterators)
 {
     s21::Vector<Item> source { Item(111111), Item(222222), Item(333333), Item(444444), Item(555555) };
-
+    using IterVector = s21::Vector<Item>::const_iterator;
+    static_assert(std::is_same_v<std::iterator_traits<IterVector>::iterator_category, 
+                             std::random_access_iterator_tag>);
+    static_assert(std::is_same_v<std::iterator_traits<IterVector>::value_type, 
+                             Item>);
+    using IterList = s21::List<Item>::const_iterator;
+    static_assert(std::is_same_v<std::iterator_traits<IterList>::iterator_category, 
+                             std::bidirectional_iterator_tag>);
+    
+    
+    // s21::Vector<Item>::iterator::iterator_category a;
+    // std::iterator_traits<s21::VectorIterator<s21::Vector<Item>, const Item*, const Item&>>::
     s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
     std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
 

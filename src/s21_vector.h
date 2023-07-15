@@ -14,10 +14,6 @@ template <typename Vector, typename Pointer, typename Reference, typename Differ
           typename Value_type>
 class VectorIteratorBase
 {
-    friend Vector;
-
-    template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherDifference_type, typename OtherValue_type>
-    friend class VectorIteratorBase;  // to be able to compare iterator and const_iterator
 
 
   public:
@@ -28,6 +24,11 @@ class VectorIteratorBase
     using iterator_category = std::random_access_iterator_tag;
     // using iterator_category = std::bidirectional_iterator_tag;
     // typename std::iterator_traits<typename Vector::const_iterator>::iterator_category{};
+
+    friend Vector;
+
+    template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherDifference_type, typename OtherValue_type>
+    friend class VectorIteratorBase;  // to be able to compare iterator and const_iterator
 
 
   public:
@@ -106,7 +107,7 @@ class VectorIteratorBase
 template <typename Vector, typename Pointer = typename Vector::pointer, typename Reference = typename Vector::reference>
 class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typename Vector::difference_type, typename Vector::value_type>
 {
-  private:
+  public:
     using Base = VectorIteratorBase<Vector, Pointer, Reference, typename Vector::difference_type,
                                   typename Vector::value_type>;
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
