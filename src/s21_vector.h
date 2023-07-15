@@ -16,12 +16,19 @@ class VectorIteratorBase
 {
     friend Vector;
 
+    template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherDifference_type, typename OtherValue_type>
+    friend class VectorIteratorBase;  // to be able to compare iterator and const_iterator
+
+
   public:
     using difference_type = Difference_type;
     using value_type = Value_type;
     using pointer = Pointer;
     using reference = Reference;
-    using iterator_category = std::bidirectional_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
+    // using iterator_category = std::bidirectional_iterator_tag;
+    // typename std::iterator_traits<typename Vector::const_iterator>::iterator_category{};
+
 
   public:
     VectorIteratorBase(pointer p) : pointer_{p} {};
@@ -61,12 +68,26 @@ class VectorIteratorBase
         return pointer_;
     }
 
-    bool operator==(const VectorIteratorBase &other) const
+    
+    // bool operator==(const VectorIteratorBase &other) const
+    // {
+    //     return pointer_ == other.pointer_;
+    // }
+
+    // bool operator!=(const VectorIteratorBase &other) const
+    // {
+    //     return !(*this == other.pointer_);
+    // }
+
+
+    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    bool operator==(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) const
     {
         return pointer_ == other.pointer_;
     }
 
-    bool operator!=(const VectorIteratorBase &other) const
+    template <typename OtherPointer, typename OtherReference>
+    bool operator!=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) const
     {
         return !(*this == other);
     }
@@ -91,6 +112,8 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
     using typename Base::reference;
 
+//   public:
+    // using iterator_category = typename Base::iterator_category;
 
     template<typename VectorType, typename PointerType, typename ReferenceType>
     friend class VectorIterator;
@@ -120,7 +143,7 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
     VectorIterator operator--(int)
     {
         VectorIterator temporary(*this);
-        --(this->node_pointer_);
+        --(this->pointer_);
         return temporary;
     }
 
@@ -180,18 +203,6 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
     // operator int() const = delete;
 };
 
-// template <typename Vector, 
-//           typename Pointer = typename Vector::pointer, 
-//           typename Reference = typename Vector::reference>
-// VectorIterator<Vector, Pointer, Reference> operator+(typename VectorIterator<Vector, Pointer, Reference>::difference_type n, 
-//                          const VectorIterator<Vector, Pointer, Reference>& it)
-// {
-//     return VectorIterator<Vector, Pointer, Reference>(it + n); 
-// }
-
-
-
-
 
 template <typename Vector, typename Pointer = typename Vector::pointer, typename Reference = typename Vector::reference>
 class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Reference,
@@ -202,6 +213,9 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
                                   typename Vector::value_type>;
     using typename Base::difference_type;
     using typename Base::reference;
+
+  public:
+    using typename Base::iterator_category;
 
     template<typename VectorType, typename PointerType, typename ReferenceType>
     friend class VectorReverseIterator;
@@ -379,9 +393,7 @@ template <typename Type> class Vector
     }
     ~Vector() 
     {
-        delete[] data_;
-        capacity_ = 0;
-        size_ = 0;
+        deallocate();
     }
 
     Vector(std::initializer_list<value_type> initializer) 
@@ -543,47 +555,87 @@ template <typename Type> class Vector
     }
 
 
-
-
-
-constexpr iterator Insert(const_iterator pos, const_reference value)
+private:
+void checkReallocateUpdatingIterator(size_type new_size, const_iterator& pos)
 {
-    const size_type new_size = size_ + 1;
-    
     if (new_size > capacity_) {
         const size_type pos_index = pos - cbegin();
         reallocate(calculate_capacity(new_size));
         pos = cbegin() + pos_index;
     }
-
-    auto it = end();
-    while (it > pos)
+}
+iterator shiftBack(size_type shift, const_iterator pos)
+{
+    assert(size_ + shift <= capacity_ && "Shifting is out of range!");
+    size_ += shift;
+    auto it = end() - 1;
+    while (it - shift + 1 > pos)
     {
-        *it = *(it - 1);
+        *it = *(it - shift);
         --it;
-    }    
-
-    *it = value;
-    size_ = new_size;
+    }
+    it -= (shift - 1);
     return it;
 }
 
+public:
+    constexpr iterator Insert(const_iterator pos, const_reference value)
+    {
+        return Insert(pos, 1, value);
+    }
+
+    constexpr iterator Insert(const_iterator pos, value_type&& value)
+    {
+        const size_type new_size = size_ + 1;
+        checkReallocateUpdatingIterator(new_size, pos);
+        auto it = shiftBack(1, pos);
+        *it = std::move(value);
+        return it;
+    }
+
+    constexpr iterator Insert(const_iterator pos, size_type count, const_reference value)
+    {
+        const size_type new_size = size_ + count;
+        checkReallocateUpdatingIterator(new_size, pos);
+        auto it = shiftBack(count, pos);
+        const auto it_result = it;
+        for (size_type i = 0; i < count; ++i)
+        {
+            *it = value;
+            ++it;
+        }
+
+        return it_result;
+    }
+
+    template<class InputIt>
+    constexpr iterator Insert(const_iterator pos, InputIt first, InputIt last)
+    {
+        size_type count = 0;
+        InputIt first_copy = first;
+        while (first_copy != last)
+        {
+            ++count;
+            ++first_copy;
+        }
+
+        const size_type new_size = size_ + count;
+        checkReallocateUpdatingIterator(new_size, pos);
+        auto it = shiftBack(count, pos);
+        const auto it_result = it;
+
+        while (first != last) {
+            *it = *first;
+            ++it;
+            ++first;
+        }
+
+        return it_result;
+    }
 
 
-// constexpr iterator insert( const_iterator pos, T&& value );
-// (since C++20)
-// (3)	
-// constexpr iterator
-//     insert( const_iterator pos, size_type count, const T& value );
-// (since C++20)
-// (4)	
-// template< class InputIt >
-// constexpr iterator insert( const_iterator pos, InputIt first, InputIt last );
-// (since C++20)
-// (5)	
-// constexpr iterator insert( const_iterator pos,
-//                            std::initializer_list<T> ilist );
-// (since C++20)
+    // constexpr iterator insert( const_iterator pos,
+                        //    std::initializer_list<T> ilist );
 
 
 
