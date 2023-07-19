@@ -26,13 +26,23 @@ class VectorIteratorBase
 
 
   public:
-    VectorIteratorBase(pointer p) noexcept : pointer_{p} {};
+    VectorIteratorBase(pointer p) noexcept : pointer_{p} {}
 
-    VectorIteratorBase(const VectorIteratorBase &other) noexcept : VectorIteratorBase(other.pointer_) {};
-    VectorIteratorBase(VectorIteratorBase &&other) noexcept : VectorIteratorBase(other.pointer_)
+    
+    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    VectorIteratorBase(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept 
+        : VectorIteratorBase(const_cast<Pointer>(other.pointer_)) 
+    {
+
+    }
+
+
+    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    VectorIteratorBase(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept 
+        : VectorIteratorBase(const_cast<Pointer>(other.pointer_))
     {
         other.pointer_ = nullptr;
-    };
+    }
     
     friend void swap(VectorIteratorBase &left, VectorIteratorBase &right) noexcept
     {
@@ -42,13 +52,15 @@ class VectorIteratorBase
 
     virtual VectorIteratorBase &operator++() noexcept = 0;
 
-    VectorIteratorBase &operator=(const VectorIteratorBase &other) noexcept
+    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
     {
         pointer_ = other.pointer_;
         return *this;
     };
 
-    VectorIteratorBase &operator=(VectorIteratorBase &&other) noexcept
+    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
     {
         pointer_ = other.pointer_;
         other.pointer_ = nullptr;
@@ -80,6 +92,13 @@ class VectorIteratorBase
     explicit operator bool() const noexcept
     {
         return pointer_;
+    }
+
+    template <typename OtherPointer, typename OtherReference>
+    operator VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type>() const noexcept
+    {
+        return VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type>(pointer_);
+        // return VectorIteratorBase(pointer_);
     }
 
   protected:
@@ -531,12 +550,12 @@ void checkReallocateUpdatingIterator(size_type new_size, const_iterator& pos)
         pos = cbegin() + pos_index;
     }
 }
-iterator shiftBack(size_type shift, const_iterator pos)
+iterator shiftBack(size_type shift, const_iterator pos_untill)
 {
     assert(size_ + shift <= capacity_ && "Shifting is out of range!");
     size_ += shift;
     auto it = end() - 1;
-    while (it - shift + 1 > pos)
+    while (it - shift + 1 > pos_untill)
     {
         *it = *(it - shift);
         --it;
@@ -614,6 +633,49 @@ public:
 
         return it_result;
     }
+
+
+
+
+    template<class... Args>
+    constexpr iterator Emplace(const_iterator pos, Args&&... args)
+    {
+        const size_type new_size = size_ + 1;
+        checkReallocateUpdatingIterator(new_size, pos);
+        auto it = shiftBack(1, pos);
+        *it = value_type(std::forward<Args>(args)...);
+        return it;
+    }
+
+    private:
+        iterator shiftForward(size_type shift, const_iterator pos_untill)
+        {
+            iterator it(pos_untill);
+            // iterator it = static_cast<iterator>(pos_untill) + shift;
+            assert(it < end() && "Shifting is out of range!");
+            const iterator result = it - shift;
+            while (it < end())
+            {
+                *(it - shift) = *it;
+                ++it;
+            }
+            size_ -= shift;
+            return result;
+        }
+    public:
+        constexpr iterator Erase(const_iterator pos)
+        {
+            return shiftForward(1, pos);
+        }
+
+        // constexpr iterator erase(const_iterator first, const_iterator last)
+        // {
+            
+        // }
+
+
+
+
 
 
 

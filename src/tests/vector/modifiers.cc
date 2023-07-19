@@ -753,6 +753,163 @@ TEST(Vector, T40InsertInitializerEmptyDestination)
 }
 
 
+
+
+
+
+
+TEST(Vector, T41Emplace)
+{
+    s21::Vector<Item> s21_vector;
+    std::vector<Item> vector;
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cend();
+    std::vector<Item>::const_iterator it = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x', 0.666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x', 0.666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T42Emplace)
+{
+    s21::Vector<Item> s21_vector;
+    std::vector<Item> vector;
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin();
+    std::vector<Item>::const_iterator it = vector.cbegin();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x', 0.666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x', 0.666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T43Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin();
+    std::vector<Item>::const_iterator it = vector.cbegin();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x', 0.666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x', 0.666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T44Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cend();
+    std::vector<Item>::const_iterator it = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x', 0.666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x', 0.666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T45Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cend() - 2;
+    std::vector<Item>::const_iterator it = vector.cend() - 2;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x', 0.666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x', 0.666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T46Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x', 0.666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x', 0.666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T47Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666, 'x');
+    const std::vector<Item>::iterator result = vector.emplace(it, 666, 'x');
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T48Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it, 666);
+    const std::vector<Item>::iterator result = vector.emplace(it, 666);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T49Emplace)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Emplace(s21_it);
+    const std::vector<Item>::iterator result = vector.emplace(it);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+
+TEST(Vector, T50Erase)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    // std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin();
+    // std::vector<Item>::const_iterator it = vector.cbegin();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
+    // const std::vector<Item>::iterator result = vector.erase(it);
+
+    // EXPECT_EQ(s21_vector, vector);
+    // EXPECT_EQ(*s21_result, *result);
+}
+
+
 }  // namespace
 
 // GCOVR_EXCL_STOP

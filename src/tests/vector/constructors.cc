@@ -20,6 +20,8 @@ TEST(Vector, T0DefaultConstructor)
     s21::Vector<Item> s21_vector;
     std::vector<Item> vector;
 
+
+
     EXPECT_EQ(s21_vector, vector);
 }
 
