@@ -897,16 +897,16 @@ TEST(Vector, T49Emplace)
 TEST(Vector, T50Erase)
 {
     s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
-    // std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
 
     s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin();
-    // std::vector<Item>::const_iterator it = vector.cbegin();
+    std::vector<Item>::const_iterator it = vector.cbegin();
 
     const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
-    // const std::vector<Item>::iterator result = vector.erase(it);
+    const std::vector<Item>::iterator result = vector.erase(it);
 
-    // EXPECT_EQ(s21_vector, vector);
-    // EXPECT_EQ(*s21_result, *result);
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
 }
 
 

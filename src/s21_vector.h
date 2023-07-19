@@ -665,7 +665,7 @@ public:
     public:
         constexpr iterator Erase(const_iterator pos)
         {
-            return shiftForward(1, pos);
+            return shiftForward(1, pos + 1);
         }
 
         // constexpr iterator erase(const_iterator first, const_iterator last)
