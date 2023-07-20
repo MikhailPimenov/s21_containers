@@ -894,7 +894,7 @@ TEST(Vector, T49Emplace)
 }
 
 
-TEST(Vector, T50Erase)
+TEST(Vector, T50EraseBegin)
 {
     s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
     std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
@@ -909,6 +909,223 @@ TEST(Vector, T50Erase)
     EXPECT_EQ(*s21_result, *result);
 }
 
+TEST(Vector, T51Erase)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 1;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 1;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
+    const std::vector<Item>::iterator result = vector.erase(it);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T52Erase)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 2;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 2;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
+    const std::vector<Item>::iterator result = vector.erase(it);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T53Erase)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
+    const std::vector<Item>::iterator result = vector.erase(it);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T54EraseEnd)
+{   
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+
+    s21::Vector<Item>::const_iterator s21_it = s21_vector.cend();
+    std::vector<Item>::const_iterator it = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
+    const std::vector<Item>::iterator result = vector.erase(it);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(s21_result, s21_it);
+    EXPECT_EQ(result, it);
+}
+
+
+TEST(Vector, T55EraseRange)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cbegin();
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it1 = vector.cbegin();
+    std::vector<Item>::const_iterator it2 = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T56EraseRange)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cbegin() + 1;
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cbegin() + 3;
+    std::vector<Item>::const_iterator it1 = vector.cbegin() + 1;
+    std::vector<Item>::const_iterator it2 = vector.cbegin() + 3;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T57EraseRange)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cbegin() + 2;
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cbegin() + 6;
+    std::vector<Item>::const_iterator it1 = vector.cbegin() + 2;
+    std::vector<Item>::const_iterator it2 = vector.cbegin() + 6;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T58EraseRange)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cbegin() + 4;
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cend();
+    std::vector<Item>::const_iterator it1 = vector.cbegin() + 4;
+    std::vector<Item>::const_iterator it2 = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T59EraseRange)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cend() - 4;
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cend();
+    std::vector<Item>::const_iterator it1 = vector.cend() - 4;
+    std::vector<Item>::const_iterator it2 = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T60EraseRangeFull)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cbegin();
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cend();
+    std::vector<Item>::const_iterator it1 = vector.cbegin();
+    std::vector<Item>::const_iterator it2 = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(*s21_result, *result);
+}
+
+TEST(Vector, T61EraseRangeEmpty)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cbegin();
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cbegin();
+    std::vector<Item>::const_iterator it1 = vector.cbegin();
+    std::vector<Item>::const_iterator it2 = vector.cbegin();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(s21_result, s21_it1);
+    EXPECT_EQ(result, it1);
+}
+
+TEST(Vector, T62EraseRangeEmpty)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cend();
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cend();
+    std::vector<Item>::const_iterator it1 = vector.cend();
+    std::vector<Item>::const_iterator it2 = vector.cend();
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(s21_result, s21_it1);
+    EXPECT_EQ(result, it1);
+}
+
+TEST(Vector, T63EraseRangeEmpty)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+
+    s21::Vector<Item>::const_iterator s21_it1 = s21_vector.cend() - 2;
+    s21::Vector<Item>::const_iterator s21_it2 = s21_vector.cend() - 2;
+    std::vector<Item>::const_iterator it1 = vector.cend() - 2;
+    std::vector<Item>::const_iterator it2 = vector.cend() - 2;
+
+    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it1, s21_it2);
+    const std::vector<Item>::iterator result = vector.erase(it1, it2);
+
+    EXPECT_EQ(s21_vector, vector);
+    EXPECT_EQ(s21_result, s21_it1);
+    EXPECT_EQ(result, it1);
+}
 
 }  // namespace
 

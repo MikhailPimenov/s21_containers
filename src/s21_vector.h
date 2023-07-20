@@ -652,7 +652,7 @@ public:
         {
             iterator it(pos_untill);
             // iterator it = static_cast<iterator>(pos_untill) + shift;
-            assert(it < end() && "Shifting is out of range!");
+            assert(it - 2 < end() && "Shifting is out of range!");
             const iterator result = it - shift;
             while (it < end())
             {
@@ -668,10 +668,10 @@ public:
             return shiftForward(1, pos + 1);
         }
 
-        // constexpr iterator erase(const_iterator first, const_iterator last)
-        // {
-            
-        // }
+        constexpr iterator Erase(const_iterator first, const_iterator last)
+        {
+            return shiftForward(last - first, last);
+        }
 
 
 
