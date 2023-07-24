@@ -1127,6 +1127,85 @@ TEST(Vector, T63EraseRangeEmpty)
     EXPECT_EQ(result, it1);
 }
 
+
+
+
+
+
+
+
+TEST(Vector, T64Swap)
+{
+    s21::Vector<Item> s21_vector1 { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    s21::Vector<Item> s21_vector2 { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    
+    const s21::Vector<Item> s21_vector1_copy = s21_vector1;
+    const s21::Vector<Item> s21_vector2_copy = s21_vector2;
+
+    s21_vector1.Swap(s21_vector2);
+
+    EXPECT_EQ(s21_vector1, s21_vector2_copy);
+    EXPECT_EQ(s21_vector2, s21_vector1_copy);
+}
+
+TEST(Vector, T65SwapEmpty)
+{
+    s21::Vector<Item> s21_vector1;
+    s21::Vector<Item> s21_vector2 { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    
+    const s21::Vector<Item> s21_vector1_copy = s21_vector1;
+    const s21::Vector<Item> s21_vector2_copy = s21_vector2;
+
+    s21_vector1.Swap(s21_vector2);
+
+    EXPECT_EQ(s21_vector1, s21_vector2_copy);
+    EXPECT_EQ(s21_vector2, s21_vector1_copy);
+}
+
+TEST(Vector, T66SwapEmpty)
+{
+    s21::Vector<Item> s21_vector1 { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    s21::Vector<Item> s21_vector2;
+    
+    const s21::Vector<Item> s21_vector1_copy = s21_vector1;
+    const s21::Vector<Item> s21_vector2_copy = s21_vector2;
+
+    s21_vector1.Swap(s21_vector2);
+
+    EXPECT_EQ(s21_vector1, s21_vector2_copy);
+    EXPECT_EQ(s21_vector2, s21_vector1_copy);
+}
+
+TEST(Vector, T67Swap)
+{
+    s21::Vector<Item> s21_vector1 { Item(0), Item(111), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    s21::Vector<Item> s21_vector2 { Item(0), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    
+    const s21::Vector<Item> s21_vector1_copy = s21_vector1;
+    const s21::Vector<Item> s21_vector2_copy = s21_vector2;
+
+    s21_vector1.Swap(s21_vector2);
+
+    EXPECT_EQ(s21_vector1, s21_vector2_copy);
+    EXPECT_EQ(s21_vector2, s21_vector1_copy);
+}
+
+TEST(Vector, T68Swap)
+{
+    s21::Vector<Item> s21_vector1 { Item(0), Item(555), Item(666), Item(777), Item(888) };
+    s21::Vector<Item> s21_vector2 { Item(0), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    
+    const s21::Vector<Item> s21_vector1_copy = s21_vector1;
+    const s21::Vector<Item> s21_vector2_copy = s21_vector2;
+
+    s21_vector1.Swap(s21_vector2);
+
+    EXPECT_EQ(s21_vector1, s21_vector2_copy);
+    EXPECT_EQ(s21_vector2, s21_vector1_copy);
+}
+
+
+
 }  // namespace
 
 // GCOVR_EXCL_STOP

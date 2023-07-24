@@ -271,7 +271,7 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     template<typename PointerType, typename ReferenceType>
     difference_type operator-(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other) const noexcept
     {
-        return other.pointer_ - this->poiner_;
+        return other.pointer_ - this->pointer_;
     }
     reference operator[](difference_type n) const noexcept
     {
@@ -396,18 +396,103 @@ template <typename Type> class Vector
         }            
     }
 
-
-
-
-    constexpr reference At( size_type pos )
+    Vector(Vector&& other) noexcept : data_{other.data_}, size_{other.size_}, capacity_{other.capacity_}  
     {
-        if (pos >= size_)
+        other.data_ = nullptr;
+        other.size_ = 0;
+        other.capacity_ = 0;
+    }
+
+    Vector(const Vector& other) : Vector()  
+    {
+        pointer new_data = new value_type[other.size_];
+        for (size_type i = 0; i < other.size_; ++i)
+            new_data[i] = other.data_[i];
+        
+        data_ = new_data;
+        size_ = other.size_;
+        capacity_ = size_;
+    }
+
+    template<typename InputIt>
+    constexpr Vector(InputIt first, InputIt last) : Vector()
+    {
+        const size_type count = getDistance(first, last);
+        capacity_ = calculate_capacity(count);
+        allocate(capacity_);
+
+        size_type i = 0;
+        while (first != last)        
+        {
+            data_[i] = *first;
+            ++i;
+            ++first;
+        }
+        size_ = count;
+    }
+
+    // Vector& operator
+
+    Vector& operator=(const Vector& other)
+    {
+        // using namespace std;    // to enable ADL
+        if (this == &other)
+            return *this;
+
+        Vector temporary(other);
+        *this = std::move(temporary);
+        return *this;
+    }
+
+    Vector& operator=(Vector&& other) noexcept
+    {
+        if (this == &other)
+            return *this;
+
+        deallocate();
+
+        data_ = other.data_;
+        size_ = other.size_;
+        capacity_ = other.capacity_;
+
+        other.data_ = nullptr;
+        other.size_ = 0;
+        other.capacity_ = 0;
+
+        return *this;
+    }
+
+
+//     void assign( size_type count, const T& value );
+// (until C++20)
+// constexpr void assign( size_type count, const T& value );
+// (since C++20)
+// (2)	
+// template< class InputIt >
+// void assign( InputIt first, InputIt last );
+// (until C++20)
+// template< class InputIt >
+// constexpr void assign( InputIt first, InputIt last );
+// (since C++20)
+// (3)	
+// void assign( std::initializer_list<T> ilist );
+// (since C++11)
+// (until C++20)
+// constexpr void assign( std::initializer_list<T> ilist );
+
+
+
+
+
+    constexpr reference At(size_type pos)
+    {
+        if (pos >= size_ || pos < 0)
             throw std::out_of_range("Index is out of range!");
         return operator[](pos);
     }
     constexpr const_reference At(size_type pos) const
     {
-        if (pos >= size_)
+        if (pos >= size_ || pos < 0)
             throw std::out_of_range("Index is out of range!");
         return operator[](pos);
     }
@@ -462,7 +547,8 @@ template <typename Type> class Vector
         if (new_capacity <= capacity_) 
             return;
 
-        const size_type new_actual_capacity = calculate_capacity(new_capacity);
+        // const size_type new_actual_capacity = calculate_capacity(new_capacity);
+        const size_type new_actual_capacity = new_capacity;
         reallocate(new_actual_capacity);
     }
 
@@ -594,17 +680,31 @@ public:
         return it_result;
     }
 
+    private:
+    template<class InputIt>
+    static size_type getDistance(InputIt first, InputIt last) noexcept
+    {
+        size_type count = 0;
+        if constexpr(std::is_same_v<typename InputIt::iterator_category, std::random_access_iterator_tag>)
+        {
+            count = last - first;
+        } 
+        else 
+        {
+            while (first != last)
+            {
+                ++count;
+                ++first;
+            }
+        }
+        return count;
+    }
+
+    public:
     template<class InputIt>
     constexpr iterator Insert(const_iterator pos, InputIt first, InputIt last)
     {
-        size_type count = 0;
-        InputIt first_copy = first;
-        while (first_copy != last)
-        {
-            ++count;
-            ++first_copy;
-        }
-
+        const size_type count = getDistance(first, last);
         const size_type new_size = size_ + count;
         checkReallocateUpdatingIterator(new_size, pos);
         auto it = shiftBack(count, pos);
@@ -651,7 +751,6 @@ public:
         iterator shiftForward(size_type shift, const_iterator pos_untill)
         {
             iterator it(pos_untill);
-            // iterator it = static_cast<iterator>(pos_untill) + shift;
             assert(it - 2 < end() && "Shifting is out of range!");
             const iterator result = it - shift;
             while (it < end())
@@ -722,6 +821,14 @@ public:
         }
         data_[old_size] = value_type(std::forward<Args>(args)...);
         size_ = new_size;
+    }
+
+    constexpr void Swap(Vector& other) 
+    {
+        using namespace std;                    // to enable ADL
+        swap(data_, other.data_);
+        swap(size_, other.size_);
+        swap(capacity_, other.capacity_);
     }
 };
 

@@ -22,6 +22,9 @@ SOURCES=tests/item.cc
 
 SOURCES+=tests/vector/constructors.cc
 SOURCES+=tests/vector/modifiers.cc
+SOURCES+=tests/vector/access.cc
+SOURCES+=tests/vector/capacity.cc
+SOURCES+=tests/vector/iterator.cc
 
 
 # SOURCES+=tests/list/list.cc 
@@ -59,7 +62,7 @@ run_tests: tests/tests_main.exe
 
 #gcov_report
 
-EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*'
+EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*' --exclude-throw-branches
 
 gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)

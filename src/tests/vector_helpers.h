@@ -32,24 +32,6 @@ bool operator==(std::vector<Type> vector, s21::Vector<Type> s21_vector) {
 }
 
 template<typename Type>
-bool operator==(const s21::Vector<Type>& left, const s21::Vector<Type>& right) {
-    if (left.Size() != right.Size())
-        return false;
-
-    auto it_left = left.cbegin();
-    auto it_right = right.cbegin();
-    while (it_left != left.cend())
-    {
-        if (*it_left != *it_right)
-            return false;
-        ++it_left; 
-        ++it_right;
-    }
-
-    return true;   
-}
-
-template<typename Type>
 std::ostream& operator<<(std::ostream& out, const s21::Vector<Type>& object)
 {
     out << "Vector: ";
