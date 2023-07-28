@@ -176,7 +176,7 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
     }
     reference operator[](difference_type n) const noexcept
     {
-        return this->operator*(n);
+        return VectorIterator(this->pointer_ + n).operator*();
     }
     template<typename PointerType, typename ReferenceType>
     bool operator<(const VectorIterator<Vector, PointerType, ReferenceType>& other) const noexcept
@@ -275,7 +275,7 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     }
     reference operator[](difference_type n) const noexcept
     {
-        return this->operator*(n);
+        return VectorReverseIterator(this->pointer_ - n).operator*();
     }
     template<typename PointerType, typename ReferenceType>
     bool operator<(const VectorReverseIterator<Vector, PointerType, ReferenceType>& other) const noexcept

@@ -110,7 +110,7 @@ TEST(Vector, T7IteratorOperatorPlusPostfix)
 
     EXPECT_EQ(s21_vector, vector);
 } 
-TEST(Vector, T7IteratorOperatorMinus)
+TEST(Vector, T8IteratorOperatorMinus)
 {
     s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
@@ -120,7 +120,7 @@ TEST(Vector, T7IteratorOperatorMinus)
 
     EXPECT_EQ(s21_vector, vector);
 } 
-TEST(Vector, T7IteratorOperatorMinusPostfix)
+TEST(Vector, T9IteratorOperatorMinusPostfix)
 {
     s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
@@ -130,7 +130,7 @@ TEST(Vector, T7IteratorOperatorMinusPostfix)
 
     EXPECT_EQ(s21_vector, vector);
 } 
-TEST(Vector, T8IteratorOperatorPlus)
+TEST(Vector, T10IteratorOperatorPlus)
 {
     s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
@@ -143,7 +143,7 @@ TEST(Vector, T8IteratorOperatorPlus)
     EXPECT_EQ(*s21_it, *it);
 
 } 
-TEST(Vector, T9IteratorOperatorPlusPostfix)
+TEST(Vector, T11IteratorOperatorPlusPostfix)
 {
     s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
@@ -155,7 +155,7 @@ TEST(Vector, T9IteratorOperatorPlusPostfix)
     EXPECT_EQ(*(s21_it++), *(it++));
     EXPECT_EQ(*s21_it, *it);
 } 
-TEST(Vector, T10IteratorOperatorMinus)
+TEST(Vector, T12IteratorOperatorMinus)
 {
     s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
@@ -168,7 +168,7 @@ TEST(Vector, T10IteratorOperatorMinus)
     EXPECT_EQ(*s21_it, *it);
 
 } 
-TEST(Vector, T11IteratorOperatorMinusPostfix)
+TEST(Vector, T13IteratorOperatorMinusPostfix)
 {
     s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
@@ -180,6 +180,36 @@ TEST(Vector, T11IteratorOperatorMinusPostfix)
     EXPECT_EQ(*(s21_it--), *(it--));
     EXPECT_EQ(*s21_it, *it);
 } 
+TEST(Vector, T14IteratorOperatorMinusIterator)
+{
+    s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
+    std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
+    
+    s21::Vector<Item>::size_type s21_size = s21_source.end() - ++s21_source.begin();
+    std::vector<Item>::size_type size = source.end() - ++source.begin();
+
+    EXPECT_EQ(s21_size, size);
+} 
+TEST(Vector, T15IteratorOperatorSubscript)
+{
+    s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
+    std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
+    
+    Item s21_item = s21_source.begin()[2];
+    Item item = source.begin()[2];
+
+    EXPECT_EQ(s21_item, item);
+}
+TEST(Vector, T16IteratorOperatorSubscript)
+{
+    s21::Vector<Item> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
+    std::vector<Item> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
+    
+    Item s21_item = s21_source.end()[-2];
+    Item item = source.end()[-2];
+
+    EXPECT_EQ(s21_item, item);
+}
 
 
 
