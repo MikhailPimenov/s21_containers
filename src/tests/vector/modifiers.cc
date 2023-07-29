@@ -1206,6 +1206,21 @@ TEST(Vector, T68Swap)
 
 
 
+
+
+
+
+TEST(Vector, T69Clear)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888) };
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), Item(999) };
+    
+    s21_vector.Clear();
+    vector.clear();
+    EXPECT_EQ(s21_vector, vector);
+}
+
+
 }  // namespace
 
 // GCOVR_EXCL_STOP
