@@ -48,7 +48,7 @@ class VectorIteratorBase
     {
         using namespace std; // to enable ADL
         swap(left.pointer_, right.pointer_);
-    };
+    }
 
     virtual VectorIteratorBase &operator++() noexcept = 0;
 
@@ -57,7 +57,7 @@ class VectorIteratorBase
     {
         pointer_ = other.pointer_;
         return *this;
-    };
+    }
 
     template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
     VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
@@ -365,9 +365,9 @@ template <typename Type> class Vector
         }
 
   public:
-    Vector() : data_{nullptr}, size_{0ull}, capacity_{0ull}
+    Vector() : capacity_{0ull}, size_{0ull}, data_{nullptr} 
     {
-    };
+    }
 
     explicit Vector(size_type count, const_reference value) 
         : capacity_{calculate_capacity(count)}, size_{count}, data_{nullptr}
@@ -396,7 +396,7 @@ template <typename Type> class Vector
         }            
     }
 
-    Vector(Vector&& other) noexcept : data_{other.data_}, size_{other.size_}, capacity_{other.capacity_}  
+    Vector(Vector&& other) noexcept : capacity_{other.capacity_}, size_{other.size_}, data_{other.data_}
     {
         other.data_ = nullptr;
         other.size_ = 0;

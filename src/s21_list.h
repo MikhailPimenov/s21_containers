@@ -15,6 +15,9 @@ class ListIteratorBase
 {
     friend List;
 
+    template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherNode_pointer, typename OtherDifference_type, typename OtherValue_type>
+    friend class ListIteratorBase;  // to be able to compare iterator and const_iterator
+
   public:
     using difference_type = Difference_type;
     using value_type = Value_type;
@@ -25,30 +28,42 @@ class ListIteratorBase
     using node_pointer = Node_pointer;
 
   public:
-    ListIteratorBase(node_pointer node_pointer) : node_pointer_{node_pointer} {};
+    ListIteratorBase(node_pointer node_pointer) : node_pointer_{node_pointer} {}
 
-    ListIteratorBase(const ListIteratorBase &other) : ListIteratorBase(other.node_pointer_){};
-    ListIteratorBase(ListIteratorBase &&other) : ListIteratorBase(other.node_pointer_)
+
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
+    ListIteratorBase(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) noexcept 
+        : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_)) 
+    {
+
+    }
+
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
+    ListIteratorBase(ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &&other) noexcept 
+        : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_))
     {
         other.node_pointer_ = nullptr;
-    };
+    }
 
     friend void swap(ListIteratorBase &left, ListIteratorBase &right)
     {
         using namespace std; // to enable ADL
         swap(left.node_pointer_, right.node_pointer_);
-    };
+    }
 
-    ListIteratorBase &operator=(const ListIteratorBase &other)
+
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
+    ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &operator=(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) noexcept
     {
-        node_pointer_ = other->node_pointer_;
+        node_pointer_ = other.node_pointer_;
         return *this;
-    };
+    }
 
-    ListIteratorBase &operator=(ListIteratorBase &&other)
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
+    ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &operator=(ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &&other) noexcept
     {
-        node_pointer_ = other->node_pointer_;
-        other->node_pointer_ = nullptr;
+        node_pointer_ = other.node_pointer_;
+        other.node_pointer_ = nullptr;
         return *this;
     }
 
@@ -62,12 +77,14 @@ class ListIteratorBase
         return &(node_pointer_->data_);
     }
 
-    bool operator==(const ListIteratorBase &other) const
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
+    bool operator==(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) const noexcept
     {
         return node_pointer_ == other.node_pointer_;
     }
 
-    bool operator!=(const ListIteratorBase &other) const
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
+    bool operator!=(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) const noexcept
     {
         return !(*this == other);
     }
@@ -75,6 +92,13 @@ class ListIteratorBase
     explicit operator bool() const
     {
         return node_pointer_;
+    }
+
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
+    operator ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type>() const noexcept
+    {
+        return ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type>(node_pointer_);
+        // return VectorIteratorBase(pointer_);
     }
 
   private:
