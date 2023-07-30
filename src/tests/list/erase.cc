@@ -321,10 +321,9 @@ TEST(List, T1EraseRange)
     const auto s21_it = s21_source.Erase(s21_it1, s21_it2);
     const auto it = source.erase(it1, it2);
 
-    EXPECT_TRUE(s21_source == source);
-    EXPECT_TRUE(s21_it == s21_it2);
-    EXPECT_TRUE(it == it2);
-    EXPECT_TRUE(*s21_it == *it);
+    EXPECT_EQ(s21_source, source);
+    EXPECT_EQ(s21_it, s21_it2);     // s21_it2 is cend()
+    EXPECT_EQ(it, it2);             // it2 is cend()
 }
 
 TEST(List, T2EraseRange)
@@ -389,6 +388,54 @@ TEST(List, T3EraseRange)
     EXPECT_TRUE(s21_it == s21_it2);
     EXPECT_TRUE(it == it2);
     EXPECT_TRUE(*s21_it == *it);
+}
+
+TEST(List, T4EraseRange)
+{
+    s21::List<Item> s21_source = {};
+
+    auto s21_it1 = s21_source.cbegin();
+    auto s21_it2 = s21_source.cend();
+
+    std::list<Item> source = {};
+
+    auto it1 = source.cbegin();
+    auto it2 = source.cend();
+                                                                                                                                                                                                                                                                                   
+ 
+   
+    
+    const auto s21_it = s21_source.Erase(s21_it1, s21_it2);
+    const auto it = source.erase(it1, it2);
+
+    EXPECT_TRUE(s21_source == source);
+    EXPECT_TRUE(s21_it == s21_it2);
+    EXPECT_TRUE(it == it2);
+    // EXPECT_TRUE(*s21_it == *it);
+}
+
+TEST(List, T5EraseRange)
+{
+    s21::List<Item> s21_source = { Item(111), };
+
+    auto s21_it1 = s21_source.cbegin();
+    auto s21_it2 = s21_source.cend();
+
+    std::list<Item> source = { Item(111), };
+
+    auto it1 = source.cbegin();
+    auto it2 = source.cend();
+                                                                                                                                                                                                                                                                                   
+ 
+   
+    
+    const auto s21_it = s21_source.Erase(s21_it1, s21_it2);
+    const auto it = source.erase(it1, it2);
+
+    EXPECT_TRUE(s21_source == source);
+    EXPECT_TRUE(s21_it == s21_it2);
+    EXPECT_TRUE(it == it2);
+    // EXPECT_TRUE(*s21_it == *it);     // comparison between cend()' s
 }
 
 // TEST(List, T1InsertReverseIterator)

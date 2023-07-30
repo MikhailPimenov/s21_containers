@@ -125,6 +125,7 @@ class ListIterator : public ListIteratorBase<List, Pointer, Reference, typename 
     ListIterator &operator++()
     {
         this->node_pointer_ = this->node_pointer_->next_;
+        assert(this && "this was nullptr!");
         return *this;
     }
 
@@ -234,6 +235,9 @@ template <typename Type> class List
       private:
         Node *next_;
         Node *previous_;
+
+      public:
+        Node() : data_{value_type()}, next_{nullptr}, previous_{nullptr} {}
     };
 
     mutable Node end_;
@@ -620,10 +624,18 @@ template <typename Type> class List
     }
     iterator Erase(const_iterator first, const_iterator last)
     {
-        for (const_iterator it = first; it != last; ++it)
-            Erase(it);
+        // for (const_iterator it = first; it != last; ++it) {
+            // it = Erase(it);
+            // ++it;
+        // }
+        const_iterator it = first;
+        while (it != last) 
+        {
+            it = Erase(it);
+            // ++it;
+        }
 
-        return iterator(last.get());
+        return iterator(last);
     }
     // Sort()
     // Unique()
@@ -676,15 +688,19 @@ template <typename Type> class List
   private:
     void connect(Node *node, Node *next_node)
     {
+        assert(node && "node was nullptr!");
+        assert(next_node && "next_node was nullptr!");
         node->next_ = next_node;
         next_node->previous_ = node;
     }
     Node *previousOf(Node *node)
     {
+        assert(node && "node was nullptr!");
         return node->previous_;
     }
     Node *nextOf(Node *node)
     {
+        assert(node && "node was nullptr!");
         return node->next_;
     }
 };
