@@ -461,29 +461,26 @@ template <typename Type> class Vector
 
         return *this;
     }
+    
+    constexpr void Assign(size_type count, const_reference value)
+    {
+        Vector temporary(count, value);
+        *this = std::move(temporary);
+    }
 
+    template<typename InputIt>
+    constexpr void Assign(InputIt first, InputIt last)
+    {
+        Vector temporary(first, last);
+        *this = std::move(temporary);
+    }
 
-//     void assign( size_type count, const T& value );
-// (until C++20)
-// constexpr void assign( size_type count, const T& value );
-// (since C++20)
-// (2)	
-// template< class InputIt >
-// void assign( InputIt first, InputIt last );
-// (until C++20)
-// template< class InputIt >
-// constexpr void assign( InputIt first, InputIt last );
-// (since C++20)
-// (3)	
-// void assign( std::initializer_list<T> ilist );
-// (since C++11)
-// (until C++20)
-// constexpr void assign( std::initializer_list<T> ilist );
-
-
-
-
-
+    constexpr void Assign(std::initializer_list<value_type> list)
+    {
+        Vector temporary(std::move(list));
+        *this = std::move(temporary);
+    }
+    
     constexpr reference At(size_type pos)
     {
         if (pos >= size_ || pos < 0)
@@ -808,6 +805,33 @@ public:
         size_ = new_size;
     };
 
+    constexpr void Pop_back()
+    {
+        --size_;
+    }
+
+    constexpr void Resize(size_type count)
+    {
+        Resize(count, value_type());
+    }
+    constexpr void Resize(size_type count, const_reference value)
+    {
+        if (count == size_)
+            return;
+
+        if (count < size_) {
+            size_ = count;
+            return;
+        }
+
+        Reserve(count);
+
+        for (size_type i = size_; i < count; ++i)
+            Push_back(value);
+
+        size_ = count;
+    }
+
     template<typename... Args>
     constexpr void Emplace_back(Args&&... args)
     {
@@ -849,6 +873,11 @@ template <typename Type> bool operator==(const Vector<Type> &left, const Vector<
     }
 
     return true;
+}
+
+template <typename Type> bool operator!=(const Vector<Type> &left, const Vector<Type> &right)
+{
+    return !(left == right);
 }
 
 } // namespace s21

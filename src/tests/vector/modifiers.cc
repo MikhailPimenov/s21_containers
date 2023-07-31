@@ -1230,6 +1230,146 @@ TEST(Vector, T70Clear)
     EXPECT_EQ(s21_vector, vector);
 }
 
+TEST(Vector, T71Clear)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888) }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), Item(999) };
+
+    s21_vector.Clear();
+    EXPECT_NE(s21_vector, vector);
+}
+
+
+TEST(Vector, T72Empty)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888) }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), Item(999) };
+
+    EXPECT_EQ(s21_vector.Empty(), vector.empty());
+}
+
+TEST(Vector, T73Empty)
+{
+    s21::Vector<Item> s21_vector; 
+    std::vector<Item> vector;
+
+    EXPECT_EQ(s21_vector.Empty(), vector.empty());
+}
+
+TEST(Vector, T74Pop_back)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    s21_vector.Pop_back();
+    s21_vector.Pop_back();
+
+    vector.pop_back();
+    vector.pop_back();
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+
+
+
+
+
+
+
+TEST(Vector, T75Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    s21_vector.Resize(5);
+    vector.resize(5);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T76Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    const Item item(6666, 'h', 0.66666);
+    s21_vector.Resize(5, item);
+    vector.resize(5, item);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T77Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    s21_vector.Resize(2);
+    vector.resize(2);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T78Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    const Item item(6666, 'h', 0.66666);
+    s21_vector.Resize(2, item);
+    vector.resize(2, item);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T79Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    s21_vector.Resize(0);
+    vector.resize(0);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T80Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    const Item item(6666, 'h', 0.66666);
+    s21_vector.Resize(0, item);
+    vector.resize(0, item);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T81Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    s21_vector.Resize(20);
+    vector.resize(20);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+TEST(Vector, T82Resize)
+{
+    s21::Vector<Item> s21_vector { Item(0), Item(555), Item(666), Item(777), Item(888), }; 
+    std::vector<Item> vector { Item(0), Item(555), Item(666), Item(777), Item(888), };
+
+    const Item item(6666, 'h', 0.66666);
+    s21_vector.Resize(20, item);
+    vector.resize(20, item);
+
+    EXPECT_EQ(s21_vector, vector);
+}
+
+
 
 }  // namespace
 

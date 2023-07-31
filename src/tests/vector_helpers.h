@@ -32,6 +32,16 @@ bool operator==(std::vector<Type> vector, s21::Vector<Type> s21_vector) {
 }
 
 template<typename Type>
+bool operator!=(const s21::Vector<Type>& s21_vector, const std::vector<Type>& vector) {
+    return !(s21_vector == vector);   
+}
+
+template<typename Type>
+bool operator!=(std::vector<Type> vector, s21::Vector<Type> s21_vector) {
+    return !(s21_vector == vector);   
+}
+
+template<typename Type>
 std::ostream& operator<<(std::ostream& out, const s21::Vector<Type>& object)
 {
     out << "Vector: ";
