@@ -6,7 +6,6 @@ STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic
 GCOVR_CFLAGS=-fprofile-arcs -ftest-coverage -fPIC
 GCOVR_LFLAGS=-lgcov
 
-
 GTEST_LFLAGS=-lgtest -lgtest_main
 
 
@@ -15,11 +14,11 @@ VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
 SOURCES=tests/item.cc 
 
-# SOURCES+=tests/stack/constructors.cc
-# SOURCES+=tests/stack/methods.cc
+SOURCES+=tests/stack/constructors.cc
+SOURCES+=tests/stack/methods.cc
 
-# SOURCES+=tests/queue/constructors.cc
-# SOURCES+=tests/queue/methods.cc
+SOURCES+=tests/queue/constructors.cc
+SOURCES+=tests/queue/methods.cc
 
 SOURCES+=tests/vector/constructors.cc
 SOURCES+=tests/vector/modifiers.cc
@@ -29,15 +28,15 @@ SOURCES+=tests/vector/iterator.cc
 SOURCES+=tests/vector/other.cc
 
 
-# SOURCES+=tests/list/list.cc 
-# SOURCES+=tests/list/push_back.cc 
-# SOURCES+=tests/list/push_front.cc
-# SOURCES+=tests/list/access.cc 
-# SOURCES+=tests/list/assign.cc
-# SOURCES+=tests/list/insert.cc
-# SOURCES+=tests/list/emplace.cc
-# SOURCES+=tests/list/swap.cc
-# SOURCES+=tests/list/erase.cc
+SOURCES+=tests/list/list.cc 
+SOURCES+=tests/list/push_back.cc 
+SOURCES+=tests/list/push_front.cc
+SOURCES+=tests/list/access.cc 
+SOURCES+=tests/list/assign.cc
+SOURCES+=tests/list/insert.cc
+SOURCES+=tests/list/emplace.cc
+SOURCES+=tests/list/swap.cc
+SOURCES+=tests/list/erase.cc
 
 # SOURCES=*/*.cc
 BINARIES=$(patsubst %.cc,%.o,$(SOURCES))
