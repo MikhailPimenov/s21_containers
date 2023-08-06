@@ -29,17 +29,30 @@ class VectorIteratorBase
     VectorIteratorBase(pointer p) noexcept : pointer_{p} {}
 
     
-    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    VectorIteratorBase(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept 
-        : VectorIteratorBase(const_cast<Pointer>(other.pointer_)) 
+    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    // VectorIteratorBase(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept 
+    //     : VectorIteratorBase(const_cast<Pointer>(other.pointer_)) 
+    // {
+
+    // }
+
+    
+    VectorIteratorBase(const VectorIteratorBase &other) noexcept 
+        : VectorIteratorBase(other.pointer_) 
     {
 
     }
 
 
-    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    VectorIteratorBase(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept 
-        : VectorIteratorBase(const_cast<Pointer>(other.pointer_))
+    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    // VectorIteratorBase(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept 
+    //     : VectorIteratorBase(const_cast<Pointer>(other.pointer_))
+    // {
+    //     other.pointer_ = nullptr;
+    // }
+
+    VectorIteratorBase(VectorIteratorBase &&other) noexcept 
+        : VectorIteratorBase(other.pointer_)
     {
         other.pointer_ = nullptr;
     }
@@ -52,20 +65,37 @@ class VectorIteratorBase
 
     virtual VectorIteratorBase &operator++() noexcept = 0;
 
-    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
+    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
+    // {
+    //     pointer_ = other.pointer_;
+    //     return *this;
+    // }
+
+    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
+    // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
+    // {
+    //     pointer_ = other.pointer_;
+    //     other.pointer_ = nullptr;
+    //     return *this;
+    // }
+
+
+
+    VectorIteratorBase &operator=(const VectorIteratorBase &other) noexcept
     {
         pointer_ = other.pointer_;
         return *this;
     }
 
-    template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
+    VectorIteratorBase &operator=(VectorIteratorBase &&other) noexcept
     {
         pointer_ = other.pointer_;
         other.pointer_ = nullptr;
         return *this;
     }
+
+
 
     reference operator*() const noexcept
     {
@@ -92,13 +122,6 @@ class VectorIteratorBase
     explicit operator bool() const noexcept
     {
         return pointer_;
-    }
-
-    template <typename OtherPointer, typename OtherReference>
-    operator VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type>() const noexcept
-    {
-        return VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type>(pointer_);
-        // return VectorIteratorBase(pointer_);
     }
 
   protected:
@@ -200,6 +223,13 @@ class VectorIterator : public VectorIteratorBase<Vector, Pointer, Reference, typ
     }
 
     operator int() const = delete;
+
+    // to enable creating iterator from const_iterator via static_cast
+    template <typename OtherPointer, typename OtherReference>
+    explicit operator VectorIterator<Vector, OtherPointer, OtherReference>() const noexcept
+    {
+        return VectorIterator<Vector, OtherPointer, OtherReference>(const_cast<OtherPointer>(this->pointer_));
+    }
 };
 
 
@@ -242,7 +272,7 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     VectorReverseIterator operator--(int) noexcept
     {
         VectorReverseIterator temporary(*this);
-        ++(this->node_pointer_);
+        ++(this->pointer_);
         return temporary;
     }
 
@@ -299,6 +329,13 @@ class VectorReverseIterator : public VectorIteratorBase<Vector, Pointer, Referen
     }
 
     operator int() const = delete;
+
+    // to enable creating iterator from const_iterator via static_cast
+    template <typename OtherPointer, typename OtherReference>
+    explicit operator VectorReverseIterator<Vector, OtherPointer, OtherReference>() const noexcept
+    {
+        return VectorReverseIterator<Vector, OtherPointer, OtherReference>(const_cast<OtherPointer>(this->pointer_));
+    }
 };
 
 
@@ -747,7 +784,7 @@ public:
     private:
         iterator shiftForward(size_type shift, const_iterator pos_untill)
         {
-            iterator it(pos_untill);
+            iterator it(static_cast<iterator>(pos_untill));
             assert(it - 2 < end() && "Shifting is out of range!");
             const iterator result = it - shift;
             while (it < end())
