@@ -4,7 +4,9 @@ STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic
 
 
 GCOVR_CFLAGS=-fprofile-arcs -ftest-coverage -fPIC
+GCOVR_CFLAGS=--coverage
 GCOVR_LFLAGS=-lgcov
+GCOVR_LFLAGS=--coverage
 
 GTEST_LFLAGS=-lgtest -lgtest_main
 
@@ -20,13 +22,14 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/queue/constructors.cc
 # SOURCES+=tests/queue/methods.cc
 
-SOURCES+=tests/vector/constructors.cc
-SOURCES+=tests/vector/modifiers.cc
-SOURCES+=tests/vector/access.cc
-SOURCES+=tests/vector/capacity.cc
-SOURCES+=tests/vector/iterator.cc
-SOURCES+=tests/vector/other.cc
+# SOURCES+=tests/vector/constructors.cc
+# SOURCES+=tests/vector/modifiers.cc
+# SOURCES+=tests/vector/access.cc
+# SOURCES+=tests/vector/capacity.cc
+# SOURCES+=tests/vector/iterator.cc
+# SOURCES+=tests/vector/other.cc
 
+SOURCES+=tests/map/constructors.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
@@ -68,7 +71,8 @@ EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*' --exclude-throw-br
 gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
-		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+		open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 

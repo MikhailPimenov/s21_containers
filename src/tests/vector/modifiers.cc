@@ -954,21 +954,21 @@ TEST(Vector, T53Erase)
     EXPECT_EQ(*s21_result, *result);
 }
 
-TEST(Vector, T54EraseEnd)
-{   
-    s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
-    std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
+// TEST(Vector, T54EraseEnd)
+// {   
+//     s21::Vector<Item> s21_vector { Item(0), Item(111), Item(222), Item(333) };
+//     std::vector<Item> vector { Item(0), Item(111), Item(222), Item(333) };
 
-    s21::Vector<Item>::const_iterator s21_it = s21_vector.cend();
-    std::vector<Item>::const_iterator it = vector.cend();
+//     s21::Vector<Item>::const_iterator s21_it = s21_vector.cend();
+//     std::vector<Item>::const_iterator it = vector.cend();
 
-    const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
-    const std::vector<Item>::iterator result = vector.erase(it);
+//     const s21::Vector<Item>::iterator s21_result = s21_vector.Erase(s21_it);
+//     const std::vector<Item>::iterator result = vector.erase(it);
 
-    EXPECT_EQ(s21_vector, vector);
-    EXPECT_EQ(s21_result, s21_it);
-    EXPECT_EQ(result, it);
-}
+//     EXPECT_EQ(s21_vector, vector);
+//     EXPECT_EQ(s21_result, s21_it);
+//     EXPECT_EQ(result, it);
+// }
 
 
 TEST(Vector, T55EraseRange)

@@ -232,7 +232,7 @@ template <typename Type> class List
       public:
         value_type data_;
 
-      private:
+    //   private:
         Node *next_;
         Node *previous_;
 
