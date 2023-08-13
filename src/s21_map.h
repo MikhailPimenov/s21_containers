@@ -456,25 +456,19 @@ bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& righ
 
 template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::Node& root) {
-    // assert(0 && "print");
     if (!root.left_ && !root.right_) {
         out << "{" << root.value_.first << " : " << root.value_.second << "}, ";
         return out;
     }
 
     if (root.left_) {
-        // out << root.left_;
-        return operator<<<Key, Type>(out, *(root.left_));
-    
-        // return out;
+        operator<<<Key, Type>(out, *(root.left_));
     }
         
     out << "{" << root.value_.first << " : " << root.value_.second << "}, ";
    
     if (root.right_) {
-        // out << root.right_;
-        // return out;
-        return operator<<<Key, Type>(out, *(root.right_));
+        operator<<<Key, Type>(out, *(root.right_));
     }
 
     return out;
@@ -485,7 +479,6 @@ std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::
 template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
     out << "Map " << s21_map.size_ << "\n";
-    // out << (*(s21_map.root_));
     operator<<<Key, Type>(out, *(s21_map.root_));
     return out;
 }
