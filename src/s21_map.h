@@ -257,6 +257,7 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
 
 template <typename Key, typename Type> class Map
 {
+    public:
     struct Node;
   public:
     using value_type = std::pair<const Key, Type>;
@@ -280,6 +281,7 @@ template <typename Key, typename Type> class Map
   private:
     size_type size_;
 
+public:
     struct Node {
         value_type value_;  // key + value
 
@@ -295,6 +297,10 @@ template <typename Key, typename Type> class Map
         }
         Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
          : value_{std::move(value)}, root_{root}, left_{left}, right_{right} {
+
+
+        // template<typename Key2, typename Type2>
+        // friend std::ostream& operator<<(std::ostream& out, const Node& root);
 
         }
 
@@ -348,29 +354,33 @@ private:
         ++size_;
         return new_node;
     }
-    std::pair<iterator, bool> create_left_node(Node* root, const_reference value) {
-        assert(root && "Root should always exist!");
-        root->left_ = create_node(root, value);
-        return std::make_pair(iterator(root->left_), true);
-    }
-    std::pair<iterator, bool> create_right_node(Node* root, const_reference value) {
-        assert(root && "Root should always exist!");
-        root->right_ = create_node(root, value);
-        return std::make_pair(iterator(root->right_), true);
-    }
+    // std::pair<iterator, bool> create_left_node(Node* root, const_reference value) {
+    //     assert(root && "Root should always exist!");
+    //     root->left_ = create_node(root, value);
+    //     return std::make_pair(iterator(root->left_), true);
+    // }
+    // std::pair<iterator, bool> create_right_node(Node* root, const_reference value) {
+    //     assert(root && "Root should always exist!");
+    //     root->right_ = create_node(root, value);
+    //     return std::make_pair(iterator(root->right_), true);
+    // }
     std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
         if (value.first < root->value_.first) {
-            if (root->left_)
+            if (root->left_) {
                 return insert_recursive(root->left_, value);
-            else
-                return create_left_node(root, value);
+            } else {
+                root->left_ = create_node(root, value);
+                return std::make_pair(iterator(root->left_), true);
+            }
         } else if (root->value_.first < value.first) {
-            if (root->right_)
+            if (root->right_) {
                 return insert_recursive(root->right_, value);
-            else 
-                return create_right_node(root, value);
+            } else {
+                root->right_ = create_node(root, value);
+                return std::make_pair(iterator(root->right_), true);
+            }
         }
         // equal
         return std::make_pair(iterator(root), false);
@@ -378,8 +388,10 @@ private:
 
 public:
     std::pair<iterator, bool> Insert(const_reference value) {
-        if (!root_)
-            return std::make_pair(iterator(create_node(nullptr, value)), true);
+        if (!root_) {
+            root_ = create_node(nullptr, value);
+            return std::make_pair(iterator(root_), true);
+        }
         return insert_recursive(root_, value);
     }
     // template< class P >
@@ -409,537 +421,8 @@ public:
 
 
 
-//     private:
-//         static size_type calculate_capacity(size_type count) {
-//             size_type result = 1;
-//             while (result <= count)
-//                 result <<= 1;
-//             return result - 1;
-//         }
-
-//         void allocate(size_type exact_count) 
-//         {
-//             assert(!data_ && "Possible memory leak!");
-//             data_ = new value_type[exact_count];
-//             capacity_ = exact_count;
-//         }
-//         void reallocate(size_type exact_count)
-//         {
-//             pointer new_data = new Type[exact_count];
-//             size_type new_size = size_;
-//             for (size_type i = 0; i < size_; ++i)
-//                 new_data[i] = data_[i];
-            
-//             deallocate();
-//             data_ = new_data;
-//             size_ = new_size;
-//             capacity_ = exact_count;
-//         }
-//         void deallocate() noexcept
-//         {
-//             delete[] data_;
-//             data_ = nullptr;
-//             capacity_ = 0;
-//             size_ = 0;
-//         }
-
-//   public:
-//     Vector() : capacity_{0ull}, size_{0ull}, data_{nullptr} 
-//     {
-//     }
-
-//     explicit Vector(size_type count, const_reference value) 
-//         : capacity_{calculate_capacity(count)}, size_{count}, data_{nullptr}
-//     {      
-//         allocate(capacity_);
-
-//         for (size_type i = 0; i < count; ++i)
-//             data_[i] = value;
-//     }
-//     ~Vector() 
-//     {
-//         deallocate();
-//     }
-
-//     Vector(std::initializer_list<value_type> initializer) 
-//         : capacity_{calculate_capacity(initializer.size())}, size_{initializer.size()}, data_{nullptr}
-//     {
-//         allocate(capacity_);
-
-
-//         size_type i = 0;
-//         for (const auto& element : initializer)
-//         {
-//             data_[i] = element;
-//             ++i;
-//         }            
-//     }
-
-//     Vector(Vector&& other) noexcept : capacity_{other.capacity_}, size_{other.size_}, data_{other.data_}
-//     {
-//         other.data_ = nullptr;
-//         other.size_ = 0;
-//         other.capacity_ = 0;
-//     }
-
-//     Vector(const Vector& other) : Vector()  
-//     {
-//         pointer new_data = new value_type[other.size_];
-//         for (size_type i = 0; i < other.size_; ++i)
-//             new_data[i] = other.data_[i];
-        
-//         data_ = new_data;
-//         size_ = other.size_;
-//         capacity_ = size_;
-//     }
-
-//     template<typename InputIt>
-//     constexpr Vector(InputIt first, InputIt last) : Vector()
-//     {
-//         const size_type count = getDistance(first, last);
-//         capacity_ = calculate_capacity(count);
-//         allocate(capacity_);
-
-//         size_type i = 0;
-//         while (first != last)        
-//         {
-//             data_[i] = *first;
-//             ++i;
-//             ++first;
-//         }
-//         size_ = count;
-//     }
-
-//     // Vector& operator
-
-//     Vector& operator=(const Vector& other)
-//     {
-//         // using namespace std;    // to enable ADL
-//         if (this == &other)
-//             return *this;
-
-//         Vector temporary(other);
-//         *this = std::move(temporary);
-//         return *this;
-//     }
-
-//     Vector& operator=(Vector&& other) noexcept
-//     {
-//         if (this == &other)
-//             return *this;
-
-//         deallocate();
-
-//         data_ = other.data_;
-//         size_ = other.size_;
-//         capacity_ = other.capacity_;
-
-//         other.data_ = nullptr;
-//         other.size_ = 0;
-//         other.capacity_ = 0;
-
-//         return *this;
-//     }
-    
-//     constexpr void Assign(size_type count, const_reference value)
-//     {
-//         Vector temporary(count, value);
-//         *this = std::move(temporary);
-//     }
-
-//     template<typename InputIt>
-//     constexpr void Assign(InputIt first, InputIt last)
-//     {
-//         Vector temporary(first, last);
-//         *this = std::move(temporary);
-//     }
-
-//     constexpr void Assign(std::initializer_list<value_type> list)
-//     {
-//         Vector temporary(std::move(list));
-//         *this = std::move(temporary);
-//     }
-    
-//     constexpr reference At(size_type pos)
-//     {
-//         if (pos >= size_ || pos < 0)
-//             throw std::out_of_range("Index is out of range!");
-//         return operator[](pos);
-//     }
-//     constexpr const_reference At(size_type pos) const
-//     {
-//         if (pos >= size_ || pos < 0)
-//             throw std::out_of_range("Index is out of range!");
-//         return operator[](pos);
-//     }
-
-//     reference operator[](size_type pos)
-//     {
-//         return data_[pos];
-//     }
-//     const_reference operator[](size_type pos) const
-//     {
-//         return data_[pos];
-//     }
-
-//     constexpr reference Front()
-//     {
-//         return data_[0];
-//     }
-//     constexpr const_reference Front() const
-//     {
-//         return data_[0];
-//     }
-
-//     constexpr reference Back()
-//     {
-//         return data_[size_ - 1];
-//     }
-//     constexpr const_reference Back() const
-//     {
-//         return data_[size_ - 1];
-//     }
-
-//     constexpr pointer Data() noexcept
-//     {
-//         return data_;
-//     }
-//     constexpr const_pointer Data() const noexcept
-//     {
-//         return data_;
-//     }
-
-//     size_type Size() const noexcept
-//     {
-//         return size_;
-//     }
-//     size_type Capacity() const noexcept
-//     {
-//         return capacity_;
-//     }
-
-//     constexpr void Reserve(size_type new_capacity)
-//     {
-//         if (new_capacity <= capacity_) 
-//             return;
-
-//         // const size_type new_actual_capacity = calculate_capacity(new_capacity);
-//         const size_type new_actual_capacity = new_capacity;
-//         reallocate(new_actual_capacity);
-//     }
-
-//     constexpr void Shrink_to_fit()
-//     {
-//         if (capacity_ > size_)
-//             reallocate(size_);
-//     }
-
-//     void Clear()
-//     {
-//         deallocate();
-//     }
-
-//     bool Empty() const noexcept
-//     {
-//         return size_ == 0ull;
-//     }
-
-
-//     iterator begin()
-//     {
-//         return iterator(data_);
-//     }
-//     const_iterator begin() const
-//     {
-//         // return cbegin();
-//         return const_iterator(data_);
-//     }
- 
-//     const_iterator cbegin() const
-//     {
-//         return const_iterator(data_);
-//     }
-
-
-//     reverse_iterator rbegin()
-//     {
-//         return reverse_iterator(data_ + size_ - 1);
-//     }
-//     const_reverse_iterator rbegin() const
-//     {
-//         return crbegin();
-//     }
-//     const_reverse_iterator crbegin() const
-//     {
-//         return const_reverse_iterator(data_ + size_ - 1);
-//     }
-
-
-//     iterator end()
-//     {
-//         return iterator(data_ + size_);
-//     }
-//     const_iterator end() const
-//     {
-//         return cend();
-//     }
-//     const_iterator cend() const
-//     {
-//         return const_iterator(data_ + size_);
-//     }
-
-
-//     reverse_iterator rend()
-//     {
-//         return reverse_iterator(data_ - 1);
-//     }
-//     const_reverse_iterator rend() const
-//     {
-//         return crend();
-//     }
-//     const_reverse_iterator crend() const
-//     {
-//         return const_reverse_iterator(data_ - 1);
-//     }
-
-
-// private:
-// void checkReallocateUpdatingIterator(size_type new_size, const_iterator& pos)
-// {
-//     if (new_size > capacity_) {
-//         const size_type pos_index = pos - cbegin();
-//         reallocate(calculate_capacity(new_size));
-//         pos = cbegin() + pos_index;
-//     }
-// }
-// iterator shiftBack(size_type shift, const_iterator pos_untill)
-// {
-//     assert(size_ + shift <= capacity_ && "Shifting is out of range!");
-//     size_ += shift;
-//     auto it = end() - 1;
-//     while (it - shift + 1 > pos_untill)
-//     {
-//         *it = *(it - shift);
-//         --it;
-//     }
-//     it -= (shift - 1);
-//     return it;
-// }
-
-// public:
-//     constexpr iterator Insert(const_iterator pos, const_reference value)
-//     {
-//         return Insert(pos, 1, value);
-//     }
-
-//     constexpr iterator Insert(const_iterator pos, value_type&& value)
-//     {
-//         const size_type new_size = size_ + 1;
-//         checkReallocateUpdatingIterator(new_size, pos);
-//         auto it = shiftBack(1, pos);
-//         *it = std::move(value);
-//         return it;
-//     }
-
-//     constexpr iterator Insert(const_iterator pos, size_type count, const_reference value)
-//     {
-//         const size_type new_size = size_ + count;
-//         checkReallocateUpdatingIterator(new_size, pos);
-//         auto it = shiftBack(count, pos);
-//         const auto it_result = it;
-//         for (size_type i = 0; i < count; ++i)
-//         {
-//             *it = value;
-//             ++it;
-//         }
-
-//         return it_result;
-//     }
-
-//     private:
-//     template<class InputIt>
-//     static size_type getDistance(InputIt first, InputIt last) noexcept
-//     {
-//         size_type count = 0;
-//         if constexpr(std::is_same_v<typename InputIt::iterator_category, std::random_access_iterator_tag>)
-//         {
-//             count = last - first;
-//         } 
-//         else 
-//         {
-//             while (first != last)
-//             {
-//                 ++count;
-//                 ++first;
-//             }
-//         }
-//         return count;
-//     }
-
-//     public:
-//     template<class InputIt>
-//     constexpr iterator Insert(const_iterator pos, InputIt first, InputIt last)
-//     {
-//         const size_type count = getDistance(first, last);
-//         const size_type new_size = size_ + count;
-//         checkReallocateUpdatingIterator(new_size, pos);
-//         auto it = shiftBack(count, pos);
-//         const auto it_result = it;
-
-//         while (first != last) {
-//             *it = *first;
-//             ++it;
-//             ++first;
-//         }
-
-//         return it_result;
-//     }
-
-//     constexpr iterator Insert(const_iterator pos, std::initializer_list<value_type> list)
-//     {
-//         const size_type new_size = size_ + list.size();
-//         checkReallocateUpdatingIterator(new_size, pos);
-//         auto it = shiftBack(list.size(), pos);
-//         const auto it_result = it;
-//         for (auto& element: list)
-//         {
-//             *it = std::move(element);
-//             ++it;
-//         }
-
-//         return it_result;
-//     }
-
-
-
-
-//     template<class... Args>
-//     constexpr iterator Emplace(const_iterator pos, Args&&... args)
-//     {
-//         const size_type new_size = size_ + 1;
-//         checkReallocateUpdatingIterator(new_size, pos);
-//         auto it = shiftBack(1, pos);
-//         *it = value_type(std::forward<Args>(args)...);
-//         return it;
-//     }
-
-//     private:
-//         iterator shiftForward(size_type shift, const_iterator pos_untill)
-//         {
-//             iterator it(static_cast<iterator>(pos_untill));
-//             assert(it - 2 < end() && "Shifting is out of range!");
-//             const iterator result = it - shift;
-//             while (it < end())
-//             {
-//                 *(it - shift) = *it;
-//                 ++it;
-//             }
-//             size_ -= shift;
-//             return result;
-//         }
-//     public:
-//         constexpr iterator Erase(const_iterator pos)
-//         {
-//             return shiftForward(1, pos + 1);
-//         }
-
-//         constexpr iterator Erase(const_iterator first, const_iterator last)
-//         {
-//             return shiftForward(last - first, last);
-//         }
-
-
-
-
-
-
-
-
-
-//     constexpr void Push_back(const_reference element)
-//     {
-//         size_type old_size = size_;
-//         size_type new_size = size_ + 1;
-
-//         if (new_size > capacity_)
-//         {
-//             size_type new_capacity = calculate_capacity(new_size);
-//             reallocate(new_capacity);
-//         }
-//         data_[old_size] = element;
-//         size_ = new_size;
-//     };
-
-//     constexpr void Push_back(value_type&& element)
-//     {
-//         size_type old_size = size_;
-//         size_type new_size = size_ + 1;
-
-//         if (new_size > capacity_)
-//         {
-//             size_type new_capacity = calculate_capacity(new_size);
-//             reallocate(new_capacity);
-//         }
-//         data_[old_size] = std::move(element);
-//         size_ = new_size;
-//     };
-
-//     constexpr void Pop_back()
-//     {
-//         --size_;
-//     }
-
-//     constexpr void Resize(size_type count)
-//     {
-//         Resize(count, value_type());
-//     }
-//     constexpr void Resize(size_type count, const_reference value)
-//     {
-//         if (count == size_)
-//             return;
-
-//         if (count < size_) {
-//             size_ = count;
-//             return;
-//         }
-
-//         Reserve(count);
-
-//         for (size_type i = size_; i < count; ++i)
-//             Push_back(value);
-
-//         size_ = count;
-//     }
-
-//     template<typename... Args>
-//     constexpr void Emplace_back(Args&&... args)
-//     {
-//         size_type old_size = size_;
-//         size_type new_size = size_ + 1;
-
-//         if (new_size > capacity_)
-//         {
-//             size_type new_capacity = calculate_capacity(new_size);
-//             reallocate(new_capacity);
-//         }
-//         data_[old_size] = value_type(std::forward<Args>(args)...);
-//         size_ = new_size;
-//     }
-
-//     constexpr void Swap(Vector& other) 
-//     {
-//         using namespace std;                    // to enable ADL
-//         swap(data_, other.data_);
-//         swap(size_, other.size_);
-//         swap(capacity_, other.capacity_);
-//     }
-
-    // template<typename Key2, typename Type2>
-    friend std::ostream& operator<<(std::ostream& out, const Node& root);
-
-
-    // template<typename Key2, typename Type2>
-    friend std::ostream& operator<<(std::ostream& out, const Map& s21_map);
+    template<typename Key3, typename Type3>
+    friend std::ostream& operator<<(std::ostream& out, const Map<Key3, Type3>& s21_map);
 
 
 };
@@ -973,16 +456,26 @@ bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& righ
 
 template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::Node& root) {
-    assert(0 && "print");
-    if (!root.left_) {
-        out << "{" << root.value_->first << " : " << root.value_->second << "}, ";
+    // assert(0 && "print");
+    if (!root.left_ && !root.right_) {
+        out << "{" << root.value_.first << " : " << root.value_.second << "}, ";
         return out;
     }
 
-    out << root.left_;
-    out << "{" << root.value_->first << " : " << root.value_->second << "}, ";
-    if (!root.right_)
-        out << root.right_;
+    if (root.left_) {
+        // out << root.left_;
+        return operator<<<Key, Type>(out, *(root.left_));
+    
+        // return out;
+    }
+        
+    out << "{" << root.value_.first << " : " << root.value_.second << "}, ";
+   
+    if (root.right_) {
+        // out << root.right_;
+        // return out;
+        return operator<<<Key, Type>(out, *(root.right_));
+    }
 
     return out;
 }
@@ -992,7 +485,8 @@ std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::
 template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
     out << "Map " << s21_map.size_ << "\n";
-    out << (*(s21_map.root_));
+    // out << (*(s21_map.root_));
+    operator<<<Key, Type>(out, *(s21_map.root_));
     return out;
 }
 // template <typename Type> bool operator==(const Vector<Type> &left, const Vector<Type> &right)
@@ -1021,4 +515,15 @@ std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) 
 
 } // namespace s21
 
+
+// int main() {
+//     s21::Map<int, double> m;
+//     m.Insert(std::make_pair(1, 1.1));
+//     m.Insert(std::make_pair(1, 4.4));
+//     m.Insert(std::make_pair(2, 2.2));
+//     m.Insert(std::make_pair(3, 3.3));
+    
+//     std::cout << m;
+//     return 0;
+// }
 #endif //  _S21_MAP_H_
