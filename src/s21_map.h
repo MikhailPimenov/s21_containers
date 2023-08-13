@@ -6,6 +6,7 @@
 #include <iterator>
 #include <new>
 #include <cstring>
+#include <iostream>
 
 namespace s21
 {
@@ -103,16 +104,13 @@ class MapIteratorBase
 
 
     reference operator*() const noexcept
-    // std::pair<typename Map::key_type, typename Map::mapped_type> operator*() const noexcept
     {
-        // return reference(pointer_->key_, pointer_->data_);
-        return reference(pointer_->key_);
-        // return std::pair<typename Map::key_type, typename Map::mapped_type>(pointer_->key_, pointer_->data_);
+        return pointer_->value_;
     }
 
     pointer operator->() const noexcept
     {
-        return pointer(pointer_->key_, pointer_->data_);
+        return &(pointer_->value_);
     }
 
     // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
@@ -155,7 +153,6 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
                                   typename Map::value_type>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
-    using typename Base::reference;
 
     // template<typename VectorType, typename PointerType, typename ReferenceType>
     // friend class VectorIterator;  // to compare const_iterator with iterator
@@ -207,7 +204,6 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
                                   typename Map::value_type>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
-    using typename Base::reference;
 
     // template<typename VectorType, typename PointerType, typename ReferenceType>
     // friend class VectorIterator;  // to compare const_iterator with iterator
@@ -262,14 +258,13 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
 template <typename Key, typename Type> class Map
 {
     struct Node;
-
   public:
     using value_type = std::pair<const Key, Type>;
     using mapped_type = Type;
     using key_type = Key;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using reference = value_type;
+    using reference = value_type &;
     using const_reference = const value_type &;
     using pointer = value_type *;
     using const_pointer = const value_type *;
@@ -286,23 +281,32 @@ template <typename Key, typename Type> class Map
     size_type size_;
 
     struct Node {
-        mapped_type data_;
-        key_type key_;
+        value_type value_;  // key + value
 
+        Node* root_;
         Node* left_;
         Node* right_;
-        Node* root_;
 
-        Node() : data_{mapped_type()}, key_{key_type()}, left_{nullptr}, right_{nullptr}, root_{nullptr} {}
+        Node() : value_{key_type(), mapped_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr} {}
+        
+        Node(const_reference value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
+         : value_{value}, root_{root}, left_{left}, right_{right} {
+
+        }
+        Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
+         : value_{std::move(value)}, root_{root}, left_{left}, right_{right} {
+
+        }
+
     };
-
+    Node* root_;
     mutable Node end_;
     mutable Node rend_;
     // pointer data_;
 
 
 public:
-    Map() : size_{0},  end_{}, rend_{}
+    Map() : size_{0},  end_{}, rend_{}, root_{nullptr}
     {
         rend_.right_ = &end_;
         end_.left_ = &rend_;
@@ -312,12 +316,15 @@ public:
         return size_;
     } 
 
+
+    // iterators============================================================
+
     iterator begin() {      // existing beginning
-        return iterator(rend_.root_);
+        return size_ ? iterator(rend_.root_) : end();
     }
 
     const_iterator cbegin() const {
-        return const_iterator(rend_.root_);
+        return size_ ? const_iterator(rend_.root_) : cend();
     }
 
     iterator end() {        // non-existing end
@@ -327,6 +334,80 @@ public:
     const_iterator cend() const {
         return const_iterator(&end_);
     }
+
+
+    
+
+private:
+    //modifiers==============================================================
+    //         4
+    //    2           6
+    //  1   3       5    7
+    Node* create_node(Node* root, const_reference value) {
+        Node* new_node = new Node(value, root);
+        ++size_;
+        return new_node;
+    }
+    std::pair<iterator, bool> create_left_node(Node* root, const_reference value) {
+        assert(root && "Root should always exist!");
+        root->left_ = create_node(root, value);
+        return std::make_pair(iterator(root->left_), true);
+    }
+    std::pair<iterator, bool> create_right_node(Node* root, const_reference value) {
+        assert(root && "Root should always exist!");
+        root->right_ = create_node(root, value);
+        return std::make_pair(iterator(root->right_), true);
+    }
+    std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
+        assert(root && "Root should always exist!");
+        // root always exists
+        if (value.first < root->value_.first) {
+            if (root->left_)
+                return insert_recursive(root->left_, value);
+            else
+                return create_left_node(root, value);
+        } else if (root->value_.first < value.first) {
+            if (root->right_)
+                return insert_recursive(root->right_, value);
+            else 
+                return create_right_node(root, value);
+        }
+        // equal
+        return std::make_pair(iterator(root), false);
+    }
+
+public:
+    std::pair<iterator, bool> Insert(const_reference value) {
+        if (!root_)
+            return std::make_pair(iterator(create_node(nullptr, value)), true);
+        return insert_recursive(root_, value);
+    }
+    // template< class P >
+    // std::pair<iterator, bool> insert( P&& value );
+// (2)	(since C++11)
+// std::pair<iterator, bool> insert( value_type&& value );
+// (3)	(since C++17)
+// (4)	
+
+// iterator insert( const_iterator pos, const value_type& value );
+// (since C++11)
+// template< class P >
+// iterator insert( const_iterator pos, P&& value );
+// (5)	(since C++11)
+// iterator insert( const_iterator pos, value_type&& value );
+// (6)	(since C++17)
+// template< class InputIt >
+// void insert( InputIt first, InputIt last );
+// (7)	
+// void insert( std::initializer_list<value_type> ilist );
+// (8)	(since C++11)
+// insert_return_type insert( node_type&& nh );
+// (9)	(since C++17)
+// iterator insert( const_iterator pos, node_type&& nh );
+// (10)	(since C++17)
+
+
+
 
 //     private:
 //         static size_type calculate_capacity(size_type count) {
@@ -852,10 +933,68 @@ public:
 //         swap(size_, other.size_);
 //         swap(capacity_, other.capacity_);
 //     }
+
+    // template<typename Key2, typename Type2>
+    friend std::ostream& operator<<(std::ostream& out, const Node& root);
+
+
+    // template<typename Key2, typename Type2>
+    friend std::ostream& operator<<(std::ostream& out, const Map& s21_map);
+
+
 };
 
+template <typename Key, typename Type>
+bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& right) {
+    if(left.Size() != right.Size())
+        return false;
+    
+    auto it_left = left.cbegin();
+    auto it_right = right.cbegin();
 
 
+    while(it_left != left.cend()) {
+        // assert(0 && "Azaza");
+        if(*it_left != *it_right) 
+            return false;
+        
+        it_left++;
+        it_right++;
+        
+    }
+
+    return true;   
+}
+
+
+// int* p = 0x00000001;
+// std::cout << p;
+// operator<<(std::ostream& ,  int*)
+
+template<typename Key, typename Type>
+std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::Node& root) {
+    assert(0 && "print");
+    if (!root.left_) {
+        out << "{" << root.value_->first << " : " << root.value_->second << "}, ";
+        return out;
+    }
+
+    out << root.left_;
+    out << "{" << root.value_->first << " : " << root.value_->second << "}, ";
+    if (!root.right_)
+        out << root.right_;
+
+    return out;
+}
+
+
+
+template<typename Key, typename Type>
+std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
+    out << "Map " << s21_map.size_ << "\n";
+    out << (*(s21_map.root_));
+    return out;
+}
 // template <typename Type> bool operator==(const Vector<Type> &left, const Vector<Type> &right)
 // {
 //     if (left.Size() != right.Size())

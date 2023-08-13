@@ -16,6 +16,7 @@ bool operator==(const s21::Map<Key, Type>& s21_map, const std::map<Key, Type>& m
     auto s21_it = s21_map.cbegin();
     auto it = map.cbegin();
 
+
     while(s21_it != s21_map.cend()) {
         if(*s21_it != *it) 
             return false;
