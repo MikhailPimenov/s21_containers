@@ -7,6 +7,8 @@
 #include <new>
 #include <cstring>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 namespace s21
 {
@@ -161,11 +163,20 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
   public:
     using Base::Base;
 
-    //                          
-    //         4
-    //    2           6
-    //  1   3       5    7
+    //          1
+    //              4
+    //                  6
+    //                      7
 
+    //          4
+    //     1        6
+    //                  7
+
+    //                          
+    //                4
+    //          2           6
+    //        1   3       5    7
+    //     re
     /*
     Tree* next(Tree* node) {
     // if no children -> go up
@@ -206,7 +217,7 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
             while (true) {
                 // find greater root
                 if (!this->pointer_->root_) {
-                    this->pointer_ = temp;
+                    this->pointer_ = temp->right_;
                     return *this;    // TODO: &end_
                 }
                 node_pointer root = this->pointer_->root_;
@@ -381,8 +392,8 @@ public:
 public:
     Map() : size_{0},  end_{}, rend_{}, root_{nullptr}
     {
-        rend_.right_ = &end_;
-        end_.left_ = &rend_;
+        rend_.root_ = &end_;
+        end_.root_ = &rend_;
     }
 
     size_type Size() const {
@@ -418,7 +429,7 @@ private:
     //         4
     //    2           6
     //  1   3       5    7
-
+    //                      8
     Node* create_node(Node* root, const_reference value) {
         Node* new_node = new Node(value, root);
         ++size_;
@@ -428,7 +439,7 @@ private:
     void updateEnd() {
         assert(root_ && "Root should always exist!");
         Node* new_end = root_;
-        while (new_end->right_ && new_end->right_ != &end_) {
+        while (new_end->right_ != nullptr && new_end->right_ != &end_) {
             new_end = new_end->right_;
         }
         end_.root_ = new_end;
@@ -463,7 +474,7 @@ private:
                 return insert_recursive(root->right_, value);
             } else {
                 root->right_ = create_node(root, value);
-                // updateEnd();
+                updateEnd();
                 return std::make_pair(iterator(root->right_), true);
             }
         }
@@ -567,8 +578,11 @@ template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, s21::Map<Key, Type>& s21_map) {
     out << "Map " << s21_map.size_ << "\n";
     // operator<<<Key, Type>(out, *(s21_map.root_));
-    for (typename s21::Map<Key, Type>::iterator it = s21_map.begin(); it != s21_map.end(); ++it)
+    int i = 0;
+    for (typename s21::Map<Key, Type>::iterator it = s21_map.begin(); it != s21_map.end() && i < 10; ++it, ++i) {
         out << "{" << (*it).first << " : " << (*it).second << "} ";
+        // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
     return out;
 }
