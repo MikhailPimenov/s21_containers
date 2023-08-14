@@ -174,9 +174,9 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
 
     //                          
     //                4
-    //          2           6
-    //        1   3       5    7
-    //     re
+    //          2               6
+    //        1   3       5          7
+    //     re         4.5  5.5
     /*
     Tree* next(Tree* node) {
     // if no children -> go up
@@ -211,18 +211,19 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
 
     MapIterator &operator++() noexcept override  // ++i
     {
-        // this->pointer_
-        if (!this->pointer_->left_ && !this->pointer_->right_) {
+        if (!this->pointer_->right_) {
             node_pointer temp = this->pointer_;
             while (true) {
                 // find greater root
                 if (!this->pointer_->root_) {
                     this->pointer_ = temp->right_;
-                    return *this;    // TODO: &end_
+                    return *this;
                 }
                 node_pointer root = this->pointer_->root_;
-                if (root->value_.first > this->pointer_->value_.first)
+                if (root->value_.first > temp->value_.first) {
+                    this->pointer_ = root;
                     return *this;
+                }
                 this->pointer_ = this->pointer_->root_; 
             }
         }
@@ -520,7 +521,7 @@ public:
 
 
     template<typename Key3, typename Type3>
-    friend std::ostream& operator<<(std::ostream& out, Map<Key3, Type3>& s21_map);
+    friend std::ostream& operator<<(std::ostream& out, const Map<Key3, Type3>& s21_map);
 
 
 };
@@ -575,11 +576,11 @@ std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::
 
 
 template<typename Key, typename Type>
-std::ostream& operator<<(std::ostream& out, s21::Map<Key, Type>& s21_map) {
+std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
     out << "Map " << s21_map.size_ << "\n";
     // operator<<<Key, Type>(out, *(s21_map.root_));
     int i = 0;
-    for (typename s21::Map<Key, Type>::iterator it = s21_map.begin(); it != s21_map.end() && i < 10; ++it, ++i) {
+    for (typename s21::Map<Key, Type>::const_iterator it = s21_map.cbegin(); it != s21_map.cend() && i < 10; ++it, ++i) {
         out << "{" << (*it).first << " : " << (*it).second << "} ";
         // std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
