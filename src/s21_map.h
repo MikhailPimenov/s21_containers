@@ -161,7 +161,7 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
   public:
     using Base::Base;
 
-
+    //                          
     //         4
     //    2           6
     //  1   3       5    7
@@ -200,35 +200,34 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
 
     MapIterator &operator++() noexcept override  // ++i
     {
-        // ++(this->pointer_);
-        // Tree* next(Tree* node) {
-        // if no children -> go up
-        // if right exists -> go right
+        // this->pointer_
         if (!this->pointer_->left_ && !this->pointer_->right_) {
+            node_pointer temp = this->pointer_;
             while (true) {
                 // find greater root
-                if (!this->pointer_->root_)
-                    return this->pointer_;
-                // Tree* root = node->_root;
-                node_pointer node = this->pointer_->root_;
-
-
-                if (this->pointer_->value_.first > node->value_.first)
-                    return this->pointer_;
-                node = node->_root; 
+                if (!this->pointer_->root_) {
+                    this->pointer_ = temp;
+                    return *this;    // TODO: &end_
+                }
+                node_pointer root = this->pointer_->root_;
+                if (root->value_.first > this->pointer_->value_.first)
+                    return *this;
+                this->pointer_ = this->pointer_->root_; 
             }
         }
-        if (!node->_right)
-            return node;      
-        node = node->_right;  
-        while(1) {
-            if (node->_left)
-                node = node->_left;
+
+        if (!this->pointer_->right_)
+            return *this;
+        
+        this->pointer_ = this->pointer_->right_;
+    
+        while(true) {
+            if (this->pointer_->left_)
+                this->pointer_ = this->pointer_->left_;
             else
-                return node;
+                return *this;
         }
-        return node;
-    }
+    
         return *this;
     }
 
@@ -390,7 +389,9 @@ public:
         return size_;
     } 
 
-
+    // Map<int, float> m1;
+    // Map<int, float>::iterator azaza = m1.begin();
+    // ++azaza;
     // iterators============================================================
 
     iterator begin() {      // existing beginning
@@ -427,28 +428,30 @@ private:
     void updateEnd() {
         assert(root_ && "Root should always exist!");
         Node* new_end = root_;
-        while (new_end->right_) {
+        while (new_end->right_ && new_end->right_ != &end_) {
             new_end = new_end->right_;
         }
         end_.root_ = new_end;
-        // new_end->right_ = &end_;     // otherwise it will not stop when if (new_end->right_)
+        new_end->right_ = &end_;     // otherwise it will not stop when if (new_end->right_)
     }
 
     void updateReverseEnd() {
         assert(root_ && "Root should always exist!");
         Node* new_end = root_;
-        while (new_end->left_) {
+        while (new_end->left_ && new_end->left_ != &rend_) {
             new_end = new_end->left_;
         }
         rend_.root_ = new_end;
-        // new_end->left_ = &rend_;     // otherwise it will not stop when if (new_end->left_)
+        new_end->left_ = &rend_;     // otherwise it will not stop when if (new_end->left_)
     }
+
+    //       4
 
     std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
         if (value.first < root->value_.first) {
-            if (root->left_) {
+            if (root->left_ != nullptr && root->left_ != &rend_) {
                 return insert_recursive(root->left_, value);
             } else {
                 root->left_ = create_node(root, value);
@@ -456,7 +459,7 @@ private:
                 return std::make_pair(iterator(root->left_), true);
             }
         } else if (root->value_.first < value.first) {
-            if (root->right_) {
+            if (root->right_ != nullptr && root->right_ != &end_) {
                 return insert_recursive(root->right_, value);
             } else {
                 root->right_ = create_node(root, value);
@@ -472,6 +475,8 @@ public:
     std::pair<iterator, bool> Insert(const_reference value) {
         if (!root_) {
             root_ = create_node(nullptr, value);
+            updateReverseEnd();
+            updateEnd();
             return std::make_pair(iterator(root_), true);
         }
         return insert_recursive(root_, value);
@@ -504,7 +509,7 @@ public:
 
 
     template<typename Key3, typename Type3>
-    friend std::ostream& operator<<(std::ostream& out, const Map<Key3, Type3>& s21_map);
+    friend std::ostream& operator<<(std::ostream& out, Map<Key3, Type3>& s21_map);
 
 
 };
@@ -559,9 +564,12 @@ std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::
 
 
 template<typename Key, typename Type>
-std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
+std::ostream& operator<<(std::ostream& out, s21::Map<Key, Type>& s21_map) {
     out << "Map " << s21_map.size_ << "\n";
-    operator<<<Key, Type>(out, *(s21_map.root_));
+    // operator<<<Key, Type>(out, *(s21_map.root_));
+    for (typename s21::Map<Key, Type>::iterator it = s21_map.begin(); it != s21_map.end(); ++it)
+        out << "{" << (*it).first << " : " << (*it).second << "} ";
+
     return out;
 }
 // template <typename Type> bool operator==(const Vector<Type> &left, const Vector<Type> &right)
