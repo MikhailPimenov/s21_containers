@@ -29,7 +29,14 @@ bool operator==(const s21::Map<Key, Type>& s21_map, const std::map<Key, Type>& m
     return true;   
 }
 
+template<typename Key, typename Type>
+std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
+    out << "Map " << s21_map.Size() << "\n";
+    for (typename s21::Map<Key, Type>::const_iterator it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+        out << "{" << (*it).first << " : " << (*it).second << "} ";
 
+    return out;
+}
 
 // GCOVR_EXCL_STOP
 

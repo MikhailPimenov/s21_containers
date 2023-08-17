@@ -6,9 +6,6 @@
 #include <iterator>
 #include <new>
 #include <cstring>
-#include <iostream>
-#include <chrono>
-#include <thread>
 
 namespace s21
 {
@@ -71,7 +68,17 @@ class MapIteratorBase
         swap(left.pointer_, right.pointer_);
     }
 
-    virtual MapIteratorBase &operator++() noexcept = 0;
+    // MapIteratorBase &operator++() noexcept
+    // {
+    //     pointer_;
+    //     ++
+    // }
+
+    // MapIteratorBase &operator--() noexcept
+    // {
+    //     --
+    // }
+
 
     // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
     // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
@@ -216,11 +223,13 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
             while (true) {
                 // find greater root
                 if (!this->pointer_->root_) {
-                    this->pointer_ = temp->right_;
+                    this->pointer_ = temp->right_;  // temp->right_ may be nullptr
                     return *this;
                 }
                 node_pointer root = this->pointer_->root_;
-                if (root->value_.first > temp->value_.first) {
+                // if we are in left subtree - root is greater
+                if (root->left_ && root->left_ == this->pointer_) {
+                // if (root->value_.first > temp->value_.first) {
                     this->pointer_ = root;
                     return *this;
                 }
@@ -250,9 +259,46 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
         return temporary;
     }
 
+
+    //                          
+    //                    4
+    //             2                 6
+    //        1      3         5          7
+    //     re  1.5    3.5   4.5  5.5        e
     MapIterator &operator--() noexcept
     {
-        // --(this->pointer_);
+        if (!this->pointer_->left_) {
+            node_pointer temp = this->pointer_;
+            while (true) {
+                // find lower root
+                if (!this->pointer_->root_) {
+                    this->pointer_ = temp->left_;       // temp->left_ may be nullptr
+                    return *this;
+                }
+                node_pointer root = this->pointer_->root_;
+                // if we are in left subtree - root is greater
+                if (root->right_ && root->right_ == this->pointer_) { // root is lower
+
+                // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
+                    this->pointer_ = root;
+                    return *this;
+                }
+                this->pointer_ = this->pointer_->root_; 
+            }
+        }
+
+        if (!this->pointer_->left_)
+            return *this;
+        
+        this->pointer_ = this->pointer_->left_;
+    
+        while(true) {
+            if (this->pointer_->right_)
+                this->pointer_ = this->pointer_->right_;
+            else
+                return *this;
+        }
+    
         return *this;
     }
 
@@ -334,7 +380,6 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
 
 template <typename Key, typename Type> class Map
 {
-    public:
     struct Node;
   public:
     using value_type = std::pair<const Key, Type>;
@@ -358,7 +403,7 @@ template <typename Key, typename Type> class Map
   private:
     size_type size_;
 
-public:
+private:
     struct Node {
         value_type value_;  // key + value
 
@@ -376,11 +421,7 @@ public:
         }
         Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
          : value_{std::move(value)}, root_{root}, left_{left}, right_{right} {
-
-
-        // template<typename Key2, typename Type2>
-        // friend std::ostream& operator<<(std::ostream& out, const Node& root);
-
+ 
         }
 
     };
@@ -406,8 +447,12 @@ public:
     // ++azaza;
     // iterators============================================================
 
-    iterator begin() {      // existing beginning
+    iterator begin() {          // existing beginning
         return size_ ? iterator(rend_.root_) : end();
+    }
+
+    const_iterator begin() const {    // existing beginning
+        return cbegin();
     }
 
     const_iterator cbegin() const {
@@ -416,6 +461,10 @@ public:
 
     iterator end() {        // non-existing end
         return iterator(&end_);
+    }
+
+    const_iterator end() const {
+        return cend();
     }
 
     const_iterator cend() const {
@@ -517,13 +566,6 @@ public:
 // iterator insert( const_iterator pos, node_type&& nh );
 // (10)	(since C++17)
 
-
-
-
-    template<typename Key3, typename Type3>
-    friend std::ostream& operator<<(std::ostream& out, const Map<Key3, Type3>& s21_map);
-
-
 };
 
 template <typename Key, typename Type>
@@ -549,44 +591,6 @@ bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& righ
 }
 
 
-// int* p = 0x00000001;
-// std::cout << p;
-// operator<<(std::ostream& ,  int*)
-
-template<typename Key, typename Type>
-std::ostream& operator<<(std::ostream& out, const typename s21::Map<Key, Type>::Node& root) {
-    if (!root.left_ && !root.right_) {
-        out << "{" << root.value_.first << " : " << root.value_.second << "}, ";
-        return out;
-    }
-
-    if (root.left_) {
-        operator<<<Key, Type>(out, *(root.left_));
-    }
-        
-    out << "{" << root.value_.first << " : " << root.value_.second << "}, ";
-   
-    if (root.right_) {
-        operator<<<Key, Type>(out, *(root.right_));
-    }
-
-    return out;
-}
-
-
-
-template<typename Key, typename Type>
-std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
-    out << "Map " << s21_map.size_ << "\n";
-    // operator<<<Key, Type>(out, *(s21_map.root_));
-    int i = 0;
-    for (typename s21::Map<Key, Type>::const_iterator it = s21_map.cbegin(); it != s21_map.cend() && i < 10; ++it, ++i) {
-        out << "{" << (*it).first << " : " << (*it).second << "} ";
-        // std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
-    return out;
-}
 // template <typename Type> bool operator==(const Vector<Type> &left, const Vector<Type> &right)
 // {
 //     if (left.Size() != right.Size())

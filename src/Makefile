@@ -31,6 +31,7 @@ SOURCES=tests/item.cc
 
 SOURCES+=tests/map/constructors.cc
 SOURCES+=tests/map/modifiers.cc
+SOURCES+=tests/map/iterator.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
