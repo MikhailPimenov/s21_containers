@@ -216,7 +216,8 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
 }
     */
 
-    MapIterator &operator++() noexcept override  // ++i
+    // MapIterator &operator++() noexcept override  // ++i
+    MapIterator &operator++() noexcept  // ++i
     {
         if (!this->pointer_->right_) {
             node_pointer temp = this->pointer_;
@@ -334,9 +335,42 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
   public:
     using Base::Base;
 
-    MapReverseIterator &operator++() noexcept override  // ++i
-    {
+    // MapReverseIterator &operator++() noexcept override  // ++i
+    MapReverseIterator &operator++() noexcept  // ++i
+    { 
         // --(this->pointer_);
+        if (!this->pointer_->left_) {
+            typename Map::node_pointer temp = this->pointer_;   // очень странная херь!! проверить===============
+            while (true) {
+                // find lower root
+                if (!this->pointer_->root_) {
+                    this->pointer_ = temp->left_;       // temp->left_ may be nullptr
+                    return *this;
+                }
+                typename Map::node_pointer root = this->pointer_->root_;
+                // if we are in left subtree - root is greater
+                if (root->right_ && root->right_ == this->pointer_) { // root is lower
+
+                // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
+                    this->pointer_ = root;
+                    return *this;
+                }
+                this->pointer_ = this->pointer_->root_; 
+            }
+        }
+
+        if (!this->pointer_->left_)
+            return *this;
+        
+        this->pointer_ = this->pointer_->left_;
+    
+        while(true) {
+            if (this->pointer_->right_)
+                this->pointer_ = this->pointer_->right_;
+            else
+                return *this;
+        }
+
         return *this;
     }
 
@@ -350,6 +384,37 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
     MapReverseIterator &operator--() noexcept
     {
         // ++(this->pointer_);
+        if (!this->pointer_->right_) {
+            typename Map::node_pointer temp = this->pointer_;
+            while (true) {
+                // find greater root
+                if (!this->pointer_->root_) {
+                    this->pointer_ = temp->right_;  // temp->right_ may be nullptr
+                    return *this;
+                }
+                typename Map::node_pointer root = this->pointer_->root_;
+                // if we are in left subtree - root is greater
+                if (root->left_ && root->left_ == this->pointer_) {
+                // if (root->value_.first > temp->value_.first) {
+                    this->pointer_ = root;
+                    return *this;
+                }
+                this->pointer_ = this->pointer_->root_; 
+            }
+        }
+
+        if (!this->pointer_->right_)
+            return *this;
+        
+        this->pointer_ = this->pointer_->right_;
+    
+        while(true) {
+            if (this->pointer_->left_)
+                this->pointer_ = this->pointer_->left_;
+            else
+                return *this;
+        }
+    
         return *this;
     }
 
@@ -397,8 +462,8 @@ template <typename Key, typename Type> class Map
   public:
     using iterator = MapIterator<Map<Key, Type>>;
     using const_iterator = MapIterator<Map<Key, Type>, const_pointer, const_reference>;
-    // using reverse_iterator = VectorReverseIterator<Vector<Type> >;
-    // using const_reverse_iterator = VectorReverseIterator<Vector<Type>, const_pointer, const_reference>;
+    using reverse_iterator = MapReverseIterator<Map<Key, Type> >;
+    using const_reverse_iterator = MapReverseIterator<Map<Key, Type>, const_pointer, const_reference>;
 
   private:
     size_type size_;
@@ -451,8 +516,16 @@ public:
         return size_ ? iterator(rend_.root_) : end();
     }
 
+    iterator rbegin() {          // existing beginning
+        return size_ ? iterator(end_.root_) : rend();
+    }
+
     const_iterator begin() const {    // existing beginning
         return cbegin();
+    }
+
+    const_iterator rbegin() const {    // existing beginning
+        return rbegin();
     }
 
     const_iterator cbegin() const {
@@ -463,12 +536,24 @@ public:
         return iterator(&end_);
     }
 
+    iterator rend() {        // non-existing end
+        return iterator(&rend_);
+    }
+
     const_iterator end() const {
         return cend();
     }
 
+    const_iterator rend() const {
+        return crend();
+    }
+
     const_iterator cend() const {
         return const_iterator(&end_);
+    }
+
+    const_iterator crend() const {
+        return const_iterator(&rend_);
     }
 
 
