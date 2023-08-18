@@ -516,15 +516,15 @@ public:
         return size_ ? iterator(rend_.root_) : end();
     }
 
-    iterator rbegin() {          // existing beginning
-        return size_ ? iterator(end_.root_) : rend();
+    reverse_iterator rbegin() {          
+        return size_ ? reverse_iterator(end_.root_) : rend();
     }
 
     const_iterator begin() const {    // existing beginning
         return cbegin();
     }
 
-    const_iterator rbegin() const {    // existing beginning
+    const_reverse_iterator rbegin() const {    
         return rbegin();
     }
 
@@ -536,15 +536,15 @@ public:
         return iterator(&end_);
     }
 
-    iterator rend() {        // non-existing end
-        return iterator(&rend_);
+    reverse_iterator rend() {        // non-existing begin
+        return reverse_iterator(&rend_);
     }
 
     const_iterator end() const {
         return cend();
     }
 
-    const_iterator rend() const {
+    const_reverse_iterator rend() const {
         return crend();
     }
 
@@ -552,7 +552,7 @@ public:
         return const_iterator(&end_);
     }
 
-    const_iterator crend() const {
+    const_reverse_iterator crend() const {
         return const_iterator(&rend_);
     }
 
