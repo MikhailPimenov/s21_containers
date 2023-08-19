@@ -503,6 +503,10 @@ public:
         end_.root_ = &rend_;
     }
 
+    ~Map() {
+        // TODO:
+    }
+
     size_type Size() const {
         return size_;
     } 
@@ -615,6 +619,27 @@ private:
         }
         // equal
         return std::make_pair(iterator(root), false);
+    }
+public:
+    void leftleft(Node* root, Node* pivot) {
+        Node* a = root->right_;
+        Node *b = pivot->right_;
+
+        Node* root_root = root->root_;
+
+        root->root_ = pivot;
+        pivot->right_ = root;
+
+        root->left_ = b;
+        b->root_ = root;
+
+        pivot->root_ = root_root;
+    }
+
+    void Balance_left_left() {
+        leftleft(root_, root_->left_);
+        // updateEnd();
+        // updateReverseEnd();
     }
 
 public:
