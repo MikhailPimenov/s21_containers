@@ -619,18 +619,18 @@ private:
     bool rightRightCase(Node* root) const noexcept {
         return false;
     }
-
     bool leftRightCase(Node* root) const noexcept {
         return false;
     }
-
     bool rightLeftCase(Node* root) const noexcept {
         return false;
     }
 
 
     void leftLeftBalance(Node* root) {
+        // assert(0 && "leftleftBalance");
         Node* root_root = root->root_;
+        assert(root->left_ && "left_ should exist!");
         Node* pivot = root->left_;
         Node *b = pivot->right_;
 
@@ -638,7 +638,8 @@ private:
         root->root_ = pivot;
 
         root->left_ = b;
-        b->root_ = root;
+        if (b)
+            b->root_ = root;
 
         pivot->root_ = root_root;
         if (root_root) {
@@ -649,16 +650,16 @@ private:
         } else {
             root_ = pivot;
         }
-    }
 
+        updateLeftHeight(root);         // order matters
+        updateRightHeight(pivot);       // order matters
+    }
     void rightRightBalance(Node* root) {
         return;
     }
-
     void leftRightBalance(Node* root) {
         return;
     }
-
     void rightLeftBalance(Node* root) {
         return;
     }
@@ -680,17 +681,27 @@ private:
     }
 
     void updateLeftHeight(Node* node) {
+        if (!node->left_) {
+            node->lHeight_ = 0ull;
+            return;
+        }
+
         if (node->left_->lHeight_ > node->left_->rHeight_)
-            node->rHeight_ = 1 + node->left_->lHeight_;
+            node->lHeight_ = 1ull + node->left_->lHeight_;
         else
-            node->rHeight_ = 1 + node->left_->rHeight_;
+            node->lHeight_ = 1ull + node->left_->rHeight_;
     }
 
     void updateRightHeight(Node* node) {
-        if (node->right_->lHeight_ > node->right_->rHeight_)
-            node->rHeight_ = 1 + node->right_->lHeight_;
-        else
-            node->rHeight_ = 1 + node->right_->rHeight_;
+        if (!node->right_) {
+            node->rHeight_ = 0ull;
+            return;
+        }
+        if (node->right_)
+            if (node->right_->lHeight_ > node->right_->rHeight_)
+                node->rHeight_ = 1ull + node->right_->lHeight_;
+            else
+                node->rHeight_ = 1ull + node->right_->rHeight_;
     }
 
     std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
@@ -704,11 +715,10 @@ private:
                     if (unbalanced(root))
                         balance(root);
                 }
-
                 return {_, created};
             } else {
                 root->left_ = create_node(root, value);
-                root->lHeight_ = 1;
+                root->lHeight_ = 1ull;
                 updateReverseEnd();
                 return std::make_pair(iterator(root->left_), true);
             }
@@ -723,7 +733,7 @@ private:
                 return {_, created};
             } else {
                 root->right_ = create_node(root, value);
-                root->rHeight_ = 1;
+                root->rHeight_ = 1ull;
                 updateEnd();
                 return std::make_pair(iterator(root->right_), true);
             }
