@@ -22,6 +22,7 @@ class MapIteratorBase
     using key_type = Key_type;
     using pointer = Pointer;
     using reference = Reference;
+    using size_type = typename Map::size_type;
     using iterator_category = std::random_access_iterator_tag;
     using node_pointer = Node_pointer;
 
@@ -121,6 +122,17 @@ class MapIteratorBase
     {
         return &(pointer_->value_);
     }
+
+    size_type LeftHeight() const noexcept
+    {
+        return pointer_->lHeight_;
+    }
+
+    size_type RightHeight() const noexcept
+    {
+        return pointer_->rHeight_;
+    }
+
 
     // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
     // bool operator==(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) const noexcept
@@ -476,16 +488,17 @@ private:
         Node* left_;
         Node* right_;
 
-        // Map& owner_;
+        size_type lHeight_;
+        size_type rHeight_;
 
-        Node() : value_{key_type(), mapped_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr} {}
+        Node() : value_{key_type(), mapped_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr}, lHeight_{0ull}, rHeight_{0ull} {}
         
         Node(const_reference value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-         : value_{value}, root_{root}, left_{left}, right_{right} {
+         : value_{value}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
 
         }
         Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-         : value_{std::move(value)}, root_{root}, left_{left}, right_{right} {
+         : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
  
         }
 
@@ -510,6 +523,10 @@ public:
     size_type Size() const {
         return size_;
     } 
+
+    size_type Height() const {
+        return root_->lHeight_ > root_->rHeight_ ? root_->lHeight_ : root_->rHeight_;
+    }
 
     // Map<int, float> m1;
     // Map<int, float>::iterator azaza = m1.begin();
@@ -596,23 +613,117 @@ private:
     }
 
     //       4
+    bool leftLeftCase(Node* root) const noexcept {
+        return root->left_ && root->left_->lHeight_ - root->left_->rHeight_ == 1ull;
+    }
+    bool rightRightCase(Node* root) const noexcept {
+        return false;
+    }
+
+    bool leftRightCase(Node* root) const noexcept {
+        return false;
+    }
+
+    bool rightLeftCase(Node* root) const noexcept {
+        return false;
+    }
+
+
+    void leftLeftBalance(Node* root) {
+        Node* root_root = root->root_;
+        Node* pivot = root->left_;
+        Node *b = pivot->right_;
+
+        pivot->right_ = root;
+        root->root_ = pivot;
+
+        root->left_ = b;
+        b->root_ = root;
+
+        pivot->root_ = root_root;
+        if (root_root) {
+            if (root_root->left_ == root)
+                root_root->left_ = pivot;
+            else
+                root_root->right_ = pivot;
+        } else {
+            root_ = pivot;
+        }
+    }
+
+    void rightRightBalance(Node* root) {
+        return;
+    }
+
+    void leftRightBalance(Node* root) {
+        return;
+    }
+
+    void rightLeftBalance(Node* root) {
+        return;
+    }
+
+
+
+
+    void balance(Node* root) {
+        if (leftLeftCase(root))
+            leftLeftBalance(root);
+        else if (rightRightCase(root))
+            rightRightBalance(root);
+        else if (leftRightCase(root))
+            leftRightBalance(root);
+        else if (rightLeftCase(root))
+            rightLeftBalance(root);
+        else
+            assert(0 && "Unknown type of unbalanced case!");
+    }
+
+    void updateLeftHeight(Node* node) {
+        if (node->left_->lHeight_ > node->left_->rHeight_)
+            node->rHeight_ = 1 + node->left_->lHeight_;
+        else
+            node->rHeight_ = 1 + node->left_->rHeight_;
+    }
+
+    void updateRightHeight(Node* node) {
+        if (node->right_->lHeight_ > node->right_->rHeight_)
+            node->rHeight_ = 1 + node->right_->lHeight_;
+        else
+            node->rHeight_ = 1 + node->right_->rHeight_;
+    }
 
     std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
         if (value.first < root->value_.first) {
-            if (root->left_ != nullptr && root->left_ != &rend_) {
-                return insert_recursive(root->left_, value);
+            if (root->left_ && root->left_ != &rend_) {
+                const auto [_, created] = insert_recursive(root->left_, value);
+                if (created) {
+                    updateLeftHeight(root);
+                    if (unbalanced(root))
+                        balance(root);
+                }
+
+                return {_, created};
             } else {
                 root->left_ = create_node(root, value);
+                root->lHeight_ = 1;
                 updateReverseEnd();
                 return std::make_pair(iterator(root->left_), true);
             }
         } else if (root->value_.first < value.first) {
-            if (root->right_ != nullptr && root->right_ != &end_) {
-                return insert_recursive(root->right_, value);
+            if (root->right_ && root->right_ != &end_) {
+                const auto [_, created] = insert_recursive(root->right_, value);
+                if (created) {
+                    updateRightHeight(root);
+                    if (unbalanced(root))
+                        balance(root);
+                }
+                return {_, created};
             } else {
                 root->right_ = create_node(root, value);
+                root->rHeight_ = 1;
                 updateEnd();
                 return std::make_pair(iterator(root->right_), true);
             }
@@ -621,26 +732,34 @@ private:
         return std::make_pair(iterator(root), false);
     }
 public:
-    void leftleft(Node* root, Node* pivot) {
-        Node* a = root->right_;
-        Node *b = pivot->right_;
-
-        Node* root_root = root->root_;
-
-        root->root_ = pivot;
-        pivot->right_ = root;
-
-        root->left_ = b;
-        b->root_ = root;
-
-        pivot->root_ = root_root;
+    bool unbalanced(Node* node) {
+        return node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_ > 1) : (node->rHeight_ - node->lHeight_ > 1);
     }
 
-    void Balance_left_left() {
-        leftleft(root_, root_->left_);
+    void leftleft(Node* root) {
+        // Node* a = root->right_;
+        // Node *b = pivot->right_;
+
+        // Node* root_root = root->root_;
+        // Node* pivot = root->left_;
+
+        // root->root_ = pivot;
+        // pivot->right_ = root;
+
+        // root->left_ = b;
+        // b->root_ = root;
+
+        // pivot->root_ = root_root;
+
+        // if (!root_root)
+        //     root_ = pivot;
+    }
+
+    // void Balance_left_left() {
+        // leftleft(root_, root_->left_);
         // updateEnd();
         // updateReverseEnd();
-    }
+    // }
 
 public:
     std::pair<iterator, bool> Insert(const_reference value) {

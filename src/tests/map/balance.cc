@@ -19,19 +19,26 @@ namespace
 TEST(Map, T0LeftLeftCase)
 {
     s21::Map<double, Item> s21_map;
+    std::cout << "insert 5.0\n";
     s21_map.Insert(std::make_pair(5.0, Item(5)));
+    std::cout << "insert 3.0\n";
     s21_map.Insert(std::make_pair(3.0, Item(5)));
+    std::cout << "insert 2.0\n";
     s21_map.Insert(std::make_pair(2.0, Item(5)));
 
+    std::cout << "insert 1.0\n";
     s21_map.Insert(std::make_pair(1.0, Item(5, 'D')));
+    std::cout << "insert 2.5\n";
     s21_map.Insert(std::make_pair(2.5, Item(5, 'C')));
+    std::cout << "insert 4.0\n";
     s21_map.Insert(std::make_pair(4.0, Item(5, 'B')));
+    std::cout << "insert 7.0\n";
     s21_map.Insert(std::make_pair(7.0, Item(5, 'A')));
 
     std::cout << "leftleft case:\n";
     std::cout << s21_map <<'\n';
 
-    s21_map.Balance_left_left();
+    // s21_map.Balance_left_left();
 
     std::cout << s21_map <<'\n';
 }

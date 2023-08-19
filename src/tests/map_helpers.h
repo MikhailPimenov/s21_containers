@@ -33,7 +33,7 @@ template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) {
     out << "Map " << s21_map.Size() << "\n";
     for (typename s21::Map<Key, Type>::const_iterator it = s21_map.cbegin(); it != s21_map.cend(); ++it)
-        out << "{" << (*it).first << " : " << (*it).second << "} ";
+        out << "{" << (*it).first << '-' << it.LeftHeight() << '-' << it.RightHeight() <<  " : " << (*it).second << "} ";
 
     return out;
 }
