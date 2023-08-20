@@ -854,38 +854,9 @@ private:
 public:
     bool unbalanced(Node* node) const noexcept {
         const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
-        if (difference > 2) {
-            // std::cout << *this << '\n';
-            // std::cout << '{' << node->value_.first << '-' << node->lHeight_ << '-' << node->rHeight_ << "}\n";
-            assert(difference <= 2 && "Critical disbalance!");
-        }
+        assert(difference <= 2 && "Critical disbalance!");
         return difference > 1;
     }
-
-    void leftleft(Node* root) {
-        // Node* a = root->right_;
-        // Node *b = pivot->right_;
-
-        // Node* root_root = root->root_;
-        // Node* pivot = root->left_;
-
-        // root->root_ = pivot;
-        // pivot->right_ = root;
-
-        // root->left_ = b;
-        // b->root_ = root;
-
-        // pivot->root_ = root_root;
-
-        // if (!root_root)
-        //     root_ = pivot;
-    }
-
-    // void Balance_left_left() {
-        // leftleft(root_, root_->left_);
-        // updateEnd();
-        // updateReverseEnd();
-    // }
 
 public:
     std::pair<iterator, bool> Insert(const_reference value) {

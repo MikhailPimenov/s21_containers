@@ -22,9 +22,8 @@ bool operator==(const s21::Map<Key, Type>& s21_map, const std::map<Key, Type>& m
         if(*s21_it != *it) 
             return false;
         
-        s21_it++;
-        it++;
-        
+        ++s21_it;
+        ++it; 
     }
 
     return true;   

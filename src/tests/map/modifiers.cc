@@ -24,11 +24,13 @@ TEST(Map, T0Insert)
     s21_map.Insert(std::make_pair(7, Item(7)));
     s21_map.Insert(std::make_pair(1, Item(1)));
 
-    std::cout << s21_map << '\n';
-
     std::map<int, Item> map;
+    map.insert(std::make_pair(4, Item(4)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(1, Item(1)));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
 
 TEST(Map, T1Insert)
@@ -39,11 +41,13 @@ TEST(Map, T1Insert)
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
 
-    std::cout << s21_map << '\n';
-
     std::map<int, Item> map;
+    map.insert(std::make_pair(1, Item(1)));
+    map.insert(std::make_pair(4, Item(4)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(7, Item(7)));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
 
 TEST(Map, T2Insert)
@@ -51,11 +55,11 @@ TEST(Map, T2Insert)
     s21::Map<int, Item> s21_map;
     s21_map.Insert(std::make_pair(1, Item(1)));
 
-    std::cout << s21_map << '\n';
 
     std::map<int, Item> map;
+    map.insert(std::make_pair(1, Item(1)));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
 
 
@@ -67,13 +71,13 @@ TEST(Map, T3Insert)
     s21_map.Insert(std::make_pair(7, Item(7)));
     s21_map.Insert(std::make_pair(1, Item(1)));
 
-    std::cout << s21_map << '\n';
-
-    // s21::Map<>::const_iterator s21_it = s21_map.cbegin();
-
     std::map<int, Item> map;
+    map.insert(std::make_pair(-4, Item(4)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(1, Item(1)));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
 
 TEST(Map, T4Insert)
@@ -84,11 +88,13 @@ TEST(Map, T4Insert)
     s21_map.Insert(std::make_pair(-7, Item(7)));
     s21_map.Insert(std::make_pair(-1, Item(1)));
 
-    std::cout << s21_map << '\n';
-
     std::map<int, Item> map;
+    map.insert(std::make_pair(-4, Item(4)));
+    map.insert(std::make_pair(-6, Item(6)));
+    map.insert(std::make_pair(-7, Item(7)));
+    map.insert(std::make_pair(-1, Item(1)));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
 
 TEST(Map, T5Insert)
@@ -99,11 +105,13 @@ TEST(Map, T5Insert)
     s21_map.Insert(std::make_pair(0, Item(7)));
     s21_map.Insert(std::make_pair(-1, Item(1)));
 
-    std::cout << s21_map << '\n';
-
     std::map<int, Item> map;
+    map.insert(std::make_pair(-4, Item(4)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(0, Item(7)));
+    map.insert(std::make_pair(-1, Item(1)));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
 
 

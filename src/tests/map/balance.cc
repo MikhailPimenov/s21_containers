@@ -18,8 +18,6 @@ namespace
 
 TEST(Map, T0LeftLeftCase)
 {
-    return;
-    // std::cout << "leftleft case:\n";
     s21::Map<double, Item> s21_map;
     std::cout << "insert 5.0\n";
     s21_map.Insert(std::make_pair(5.0, Item(5)));
@@ -46,13 +44,12 @@ TEST(Map, T0LeftLeftCase)
 
 
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+
 }
 
 TEST(Map, T1RightRightCase)
 {
-    return;
     s21::Map<double, Item> s21_map;
-    // std::cout << "rightright case:\n";
     std::cout << "insert 3.0\n";
     s21_map.Insert(std::make_pair(3.0, Item(5)));
     std::cout << s21_map <<'\n';
@@ -286,20 +283,23 @@ TEST(Map, T10SortedMixedCase)
 
 TEST(Map, T11SortedMixedCase)
 {
-    // return;
     s21::Map<int, Item> s21_map;
+    std::map<int, Item> map;
 
     for (int i = -20000; i < 20000; ++i) {
         
         // std::cout << "insert " << -i << '\n';
         s21_map.Insert(std::make_pair(-i, Item(-i)));
+        map.insert(std::make_pair(-i, Item(-i)));
         // std::cout << "Map: size " << s21_map.Size() << ", height " << s21_map.Height() << "\n"; 
         // std::cout << s21_map << "\n\n";
         
         s21_map.Insert(std::make_pair(i * i / 2, Item(i / 2)));
+        map.insert(std::make_pair(i * i / 2, Item(i / 2)));
         
         // std::cout << "insert " << i << '\n';
         s21_map.Insert(std::make_pair(i, Item(i)));
+        map.insert(std::make_pair(i, Item(i)));
         // std::cout << "Map: size " << s21_map.Size() << ", height " << s21_map.Height() << "\n"; 
         // std::cout << s21_map << "\n\n";
     }
@@ -307,6 +307,33 @@ TEST(Map, T11SortedMixedCase)
     std::cout << "Map: size " << s21_map.Size() << ", height " << s21_map.Height() << "\n"; 
 
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_map, map);
+}
+
+TEST(Map, T12SortedMixedCase)
+{
+    s21::Map<int, Item> s21_map;
+    std::map<int, Item> map;
+
+    for (int i = -20000; i < 20000; ++i) {
+        
+        s21_map.Insert(std::make_pair(-i, Item(-i)));
+        map.insert(std::make_pair(-i, Item(-i)));
+        
+        s21_map.Insert(std::make_pair(i * i / 2, Item(i * i / 2)));
+        map.insert(std::make_pair(i * i / 2, Item(i * i / 2)));
+
+        s21_map.Insert(std::make_pair(-i * i * i / 2, Item(-i * i * i / 2)));
+        map.insert(std::make_pair(-i * i * i / 2, Item(-i * i * i / 2)));
+        
+        s21_map.Insert(std::make_pair(i, Item(i)));
+        map.insert(std::make_pair(i, Item(i)));
+    }
+
+    std::cout << "Map: size " << s21_map.Size() << ", height " << s21_map.Height() << "\n"; 
+
+    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_map, map);
 }
 
 
