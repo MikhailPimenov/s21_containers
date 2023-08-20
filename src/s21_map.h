@@ -614,16 +614,16 @@ private:
 
     //       4
     bool leftLeftCase(Node* root) const noexcept {
-        return root->left_ && root->left_->lHeight_ - root->left_->rHeight_ == 1ull;
+        return unbalanced(root) && root->left_ && root->left_->lHeight_ - root->left_->rHeight_ == 1ull;    // ? TODO: consider rHeight of root
     }
     bool rightRightCase(Node* root) const noexcept {
-        return false;
+        return unbalanced(root) && root->right_ && root->right_->rHeight_ - root->right_->lHeight_ == 1ull;
     }
     bool leftRightCase(Node* root) const noexcept {
-        return false;
+        return unbalanced(root) && root->left_ && root->left_->rHeight_ - root->left_->lHeight_ == 1ull;
     }
     bool rightLeftCase(Node* root) const noexcept {
-        return false;
+        return unbalanced(root) && root->right_ && root->right_->lHeight_ - root->right_->rHeight_ == 1ull;
     }
 
 
@@ -655,19 +655,86 @@ private:
         updateRightHeight(pivot);       // order matters
     }
     void rightRightBalance(Node* root) {
-        return;
+        // assert(0 && "rightrightBalance");
+        Node* root_root = root->root_;
+        assert(root->right_ && "right_ should exist!");
+        Node* pivot = root->right_;
+        Node *b = pivot->left_;
+
+        pivot->left_ = root;
+        root->root_ = pivot;
+
+        root->right_ = b;
+        if (b)
+            b->root_ = root;
+
+        pivot->root_ = root_root;
+        if (root_root) {
+            if (root_root->left_ == root)
+                root_root->left_ = pivot;
+            else
+                root_root->right_ = pivot;
+        } else {
+            root_ = pivot;
+        }
+
+        updateRightHeight(root);        // order matters
+        updateLeftHeight(pivot);        // order matters
     }
     void leftRightBalance(Node* root) {
-        return;
+        // assert(0 && "left right balance");
+        assert(root->left_ && "left_ should exist!");
+        assert(root->left_->right_ && "left_->right_ should exist!");
+        
+        Node* child = root->left_;
+        Node* pivot = child->right_;
+        Node* c = pivot->left_;
+
+        pivot->left_ = child;
+        child->root_ = pivot;
+
+        child->right_ = c;
+        if (c)
+            c->root_ = child;
+
+        root->left_ = pivot;
+        pivot->root_ = root;
+
+        updateRightHeight(child);       // order matters
+        updateLeftHeight(pivot);        // order matters
+
+        leftLeftBalance(root);
     }
     void rightLeftBalance(Node* root) {
-        return;
+        // assert(0 && "right left balance");
+        assert(root->right_ && "right_ should exist!");
+        assert(root->right_->left_ && "right_->left_ should exist!");
+        
+        Node* child = root->right_;
+        Node* pivot = child->left_;
+        Node* c = pivot->right_;
+
+        pivot->right_ = child;
+        child->root_ = pivot;
+
+        child->left_ = c;
+        if (c)
+            c->root_ = child;
+
+        root->right_ = pivot;
+        pivot->root_ = root;
+
+        updateLeftHeight(child);        // order matters
+        updateRightHeight(pivot);       // order matters
+
+        rightRightBalance(root);
     }
 
 
 
 
-    void balance(Node* root) {
+    void balance(Node* root) noexcept {
+        // return;
         if (leftLeftCase(root))
             leftLeftBalance(root);
         else if (rightRightCase(root))
@@ -742,7 +809,7 @@ private:
         return std::make_pair(iterator(root), false);
     }
 public:
-    bool unbalanced(Node* node) {
+    bool unbalanced(Node* node) const noexcept {
         return node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_ > 1) : (node->rHeight_ - node->lHeight_ > 1);
     }
 

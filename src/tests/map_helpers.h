@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <cmath>
 
 #include "../s21_map.h"
 
@@ -36,6 +37,10 @@ std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>& s21_map) 
         out << "{" << (*it).first << '-' << it.LeftHeight() << '-' << it.RightHeight() <<  " : " << (*it).second << "} ";
 
     return out;
+}
+
+inline bool minimalHeight(std::size_t size, std::size_t height) {
+    return height < std::log2(static_cast<double>(size) + 1.0);
 }
 
 // GCOVR_EXCL_STOP
