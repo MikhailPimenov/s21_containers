@@ -525,6 +525,8 @@ public:
     } 
 
     size_type Height() const {
+        if (!root_)
+            return 0ull;
         return root_->lHeight_ > root_->rHeight_ ? root_->lHeight_ : root_->rHeight_;
     }
 
@@ -536,43 +538,33 @@ public:
     iterator begin() {          // existing beginning
         return size_ ? iterator(rend_.root_) : end();
     }
-
     reverse_iterator rbegin() {          
         return size_ ? reverse_iterator(end_.root_) : rend();
     }
-
     const_iterator begin() const {    // existing beginning
         return cbegin();
     }
-
     const_reverse_iterator rbegin() const {    
         return rbegin();
     }
-
     const_iterator cbegin() const {
         return size_ ? const_iterator(rend_.root_) : cend();
     }
-
     iterator end() {        // non-existing end
         return iterator(&end_);
     }
-
     reverse_iterator rend() {        // non-existing begin
         return reverse_iterator(&rend_);
     }
-
     const_iterator end() const {
         return cend();
     }
-
     const_reverse_iterator rend() const {
         return crend();
     }
-
     const_iterator cend() const {
         return const_iterator(&end_);
     }
-
     const_reverse_iterator crend() const {
         return const_iterator(&rend_);
     }
@@ -614,16 +606,56 @@ private:
 
     //       4
     bool leftLeftCase(Node* root) const noexcept {
-        return unbalanced(root) && root->left_ && root->left_->lHeight_ - root->left_->rHeight_ == 1ull;    // ? TODO: consider rHeight of root
+        if (root->lHeight_ - root->rHeight_ != 2ull)
+            return false;
+        if (!root->left_) {
+            // assert(0 && "left_ should exist!");
+            return false;
+        }
+        if (root->left_->lHeight_ - root->left_->rHeight_ != 1ull) {
+            // assert(0 && "Expected 1 difference!");
+            return false;
+        }
+        return true;
+        // return unbalanced(root) && root->left_ && root->left_->lHeight_ - root->left_->rHeight_ == 1ull;    // ? TODO: consider rHeight of root
     }
     bool rightRightCase(Node* root) const noexcept {
-        return unbalanced(root) && root->right_ && root->right_->rHeight_ - root->right_->lHeight_ == 1ull;
+        if (root->rHeight_ - root->lHeight_ != 2ull)
+            return false;
+        if (!root->right_) {
+            // assert(0 && "right_ should exist!");
+            return false;
+        }
+        if (root->right_->rHeight_ - root->right_->lHeight_ != 1ull) {
+            // assert(0 && "Expected 1 difference!");
+            return false;
+        } 
+        return true;
+        // return unbalanced(root) && root->right_ && root->right_->rHeight_ - root->right_->lHeight_ == 1ull;
     }
     bool leftRightCase(Node* root) const noexcept {
-        return unbalanced(root) && root->left_ && root->left_->rHeight_ - root->left_->lHeight_ == 1ull;
+        if (root->lHeight_ - root->rHeight_ != 2ull)
+            return false; 
+        if (!root->left_)
+            return false;
+        if (root->left_->rHeight_ - root->left_->lHeight_ != 1ull) {
+            // assert(0 && "Expected 1 difference!");
+            return false;
+        } 
+        return true;
+        // return unbalanced(root) && root->left_ && root->left_->rHeight_ - root->left_->lHeight_ == 1ull;
     }
     bool rightLeftCase(Node* root) const noexcept {
-        return unbalanced(root) && root->right_ && root->right_->lHeight_ - root->right_->rHeight_ == 1ull;
+        if (root->rHeight_ - root->lHeight_ != 2ull)
+            return false;
+        if (!root->right_)
+            return false;
+        if (root->right_->lHeight_ - root->right_->rHeight_ != 1ull) {
+            // assert(0 && "Expected 1 difference!");
+            return false;
+        }
+        return true;
+        // return unbalanced(root) && root->right_ && root->right_->lHeight_ - root->right_->rHeight_ == 1ull;
     }
 
 
@@ -683,8 +715,16 @@ private:
     }
     void leftRightBalance(Node* root) {
         // assert(0 && "left right balance");
-        assert(root->left_ && "left_ should exist!");
-        assert(root->left_->right_ && "left_->right_ should exist!");
+        if (!root->left_) {
+            std::cout << *this << '\n';
+            std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
+            assert(root->left_ && "left_ should exist!");
+        }
+        if (!root->left_->right_) {
+            std::cout << *this << '\n';
+            std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
+            assert(root->left_->right_ && "left_->right_ should exist!");
+        }
         
         Node* child = root->left_;
         Node* pivot = child->right_;
@@ -735,20 +775,23 @@ private:
 
     void balance(Node* root) noexcept {
         // return;
-        if (leftLeftCase(root))
-            leftLeftBalance(root);
-        else if (rightRightCase(root))
-            rightRightBalance(root);
-        else if (leftRightCase(root))
+        if (leftRightCase(root))
             leftRightBalance(root);
         else if (rightLeftCase(root))
             rightLeftBalance(root);
-        else
+        else if (leftLeftCase(root))
+            leftLeftBalance(root);
+        else if (rightRightCase(root))
+            rightRightBalance(root);
+        else {
+            std::cout << *this << '\n';
+            std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(0 && "Unknown type of unbalanced case!");
+        }
     }
 
     void updateLeftHeight(Node* node) {
-        if (!node->left_) {
+        if (!node->left_ || node->left_ == &rend_) {
             node->lHeight_ = 0ull;
             return;
         }
@@ -760,7 +803,7 @@ private:
     }
 
     void updateRightHeight(Node* node) {
-        if (!node->right_) {
+        if (!node->right_ || node->right_ == &end_) {
             node->rHeight_ = 0ull;
             return;
         }
@@ -810,7 +853,13 @@ private:
     }
 public:
     bool unbalanced(Node* node) const noexcept {
-        return node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_ > 1) : (node->rHeight_ - node->lHeight_ > 1);
+        const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
+        if (difference > 2) {
+            // std::cout << *this << '\n';
+            // std::cout << '{' << node->value_.first << '-' << node->lHeight_ << '-' << node->rHeight_ << "}\n";
+            assert(difference <= 2 && "Critical disbalance!");
+        }
+        return difference > 1;
     }
 
     void leftleft(Node* root) {
@@ -846,7 +895,15 @@ public:
             updateEnd();
             return std::make_pair(iterator(root_), true);
         }
-        return insert_recursive(root_, value);
+        // return insert_recursive(root_, value);
+        const auto [_, created] = insert_recursive(root_, value);
+        if (created) {
+            updateLeftHeight(root_);
+            updateRightHeight(root_);
+            if (unbalanced(root_))
+                balance(root_);
+        }
+        return {_, created};
     }
     // template< class P >
     // std::pair<iterator, bool> insert( P&& value );

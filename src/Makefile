@@ -1,6 +1,6 @@
 CC=g++
 # STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -Werror
-STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic
+STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g
 
 
 GCOVR_CFLAGS=-fprofile-arcs -ftest-coverage -fPIC
