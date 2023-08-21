@@ -449,17 +449,43 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
 
 
 
+// std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
+        // assert(root && "Root should always exist!");
+        // root always exists
+        // if (value.first < root->value_.first) {
+        // if (value < root->value_) {
+        // if (Comparator(value, root->value_)) {
+
+
+template <typename Type>
+class ComparatorSet {
+
+public:
+    static bool operator()(const Type& left, const Type& right) {
+        return left < right;
+    }
+
+};
+
+template <typename Type>
+class ComparatorMap {
+
+public:
+    static bool operator()(const Type& left, const Type& right) {
+        return left.first < right.first;
+    }
+
+};
 
 
 
 
-
-
-template <typename Key, typename Type> class Map
+template <typename Value, typename Comparator> class MapBase
 {
     struct Node;
   public:
-    using value_type = std::pair<const Key, Type>;
+    // using value_type = std::pair<const Key, Type>;
+    using value_type = Value;
     using mapped_type = Type;
     using key_type = Key;
     using size_type = std::size_t;
@@ -470,12 +496,13 @@ template <typename Key, typename Type> class Map
     using const_pointer = const value_type *;
 
     using node_pointer = Node*;
+    using comparator = Comparator;
 
   public:
-    using iterator = MapIterator<Map<Key, Type>>;
-    using const_iterator = MapIterator<Map<Key, Type>, const_pointer, const_reference>;
-    using reverse_iterator = MapReverseIterator<Map<Key, Type> >;
-    using const_reverse_iterator = MapReverseIterator<Map<Key, Type>, const_pointer, const_reference>;
+    using iterator = MapIterator<MapBase<Value, Comparator>>;
+    using const_iterator = MapIterator<MapBase<Value, Comparator>, const_pointer, const_reference>;
+    using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator> >;
+    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator>, const_pointer, const_reference>;
 
   private:
     size_type size_;
@@ -510,21 +537,24 @@ private:
 
 
 public:
-    Map() : size_{0},  end_{}, rend_{}, root_{nullptr}
+    MapBase() : size_{0},  end_{}, rend_{}, root_{nullptr}
     {
         rend_.root_ = &end_;
         end_.root_ = &rend_;
     }
 
-    ~Map() {
+    ~MapBase() {
         // TODO:
+        // delete root_;
+        // --size_;
+        // root_ = nullptr;
     }
 
-    size_type Size() const {
+    size_type Size() const noexcept {
         return size_;
     } 
 
-    size_type Height() const {
+    size_type Height() const noexcept {
         if (!root_)
             return 0ull;
         return root_->lHeight_ > root_->rHeight_ ? root_->lHeight_ : root_->rHeight_;
@@ -534,7 +564,6 @@ public:
     // Map<int, float>::iterator azaza = m1.begin();
     // ++azaza;
     // iterators============================================================
-
     iterator begin() {          // existing beginning
         return size_ ? iterator(rend_.root_) : end();
     }
@@ -817,7 +846,9 @@ private:
     std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
-        if (value.first < root->value_.first) {
+        // if (value.first < root->value_.first) {
+        // if (value < root->value_) {
+        if (comparator(value, root->value_)) {
             if (root->left_ && root->left_ != &rend_) {
                 const auto [_, created] = insert_recursive(root->left_, value);
                 if (created) {
@@ -832,7 +863,8 @@ private:
                 updateReverseEnd();
                 return std::make_pair(iterator(root->left_), true);
             }
-        } else if (root->value_.first < value.first) {
+        // } else if (root->value_.first < value.first) {
+        } else if (comparator(root->value_, value)) {
             if (root->right_ && root->right_ != &end_) {
                 const auto [_, created] = insert_recursive(root->right_, value);
                 if (created) {
@@ -901,6 +933,50 @@ public:
 // (10)	(since C++17)
 
 };
+
+
+
+template <typename Type>
+class Set : public MapBase<Type, ComparatorSet> {
+
+};
+
+template <typename Key, typename Type>
+class Map : public MapBase<std::pair<Key, Type>, ComparatorMap> {
+
+public:
+    using Base = MapBase<std::pair<Key, Type>, ComparatorMap>;
+
+public:
+    // using value_type = typename Base::value_type;
+    // using mapped_type = typename Base::mapped_type;
+    // using key_type = typename Base::key_type;
+    // using size_type = typename Base::size_type;
+    // using difference_type = typename Base::difference_type;
+    // using reference = typename Base::reference;
+    // using const_reference = typename Base::const_reference;
+    // using pointer = typename Base::pointer;
+    // using const_pointer = typename Base::const_pointer;
+
+    // using node_pointer = Node*;
+    // using comparator = Comparator;
+
+
+public:
+    using iterator = typename Base::iterator;
+    using const_iterator = typename Base::const_iterator;
+    using reverse_iterator = typename Base::reverse_iterator;
+    using const_reverse_iterator = typename Base::const_reverse_iterator;
+
+public:
+    using Base::Base;
+
+    // size_type Size() const noexcept {
+    //     return this->Base::Size();
+    // }
+
+};
+
 
 template <typename Key, typename Type>
 bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& right) {
