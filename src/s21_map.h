@@ -543,11 +543,26 @@ public:
         end_.root_ = &rend_;
     }
 
+    void deallocate(Node** node) {
+        if((*node)->left_ && (*node)->left_ != &rend_) 
+            deallocate(&(*node)->left_);
+           
+        if((*node)->right_ && (*node)->right_ != &end_) 
+            deallocate(&(*node)->right_);
+
+        delete *node;
+        *node = nullptr;
+    }
+
     ~MapBase() {
-        // TODO:
-        // delete root_;
-        // --size_;
-        // root_ = nullptr;
+
+        std::cout << "~des map \n";
+
+        if(root_)
+            deallocate(&root_);
+        
+        size_ = 0;
+        
     }
 
     size_type Size() const noexcept {
