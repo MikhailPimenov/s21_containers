@@ -11,7 +11,7 @@ namespace s21
 {
 
 template <typename Map, typename Pointer, typename Reference, typename Node_pointer, typename Difference_type,
-          typename Key_type, typename Value_type>
+          /*typename Key_type,*/ typename Value_type>
 // template <typename Vector, typename Pointer, typename Reference, typename Difference_type,
         //   typename Value_type>
 class MapIteratorBase
@@ -19,7 +19,7 @@ class MapIteratorBase
   public:
     using difference_type = Difference_type;
     using value_type = Value_type;
-    using key_type = Key_type;
+    //using key_type = Key_type;
     using pointer = Pointer;
     using reference = Reference;
     using size_type = typename Map::size_type;
@@ -167,10 +167,10 @@ class MapIteratorBase
 };
 
 template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference>
-class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, typename Map::key_type, typename Map::value_type>
+class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
 {
   private:
-    using Base = MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, typename Map::key_type,
+    using Base = MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
                                   typename Map::value_type>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
@@ -333,10 +333,10 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
 };
 
 template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference>
-class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, typename Map::key_type, typename Map::value_type>
+class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
 {
   private:
-    using Base = MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, typename Map::key_type,
+    using Base = MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
                                   typename Map::value_type>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
@@ -461,17 +461,17 @@ template <typename Type>
 class ComparatorSet {
 
 public:
-    static bool operator()(const Type& left, const Type& right) {
+    bool operator()(const Type& left, const Type& right) {
         return left < right;
     }
 
 };
 
-template <typename Type>
+template <typename PairType>
 class ComparatorMap {
 
 public:
-    static bool operator()(const Type& left, const Type& right) {
+    bool operator()(const PairType& left, const PairType& right) {
         return left.first < right.first;
     }
 
@@ -486,8 +486,8 @@ template <typename Value, typename Comparator> class MapBase
   public:
     // using value_type = std::pair<const Key, Type>;
     using value_type = Value;
-    using mapped_type = Type;
-    using key_type = Key;
+    //using mapped_type = Type;
+    //using key_type = Key;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using reference = value_type &;
@@ -518,7 +518,7 @@ private:
         size_type lHeight_;
         size_type rHeight_;
 
-        Node() : value_{key_type(), mapped_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr}, lHeight_{0ull}, rHeight_{0ull} {}
+        Node() : value_{value_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr}, lHeight_{0ull}, rHeight_{0ull} {}
         
         Node(const_reference value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
          : value_{value}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
@@ -534,6 +534,8 @@ private:
     mutable Node end_;      // non-existing element, element after last existing element
     mutable Node rend_;     // non-existing element, element before begin
     // pointer data_;
+private:
+    comparator comparator_;
 
 
 public:
@@ -760,12 +762,12 @@ private:
     void leftRightBalance(Node* root) {
         // assert(0 && "left right balance");
         if (!root->left_) {
-            std::cout << *this << '\n';
+//            std::cout << *this << '\n';
             std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(root->left_ && "left_ should exist!");
         }
         if (!root->left_->right_) {
-            std::cout << *this << '\n';
+//            std::cout << *this << '\n';
             std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(root->left_->right_ && "left_->right_ should exist!");
         }
@@ -863,7 +865,7 @@ private:
         // root always exists
         // if (value.first < root->value_.first) {
         // if (value < root->value_) {
-        if (comparator(value, root->value_)) {
+        if (comparator_(value, root->value_)) {
             if (root->left_ && root->left_ != &rend_) {
                 const auto [_, created] = insert_recursive(root->left_, value);
                 if (created) {
@@ -879,7 +881,7 @@ private:
                 return std::make_pair(iterator(root->left_), true);
             }
         // } else if (root->value_.first < value.first) {
-        } else if (comparator(root->value_, value)) {
+        } else if (comparator_(root->value_, value)) {
             if (root->right_ && root->right_ != &end_) {
                 const auto [_, created] = insert_recursive(root->right_, value);
                 if (created) {
@@ -951,16 +953,16 @@ public:
 
 
 
-template <typename Type>
-class Set : public MapBase<Type, ComparatorSet> {
+template <typename Type, typename Comparator = ComparatorSet<Type>>
+class Set : public MapBase<Type, Comparator> {
 
 };
 
-template <typename Key, typename Type>
-class Map : public MapBase<std::pair<Key, Type>, ComparatorMap> {
+template <typename Key, typename Type, typename Comparator = ComparatorMap<std::pair<Key, Type>>>
+class Map : public MapBase<std::pair<Key, Type>, Comparator> {
 
 public:
-    using Base = MapBase<std::pair<Key, Type>, ComparatorMap>;
+    using Base = MapBase<std::pair<Key, Type>, Comparator>;
 
 public:
     // using value_type = typename Base::value_type;
