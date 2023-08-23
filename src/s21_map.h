@@ -541,10 +541,11 @@ private:
 public:
     MapBase() : size_{0},  end_{}, rend_{}, root_{nullptr}
     {
-        rend_.root_ = &end_;
-        end_.root_ = &rend_;
+        // rend_.root_ = &end_;
+        // end_.root_ = &rend_;
     }
 
+private:
     void deallocate(Node** node) {
         if((*node)->left_ && (*node)->left_ != &rend_) 
             deallocate(&(*node)->left_);
@@ -556,9 +557,10 @@ public:
         *node = nullptr;
     }
 
+public:
     ~MapBase() {
 
-        std::cout << "~des map \n";
+        // std::cout << "~des map \n";
 
         if(root_)
             deallocate(&root_);
@@ -830,7 +832,7 @@ private:
         else if (rightRightCase(root))
             rightRightBalance(root);
         else {
-            std::cout << *this << '\n';
+            // std::cout << *this << '\n';
             std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(0 && "Unknown type of unbalanced case!");
         }
@@ -958,40 +960,31 @@ class Set : public MapBase<Type, Comparator> {
 
 };
 
-template <typename Key, typename Type, typename Comparator = ComparatorMap<std::pair<Key, Type>>>
-class Map : public MapBase<std::pair<Key, Type>, Comparator> {
+template <typename Key, typename Type, typename Comparator = ComparatorMap<std::pair<const Key, Type>>>
+class Map : public MapBase<std::pair<const Key, Type>, Comparator> {
 
 public:
-    using Base = MapBase<std::pair<Key, Type>, Comparator>;
+    using Base = MapBase<std::pair<const Key, Type>, Comparator>;
 
 public:
-    // using value_type = typename Base::value_type;
-    // using mapped_type = typename Base::mapped_type;
-    // using key_type = typename Base::key_type;
-    // using size_type = typename Base::size_type;
-    // using difference_type = typename Base::difference_type;
-    // using reference = typename Base::reference;
-    // using const_reference = typename Base::const_reference;
-    // using pointer = typename Base::pointer;
-    // using const_pointer = typename Base::const_pointer;
-
-    // using node_pointer = Node*;
-    // using comparator = Comparator;
-
+    using value_type        = typename Base::value_type;
+    // using mapped_type       = typename Base::mapped_type;
+    // using key_type          = typename Base::key_type;
+    using size_type         = typename Base::size_type;
+    using difference_type   = typename Base::difference_type;
+    using reference         = typename Base::reference;
+    using const_reference   = typename Base::const_reference;
+    using pointer           = typename Base::pointer;
+    using const_pointer     = typename Base::const_pointer;
 
 public:
-    using iterator = typename Base::iterator;
-    using const_iterator = typename Base::const_iterator;
-    using reverse_iterator = typename Base::reverse_iterator;
-    using const_reverse_iterator = typename Base::const_reverse_iterator;
+    using iterator                  = typename Base::iterator;
+    using const_iterator            = typename Base::const_iterator;
+    using reverse_iterator          = typename Base::reverse_iterator;
+    using const_reverse_iterator    = typename Base::const_reverse_iterator;
 
 public:
     using Base::Base;
-
-    // size_type Size() const noexcept {
-    //     return this->Base::Size();
-    // }
-
 };
 
 

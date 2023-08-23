@@ -18,10 +18,15 @@ namespace
 
 TEST(Map, T0DefaultConstructor)
 {
-    // s21::Map<int, Item> s21_map;
-    // std::map<int, Item> map;
+    s21::Map<int, Item> s21_map;
+    std::map<int, Item> map;
 
-    // EXPECT_EQ(s21_map, map);
+    std::cout << s21_map << '\n';
+
+    for (auto it = map.cbegin(); it != map.cend(); ++it)
+        std::cout << "{" << it->first << " : " << it->second << "}\n";
+
+    EXPECT_EQ(s21_map, map);
 }
 
 TEST(Map, T1Destructor)
@@ -40,6 +45,18 @@ TEST(Map, T2Destructor)
     s21_map.Insert(std::make_pair(4, Item()));
 
     // EXPECT_EQ(s21_map, map);
+
+
+
+    // s21::Set<int> s21_set;
+    // s21_set.Insert(4);
+    // s21_set.Insert(1);
+    // s21_set.Insert(0);
+    // s21_set.Insert(1);
+    // s21_set.Insert(2);
+    // s21_set.Insert(4);
+
+    // std::cout << s21_set << '\n';
 }
 
 
