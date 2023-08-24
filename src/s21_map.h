@@ -1076,7 +1076,9 @@ private:
             }
 
             return result;
-        }   
+        } 
+        assert(0 && "Impossible case!");
+        return iterator(*root);  
     }
 
 public:
