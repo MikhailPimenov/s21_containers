@@ -35,14 +35,15 @@ TEST(Map, T0Erase)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
 
-    map.erase(7);
-    s21_map.Erase(7, Item());
+    s21_map.Erase(s21_map.cbegin());
+    map.erase(map.begin());
     std::cout << "After erase: \n\n";
 
     // for (auto it = map.cbegin(); it != map.cend(); ++it)
     //     std::cout << "{" << it->first << " : " << it->second << "}\n";
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
+    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));
 }
 
 TEST(Map, T1Erase)
