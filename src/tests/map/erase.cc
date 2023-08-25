@@ -37,10 +37,10 @@ TEST(Map, T0Erase)
 
     s21_map.Erase(s21_map.cbegin());
     map.erase(map.begin());
-    std::cout << "After erase: \n\n";
+    std::cout << "After erase: \n";
 
-    // for (auto it = map.cbegin(); it != map.cend(); ++it)
-    //     std::cout << "{" << it->first << " : " << it->second << "}\n";
+    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+        std::cout << "{" << it->first << " : " << it->second << "}\n";
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));
@@ -51,16 +51,61 @@ TEST(Map, T1Erase)
     s21::Map<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item()));
     s21_map.Insert(std::make_pair(3, Item()));
-    s21_map.Insert(std::make_pair(5, Item()));
+    s21_map.Insert(std::make_pair(7, Item()));
 
-    // EXPECT_EQ(s21_map, map);
+    std::map<int, Item> map;
+    map.insert(std::make_pair(4, Item()));
+    map.insert(std::make_pair(3, Item()));
+    map.insert(std::make_pair(7, Item()));
+
+    s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
+    std::map<int, Item>::const_iterator it = map.cbegin();
+    for(int i = 0; i < 2; i++) {
+        ++s21_it;
+        ++it;
+    }
+
+    s21_map.Erase(s21_it);
+    map.erase(it);
+
+    std::cout << "After erase: \n";
+
+    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+        std::cout << "{" << it->first << " : " << it->second << "}\n";
+
+
+    EXPECT_EQ(s21_map, map);
 }
 
 TEST(Map, T2Erase)
 {
     s21::Map<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item()));
+    s21_map.Insert(std::make_pair(3, Item()));
+    s21_map.Insert(std::make_pair(7, Item()));
 
+    std::map<int, Item> map;
+    map.insert(std::make_pair(4, Item()));
+    map.insert(std::make_pair(3, Item()));
+    map.insert(std::make_pair(7, Item()));
+
+    s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
+    std::map<int, Item>::const_iterator it = map.cbegin();
+    // for(int i = 0; i < 1; i++) {
+    //     ++s21_it;                    SEGMENTATION FAULT!!!!!
+    //     ++it;
+    // }
+
+    s21_map.Erase(s21_it);
+    map.erase(it);
+
+    std::cout << "After erase: \n";
+
+    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+        std::cout << "{" << it->first << " : " << it->second << "}\n";
+
+
+    EXPECT_EQ(s21_map, map);
     
 }
 
@@ -183,13 +228,13 @@ TEST(Map, T4RandomErase)
     // std::cout << s21_map << "\n\n";
     s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
     std::map<int, Item>::const_iterator it = map.cbegin();
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         ++s21_it;
         ++it;
     }
 
-    s21_map.Erase(s21_it);
     map.erase(it);
+    s21_map.Erase(s21_it);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
