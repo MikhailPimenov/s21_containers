@@ -255,8 +255,9 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
         
         this->pointer_ = this->pointer_->right_;
     
-        while(true) {
+        while (true) {
             if (this->pointer_->left_)
+            // if (this->pointer_)
                 this->pointer_ = this->pointer_->left_;
             else
                 return *this;
@@ -955,12 +956,12 @@ public:
 private:
     //modifiers==============================================================
     //                      4
-    //         2                                       6
-    //  1           3                  5                         7
-    //   0.5                   4.5        5.5              6.5     8
-    //    0.6                                     5.8
-    //          0.8                             5.7
-    //       0.7                                
+    //         2                                          6
+    //  1           3                  5                              7
+    //   1.5                   4.5             5.5               6.5         8
+    //    1.6               4.1           5.4        5.8      6.1         7.5          8.5
+    //          1.8                               5.7                             8.2        9
+    //       1.7                                                                8.1   
     
     iterator erase_recursive(Node** root, const_iterator pos) {
         assert(root && "root should exist!");
@@ -988,198 +989,262 @@ private:
                 // not found
                 assert(0 && "Element should exist!");
             }
-        } else {
-            // found
-            //const iterator result = ++pos;
-            // Node* candidate = root->left_;
-            bool updateBothEnds = false;
-            iterator result(*root);
-            ++result;
+        } 
+        // found
+        //const iterator result = ++pos;
+        // Node* candidate = root->left_;
+        // bool needUpdateEnd = true;
+        // bool needUpdateReverseEnd = true;
+        iterator result(*root);
+        ++result;
 
-            Node* node_to_delete = *root;
-            if (node_to_delete->left_ && node_to_delete->left_ != &rend_) {
-                Node* new_node = node_to_delete->left_;
+/*
+        if ((*root)->left_ && (*root)->left_ != &rend_) {
+            Node* candidate = (*root)->left_;
+            bool updateOnUp = false;
+            while (candidate->right_ && candidate->right_ != &end_) {
+                updateOnUp = true;
+                candidate = candidate->right_;
+            }
+        
+            candidate->right_ = (*root)->right_;
+            if ((*root)->right_)
+                (*root)->right_->root_ = candidate;
+            updateRightHeight(candidate);
+
+            if (candidate->root_ != *root) {
+                candidate->root_->right_ = candidate->left_;
+                if (candidate->left_)
+                    candidate->left_->root_ = candidate->root_;
+            }
+
+            if (updateOnUp) {
+                Node* temp = candidate->root_;
+                while (temp != (*root)->left_) {
+                    updateRightHeight(temp);
+                    if (unbalanced(temp))
+                        balance(temp);
+                    temp = temp->root_;
+                }
+            }
+            //       4                      3
+            //    3     7                       7
+            if ((*root)->left_ != candidate) {
+                candidate->left_ = (*root)->left_;
+                candidate->left_->root_ = candidate;
+                updateLeftHeight(candidate);
+                if (unbalanced(candidate))
+                    balance(candidate);
+            }
+
+            if ((*root)->root_) {
+                if ((*root)->root_->right_ == *root)
+                    (*root)->root_->right_ = candidate;
+                else
+                    (*root)->root_->left_ = candidate;
+                candidate->root_ = (*root)->root_;
+            } else {
+                candidate->root_ = nullptr;
+                root_ = candidate;
+            } 
+        } else if ((*root)->right_ && (*root)->right_ != &end_) {
+            Node* candidate = (*root)->right_;
+            bool updateOnUp = false;
+            while (candidate->left_ && candidate->left_ != &rend_) {
+                updateOnUp = true;
+                candidate = candidate->left_;
+            }
+
+            candidate->left_ = (*root)->left_;
+            candidate->left_->root_ = candidate;
+            updateLeftHeight(candidate);
+
+            if (candidate->root_ != *root) {
+                candidate->root_->left_ = candidate->right_;
+                if (candidate->right_)
+                    candidate->right_->root_ = candidate->root_;
+            }
+            if (updateOnUp) {
+                Node* temp = candidate->root_;
+                while (temp != (*root)->right_) {
+                    updateLeftHeight(temp);
+                    if (unbalanced(temp))
+                        balance(temp);
+                    temp = temp->root_;
+                }
+            }
+        
+            if ((*root)->right_ != candidate) {
+                candidate->right_ = (*root)->right_;
+                if ((*root)->right_)
+                    (*root)->right_->root_ = candidate;
+                updateRightHeight(candidate);
+                if (unbalanced(candidate))
+                    balance(candidate);
+            }
+        
+            if ((*root)->root_) {
+                if ((*root)->root_->left_ == *root)
+                    (*root)->root_->left_ = candidate;
+                else
+                    (*root)->root_->right_ = candidate;               
+                candidate->root_ = (*root)->root_;
+            } else {
+                candidate->root_ = nullptr;
+                root_ = candidate;
+            }
+        } 
+        } else {
+            updateBothEnds = true;
+        }
+        
+        if ((*root)->right_ == &end_) {
+            if ((*root)->root_)
+                (*root)->right_ = &end_;
+        }
+        if ((*root)->left_ == &rend_) {
+            if ((*root)->root_)
+                (*root)->left_ = &rend_;
+        }
+
+        if ((*root)->root_) {
+            if ((*root)->right_ == &end_)
+                (*root)->right_ = &end_;
+            if ((*root)->left_ == &rend_)
+                (*root)->left_ = &rend_;
+        }
+*/
+
+        if ((*root)->left_ && (*root)->left_ != &rend_) {
+            Node* new_node = (*root)->left_;
+
+            if (!new_node->right_) {
+
+                new_node->right_ = (*root)->right_;
+                if ((*root)->right_)
+                    (*root)->right_->root_ = new_node;
+                updateRightHeight(new_node);
+
+                if ((*root)->root_) 
+                    if ((*root)->root_->right_ == (*root))
+                        (*root)->root_->right_ = new_node;
+                    else
+                        (*root)->root_->left_ = new_node;
+                new_node->root_ = (*root)->root_;
+
+                if (unbalanced(new_node))
+                    balance(new_node);
+
+            } else {
+
                 while (new_node->right_)
                     new_node = new_node->right_;
-
-                // connect 5.8
-                //              <- 7
-                new_node->right_ = node_to_delete->right_;
-                node_to_delete->root_ = new_node;
+                
+                new_node->right_ = (*root)->right_;
+                if ((*root)->right_)
+                    (*root)->right_ = new_node;
                 updateRightHeight(new_node);
 
-                // connect 5.5
-                //             <- 5.7
-                if (new_node->root_ != node_to_delete) {
-                    new_node->root_->right_ = new_node->left_;
-                    if (new_node->left_)
-                        new_node->left_->root_ = new_node->root_;
-                }
-                Node* temp = new_node;
-                while (temp->root_ != node_to_delete) {
-                    updateRightHeight(temp->root_);
+                new_node->root_->right_ = new_node->left_;
+                if (new_node->left_)
+                    new_node->left_->root_ = new_node->root_;
+
+                Node* temp = new_node->root_;
+                while (temp != (*root)->left_) {
+                    updateRightHeight(temp);
                     temp = temp->root_;
                 }
 
-
-                // connect      5.8
-                //         5 ->
-                if (node_to_delete->left_ != new_node) {
-                    new_node->left_ = node_to_delete->left_;
-                    node_to_delete->left_->root_ = new_node;
-                }
+                new_node->left_ = (*root)->left_;
+                (*root)->left_->root_ = new_node;
                 updateLeftHeight(new_node);
 
-                // connect 4
-                //           <- 5.8
-                if (node_to_delete->root_) {
-                    if (node_to_delete->root_->right_ == node_to_delete)
-                        node_to_delete->root_->right_ = new_node;
+                if ((*root)->root_)
+                    if ((*root)->root_->right_ == (*root))
+                        (*root)->root_->right_ = new_node;
                     else
-                        node_to_delete->root_->left_ = new_node;
-                } 
-                new_node->root_ = node_to_delete->root_;
+                        (*root)->root_->left_ = new_node;
+                new_node->root_ = (*root)->root_;
 
-                // updating root_
-                if (!new_node->root_)
-                    root_ = new_node;
-            } else if (node_to_delete->right_ && node_to_delete->right_ != &end_) {
-                Node* new_node = node_to_delete->right_;
+            }
+
+            if (!new_node->root_)
+                root_ = new_node;
+        }
+
+
+        if ((*root)->right_ && (*root)->right_ != &end_) {
+            Node* new_node = (*root)->right_;
+
+            if (!new_node->left_) {
+
+                new_node->left_ = (*root)->left_;
+                if ((*root)->left_)
+                    (*root)->left_->root_ = new_node;
+                updateLeftHeight(new_node);
+                
+
+                if ((*root)->root_) 
+                    if ((*root)->root_->left_ == (*root))
+                        (*root)->root_->left_ = new_node;
+                    else
+                        (*root)->root_->right_ = new_node;
+                new_node->root_ = (*root)->root_;
+
+                if (unbalanced(new_node))
+                    balance(new_node);
+
+            } else {
+
                 while (new_node->left_)
                     new_node = new_node->left_;
-
-                new_node->left_ = node_to_delete->left_;
-                node_to_delete->root_ = new_node;
+                
+                new_node->left_ = (*root)->left_;
+                if ((*root)->left_)
+                    (*root)->left_ = new_node;
                 updateLeftHeight(new_node);
 
-                if (new_node->root_ != node_to_delete) {
-                    new_node->root_->left_ = new_node->right_;
-                    if (new_node->right_)
-                        new_node->right_->root_ = new_node->root_;
-                }
-                Node* temp = new_node;
-                while (temp->root_ != node_to_delete) {
-                    updateLeftHeight(temp->root_);
+                new_node->root_->left_ = new_node->right_;
+                if (new_node->right_)
+                    new_node->right_->root_ = new_node->root_;
+
+                Node* temp = new_node->root_;
+                while (temp != (*root)->right_) {
+                    updateLeftHeight(temp);
                     temp = temp->root_;
                 }
-                if (node_to_delete->right_ != new_node) {
-                    new_node->right_ = node_to_delete->right_;
-                    node_to_delete->right_->root_ = new_node;
-                }
+
+                new_node->right_ = (*root)->right_;
+                (*root)->right_->root_ = new_node;
                 updateRightHeight(new_node);
 
-                if (node_to_delete->root_) {
-                    if (node_to_delete->root_->left_ == node_to_delete)
-                        node_to_delete->root_->left_ = new_node;
+                if ((*root)->root_)
+                    if ((*root)->root_->left_ == (*root))
+                        (*root)->root_->left_ = new_node;
                     else
-                        node_to_delete->root_->right_ = new_node;
-                } 
-                new_node->root_ = node_to_delete->root_;
+                        (*root)->root_->right_ = new_node;
+                new_node->root_ = (*root)->root_;
 
-                // updating root_
-                if (!new_node->root_)
-                    root_ = new_node;
             }
 
-            // if ((*root)->left_ && (*root)->left_ != &rend_) {
-            //     Node* candidate = (*root)->left_;
-            //     bool updateOnUp = false;
-            //     while (candidate->right_ /*&& candidate->right_ != &end_*/) {
-            //         updateOnUp = true;
-            //         candidate = candidate->right_;
-            //     }
-            
-            //     candidate->right_ = (*root)->right_;
-            //     candidate->right_->root_ = candidate;
-            //     updateRightHeight(candidate);
+            if (!new_node->root_)
+                root_ = new_node;
+        }
+    
 
-            //     candidate->root_->right_ = candidate->left_;
-            //     if (candidate->left_)
-            //         candidate->left_->root_ = candidate->root_;
+        delete *root;
+        *root = nullptr;
+        --size_;
 
-            //     if (updateOnUp) {
-            //         Node* temp = candidate->root_;
-            //         while (temp != (*root)->left_) {
-            //             updateRightHeight(temp);
-            //             if (unbalanced(temp))
-            //                 balance(temp);
-            //             temp = temp->root_;
-            //         }
-            //     }
+        // if (updateBothEnds) {
+        if (root_) {
+            updateEnd();
+            updateReverseEnd();
+        }
 
-            //     candidate->left_ = (*root)->left_;
-            //     candidate->left_->root_ = candidate;
-            //     updateLeftHeight(candidate);
-            //     if (unbalanced(candidate))
-            //         balance(candidate);
+        return result;
+     
 
-            //     if ((*root)->root_) {
-            //         if ((*root)->root_->right_ == *root)
-            //             (*root)->root_->right_ = candidate;
-            //         else
-            //             (*root)->root_->left_ = candidate;
-            //     } else {
-            //         root_ = candidate;           
-            //     } 
-            //     candidate->root_ = (*root)->root_;
-            // } else if ((*root)->right_ && (*root)->right_ != &end_) {
-            //     Node* candidate = (*root)->right_;
-            //     bool updateOnUp = false;
-            //     while (candidate->left_ /*&& candidate->left_ != &rend_*/) {
-            //         updateOnUp = true;
-            //         candidate = candidate->left_;
-            //     }
-
-            //     candidate->left_ = (*root)->left_;
-            //     candidate->left_->root_ = candidate;
-            //     updateLeftHeight(candidate);
-
-            //     candidate->root_->left_ = candidate->right_;
-            //     if (candidate->right_)
-            //         candidate->right_->root_ = candidate->root_;
-
-            //     if (updateOnUp) {
-            //         Node* temp = candidate->root_;
-            //         while (temp != (*root)->right_) {
-            //             updateLeftHeight(temp);
-            //             if (unbalanced(temp))
-            //                 balance(temp);
-            //             temp = temp->root_;
-            //         }
-            //     }
-            
-            //     candidate->right_ = (*root)->right_;
-            //     candidate->right_->root_ = candidate;
-            //     updateRightHeight(candidate);
-            //     if (unbalanced(candidate))
-            //         balance(candidate);
-            
-            //     if ((*root)->root_) {
-            //         if ((*root)->root_->left_ == *root)
-            //             (*root)->root_->left_ = candidate;
-            //         else
-            //             (*root)->root_->right_ = candidate;               
-            //     } else {
-            //         root_ = candidate;
-            //     } 
-            //     candidate->root_ = (*root)->root_;
-            // } else {
-            //     updateBothEnds = true;
-            // }
-            
-            delete *root;
-            *root = nullptr;
-            --size_;
-
-            if (updateBothEnds) {
-                updateEnd();
-                updateReverseEnd();
-            }
-
-            return result;
-        } 
-        assert(0 && "Impossible case!");
-        return iterator(*root);  
     }
 
 public:

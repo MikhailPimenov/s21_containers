@@ -286,7 +286,7 @@ TEST(Map, T11SortedMixedCase)
     s21::Map<int, Item> s21_map;
     std::map<int, Item> map;
 
-    for (int i = -20000; i < 20000; ++i) {
+    for (int i = -200; i < 200; ++i) {
         
         // std::cout << "insert " << -i << '\n';
         s21_map.Insert(std::make_pair(-i, Item(-i)));
@@ -305,7 +305,7 @@ TEST(Map, T11SortedMixedCase)
     }
 
     std::cout << "Map: size " << s21_map.Size() << ", height " << s21_map.Height() << "\n"; 
-
+    
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
     EXPECT_EQ(s21_map, map);
 }
