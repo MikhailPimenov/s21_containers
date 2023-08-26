@@ -1115,9 +1115,11 @@ private:
         }
 */
         Node* new_node = nullptr;
+        bool no_replace = true;
 
         if ((root)->left_ && (root)->left_ != &rend_) {
-
+            
+            no_replace = false;
             new_node = (root)->left_;
 
             if (!new_node->right_) {
@@ -1168,11 +1170,15 @@ private:
                         (root)->root_->left_ = new_node;
                 new_node->root_ = (root)->root_;
 
+                if (unbalanced(new_node))
+                    balance(new_node);
+
             }
 
 
         } else if ((root)->right_ && (root)->right_ != &end_) {
 
+            no_replace = false;
             new_node = (root)->right_;
 
             if (!new_node->left_) {
@@ -1224,13 +1230,15 @@ private:
                         (root)->root_->right_ = new_node;
                 new_node->root_ = (root)->root_;
 
+                if (unbalanced(new_node))
+                    balance(new_node);
+
             }
 
             
         }
     
-
-        if (root->root_)
+        if (no_replace && root->root_)
             if (root->root_->left_ == root)
                 root->root_->left_ = nullptr;
             else
