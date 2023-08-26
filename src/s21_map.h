@@ -1116,6 +1116,7 @@ private:
 */
 
         if ((*root)->left_ && (*root)->left_ != &rend_) {
+            
             Node* new_node = (*root)->left_;
 
             if (!new_node->right_) {
@@ -1170,10 +1171,9 @@ private:
 
             if (!new_node->root_)
                 root_ = new_node;
-        }
 
+        } else if ((*root)->right_ && (*root)->right_ != &end_) {
 
-        if ((*root)->right_ && (*root)->right_ != &end_) {
             Node* new_node = (*root)->right_;
 
             if (!new_node->left_) {
