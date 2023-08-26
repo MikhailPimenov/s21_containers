@@ -963,27 +963,27 @@ private:
     //          1.8                               5.7                             8.2        9
     //       1.7                                                                8.1   
     
-    iterator erase_recursive(Node** root, const_iterator pos) {
+    iterator erase_recursive(Node* root, const_iterator pos) {
         assert(root && "root should exist!");
     
-        if (comparator_(*pos, (*root)->value_)) {  // pos < root->value_
-            if ((*root)->left_ && (*root)->left_ != &rend_) {
-                iterator result = erase_recursive(&((*root)->left_), pos);
-                updateLeftHeight(*root);
-                if (unbalanced(*root))
-                    balance(*root);
+        if (comparator_(*pos, (root)->value_)) {  // pos < root->value_
+            if ((root)->left_ && (root)->left_ != &rend_) {
+                iterator result = erase_recursive(((root)->left_), pos);
+                updateLeftHeight(root);
+                if (unbalanced(root))
+                    balance(root);
                 return result;
             } else {
                 // not found
                 assert(0 && "Element should exist!");
             } 
 
-        } else if (comparator_((*root)->value_, *pos)) {
-            if ((*root)->right_ && (*root)->right_ != &end_) {
-                iterator result = erase_recursive(&((*root)->right_), pos);
-                updateRightHeight(*root);
-                if (unbalanced(*root))
-                    balance(*root);
+        } else if (comparator_((root)->value_, *pos)) {
+            if ((root)->right_ && (root)->right_ != &end_) {
+                iterator result = erase_recursive(((root)->right_), pos);
+                updateRightHeight(root);
+                if (unbalanced(root))
+                    balance(root);
                 return result;
             } else {
                 // not found
@@ -995,7 +995,7 @@ private:
         // Node* candidate = root->left_;
         // bool needUpdateEnd = true;
         // bool needUpdateReverseEnd = true;
-        iterator result(*root);
+        iterator result(root);
         ++result;
 
 /*
@@ -1114,24 +1114,25 @@ private:
                 (*root)->left_ = &rend_;
         }
 */
+        Node* new_node = nullptr;
 
-        if ((*root)->left_ && (*root)->left_ != &rend_) {
-            
-            Node* new_node = (*root)->left_;
+        if ((root)->left_ && (root)->left_ != &rend_) {
+
+            new_node = (root)->left_;
 
             if (!new_node->right_) {
 
-                new_node->right_ = (*root)->right_;
-                if ((*root)->right_)
-                    (*root)->right_->root_ = new_node;
+                new_node->right_ = (root)->right_;
+                if ((root)->right_)
+                    (root)->right_->root_ = new_node;
                 updateRightHeight(new_node);
 
-                if ((*root)->root_) 
-                    if ((*root)->root_->right_ == (*root))
-                        (*root)->root_->right_ = new_node;
+                if ((root)->root_) 
+                    if ((root)->root_->right_ == (root))
+                        (root)->root_->right_ = new_node;
                     else
-                        (*root)->root_->left_ = new_node;
-                new_node->root_ = (*root)->root_;
+                        (root)->root_->left_ = new_node;
+                new_node->root_ = (root)->root_;
 
                 if (unbalanced(new_node))
                     balance(new_node);
@@ -1141,9 +1142,9 @@ private:
                 while (new_node->right_)
                     new_node = new_node->right_;
                 
-                new_node->right_ = (*root)->right_;
-                if ((*root)->right_)
-                    (*root)->right_ = new_node;
+                new_node->right_ = (root)->right_;
+                if ((root)->right_)
+                    (root)->right_ = new_node;
                 updateRightHeight(new_node);
 
                 new_node->root_->right_ = new_node->left_;
@@ -1151,45 +1152,43 @@ private:
                     new_node->left_->root_ = new_node->root_;
 
                 Node* temp = new_node->root_;
-                while (temp != (*root)->left_) {
+                while (temp != (root)->left_) {
                     updateRightHeight(temp);
                     temp = temp->root_;
                 }
 
-                new_node->left_ = (*root)->left_;
-                (*root)->left_->root_ = new_node;
+                new_node->left_ = (root)->left_;
+                (root)->left_->root_ = new_node;
                 updateLeftHeight(new_node);
 
-                if ((*root)->root_)
-                    if ((*root)->root_->right_ == (*root))
-                        (*root)->root_->right_ = new_node;
+                if ((root)->root_)
+                    if ((root)->root_->right_ == (root))
+                        (root)->root_->right_ = new_node;
                     else
-                        (*root)->root_->left_ = new_node;
-                new_node->root_ = (*root)->root_;
+                        (root)->root_->left_ = new_node;
+                new_node->root_ = (root)->root_;
 
             }
 
-            if (!new_node->root_)
-                root_ = new_node;
 
-        } else if ((*root)->right_ && (*root)->right_ != &end_) {
+        } else if ((root)->right_ && (root)->right_ != &end_) {
 
-            Node* new_node = (*root)->right_;
+            new_node = (root)->right_;
 
             if (!new_node->left_) {
 
-                new_node->left_ = (*root)->left_;
-                if ((*root)->left_)
-                    (*root)->left_->root_ = new_node;
+                new_node->left_ = (root)->left_;
+                if ((root)->left_)
+                    (root)->left_->root_ = new_node;
                 updateLeftHeight(new_node);
                 
 
-                if ((*root)->root_) 
-                    if ((*root)->root_->left_ == (*root))
-                        (*root)->root_->left_ = new_node;
+                if ((root)->root_) 
+                    if ((root)->root_->left_ == (root))
+                        (root)->root_->left_ = new_node;
                     else
-                        (*root)->root_->right_ = new_node;
-                new_node->root_ = (*root)->root_;
+                        (root)->root_->right_ = new_node;
+                new_node->root_ = (root)->root_;
 
                 if (unbalanced(new_node))
                     balance(new_node);
@@ -1199,9 +1198,9 @@ private:
                 while (new_node->left_)
                     new_node = new_node->left_;
                 
-                new_node->left_ = (*root)->left_;
-                if ((*root)->left_)
-                    (*root)->left_ = new_node;
+                new_node->left_ = (root)->left_;
+                if ((root)->left_)
+                    (root)->left_ = new_node;
                 updateLeftHeight(new_node);
 
                 new_node->root_->left_ = new_node->right_;
@@ -1209,32 +1208,40 @@ private:
                     new_node->right_->root_ = new_node->root_;
 
                 Node* temp = new_node->root_;
-                while (temp != (*root)->right_) {
+                while (temp != (root)->right_) {
                     updateLeftHeight(temp);
                     temp = temp->root_;
                 }
 
-                new_node->right_ = (*root)->right_;
-                (*root)->right_->root_ = new_node;
+                new_node->right_ = (root)->right_;
+                (root)->right_->root_ = new_node;
                 updateRightHeight(new_node);
 
-                if ((*root)->root_)
-                    if ((*root)->root_->left_ == (*root))
-                        (*root)->root_->left_ = new_node;
+                if ((root)->root_)
+                    if ((root)->root_->left_ == (root))
+                        (root)->root_->left_ = new_node;
                     else
-                        (*root)->root_->right_ = new_node;
-                new_node->root_ = (*root)->root_;
+                        (root)->root_->right_ = new_node;
+                new_node->root_ = (root)->root_;
 
             }
 
-            if (!new_node->root_)
-                root_ = new_node;
+            
         }
     
 
-        delete *root;
-        *root = nullptr;
+        if (root->root_)
+            if (root->root_->left_ == root)
+                root->root_->left_ = nullptr;
+            else
+                root->root_->right_ = nullptr;
+
+        delete root;
+        root = nullptr;
         --size_;
+
+        if (new_node && !new_node->root_)
+            root_ = new_node;
 
         // if (updateBothEnds) {
         if (root_) {
@@ -1251,7 +1258,7 @@ public:
     iterator Erase(const_iterator pos) {
         if (!root_)
             assert(0 && "Trying to erase from empty tree!");
-        return erase_recursive(&root_, pos);
+        return erase_recursive(root_, pos);
     }
 };
 
