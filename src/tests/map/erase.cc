@@ -91,13 +91,13 @@ TEST(Map, T2Erase)
 
     s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
     std::map<int, Item>::const_iterator it = map.cbegin();
-    // for(int i = 0; i < 1; i++) {
-    //     ++s21_it;                    SEGMENTATION FAULT!!!!!
-    //     ++it;
-    // }
+    for(int i = 0; i < 1; i++) {
+        ++s21_it;                    //SEGMENTATION FAULT!!!!!
+        ++it;
+    }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    // s21_map.Erase(s21_it);
+    // map.erase(it);
 
     std::cout << "After erase: \n";
 
@@ -363,6 +363,8 @@ TEST(Map, T6RandomErase)
         ++it;
     }
 
+    EXPECT_EQ(s21_map, map);
+    
     s21_map.Erase(s21_it);
     map.erase(it);
 
@@ -371,6 +373,73 @@ TEST(Map, T6RandomErase)
 }
 
 TEST(Map, T7RandomErase)
+{
+    // return;
+    s21::Map<int, Item> s21_map;
+
+    s21_map.Insert(std::make_pair(3, Item(3)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(4, Item(4)));
+
+    s21_map.Insert(std::make_pair(14, Item(14)));
+    s21_map.Insert(std::make_pair(11, Item(11)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(8, Item(8)));
+    s21_map.Insert(std::make_pair(-8, Item(-8)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(-18, Item(-18)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(3, Item(3)));
+    s21_map.Insert(std::make_pair(29, Item(29)));
+    s21_map.Insert(std::make_pair(30, Item(30)));
+    s21_map.Insert(std::make_pair(31, Item(31)));
+    s21_map.Insert(std::make_pair(34, Item(34)));
+    s21_map.Insert(std::make_pair(37, Item(37)));
+
+
+    std::map<int, Item> map;
+
+    map.insert(std::make_pair(3, Item(3)));
+    map.insert(std::make_pair(5, Item(5)));
+    map.insert(std::make_pair(5, Item(5)));
+    map.insert(std::make_pair(4, Item(4)));
+
+    map.insert(std::make_pair(14, Item(14)));
+    map.insert(std::make_pair(11, Item(11)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(8, Item(8)));
+    map.insert(std::make_pair(-8, Item(-8)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(-18, Item(-18)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(3, Item(3)));
+    map.insert(std::make_pair(29, Item(29)));
+    map.insert(std::make_pair(30, Item(30)));
+    map.insert(std::make_pair(31, Item(31)));
+    map.insert(std::make_pair(34, Item(34)));
+    map.insert(std::make_pair(37, Item(37)));
+
+
+
+    EXPECT_EQ(s21_map, map);
+    // std::cout << s21_map << "\n\n";
+    s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
+    std::map<int, Item>::const_iterator it = map.cbegin();
+    for (int i = 0; i < 10; ++i) {
+        ++s21_it;
+        ++it;
+    }
+
+    std::cout << "Erase: " << s21_it->first << '\n';
+    s21_map.Erase(s21_it);
+    map.erase(it);
+
+    EXPECT_EQ(s21_map, map);
+    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+}
+
+TEST(Map, T8RandomErase)
 {
     // return;
     s21::Map<int, Item> s21_map;
@@ -434,7 +503,6 @@ TEST(Map, T7RandomErase)
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
 }
-
 
 
 
