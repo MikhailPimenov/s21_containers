@@ -487,8 +487,8 @@ template <typename Value, typename Comparator> class MapBase
   public:
     // using value_type = std::pair<const Key, Type>;
     using value_type = Value;
-    //using mapped_type = Type;
-    //using key_type = Key;
+    // using mapped_type = Type;
+    // using key_type = Key;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using reference = value_type &;
@@ -531,10 +531,12 @@ private:
         }
 
     };
+
+private:
     Node* root_;
     mutable Node end_;      // non-existing element, element after last existing element
     mutable Node rend_;     // non-existing element, element before begin
-    // pointer data_;
+   
 private:
     comparator comparator_;
 
@@ -990,130 +992,11 @@ private:
                 assert(0 && "Element should exist!");
             }
         } 
+
         // found
-        //const iterator result = ++pos;
-        // Node* candidate = root->left_;
-        // bool needUpdateEnd = true;
-        // bool needUpdateReverseEnd = true;
         iterator result(root);
         ++result;
 
-/*
-        if ((*root)->left_ && (*root)->left_ != &rend_) {
-            Node* candidate = (*root)->left_;
-            bool updateOnUp = false;
-            while (candidate->right_ && candidate->right_ != &end_) {
-                updateOnUp = true;
-                candidate = candidate->right_;
-            }
-        
-            candidate->right_ = (*root)->right_;
-            if ((*root)->right_)
-                (*root)->right_->root_ = candidate;
-            updateRightHeight(candidate);
-
-            if (candidate->root_ != *root) {
-                candidate->root_->right_ = candidate->left_;
-                if (candidate->left_)
-                    candidate->left_->root_ = candidate->root_;
-            }
-
-            if (updateOnUp) {
-                Node* temp = candidate->root_;
-                while (temp != (*root)->left_) {
-                    updateRightHeight(temp);
-                    if (unbalanced(temp))
-                        balance(temp);
-                    temp = temp->root_;
-                }
-            }
-            //       4                      3
-            //    3     7                       7
-            if ((*root)->left_ != candidate) {
-                candidate->left_ = (*root)->left_;
-                candidate->left_->root_ = candidate;
-                updateLeftHeight(candidate);
-                if (unbalanced(candidate))
-                    balance(candidate);
-            }
-
-            if ((*root)->root_) {
-                if ((*root)->root_->right_ == *root)
-                    (*root)->root_->right_ = candidate;
-                else
-                    (*root)->root_->left_ = candidate;
-                candidate->root_ = (*root)->root_;
-            } else {
-                candidate->root_ = nullptr;
-                root_ = candidate;
-            } 
-        } else if ((*root)->right_ && (*root)->right_ != &end_) {
-            Node* candidate = (*root)->right_;
-            bool updateOnUp = false;
-            while (candidate->left_ && candidate->left_ != &rend_) {
-                updateOnUp = true;
-                candidate = candidate->left_;
-            }
-
-            candidate->left_ = (*root)->left_;
-            candidate->left_->root_ = candidate;
-            updateLeftHeight(candidate);
-
-            if (candidate->root_ != *root) {
-                candidate->root_->left_ = candidate->right_;
-                if (candidate->right_)
-                    candidate->right_->root_ = candidate->root_;
-            }
-            if (updateOnUp) {
-                Node* temp = candidate->root_;
-                while (temp != (*root)->right_) {
-                    updateLeftHeight(temp);
-                    if (unbalanced(temp))
-                        balance(temp);
-                    temp = temp->root_;
-                }
-            }
-        
-            if ((*root)->right_ != candidate) {
-                candidate->right_ = (*root)->right_;
-                if ((*root)->right_)
-                    (*root)->right_->root_ = candidate;
-                updateRightHeight(candidate);
-                if (unbalanced(candidate))
-                    balance(candidate);
-            }
-        
-            if ((*root)->root_) {
-                if ((*root)->root_->left_ == *root)
-                    (*root)->root_->left_ = candidate;
-                else
-                    (*root)->root_->right_ = candidate;               
-                candidate->root_ = (*root)->root_;
-            } else {
-                candidate->root_ = nullptr;
-                root_ = candidate;
-            }
-        } 
-        } else {
-            updateBothEnds = true;
-        }
-        
-        if ((*root)->right_ == &end_) {
-            if ((*root)->root_)
-                (*root)->right_ = &end_;
-        }
-        if ((*root)->left_ == &rend_) {
-            if ((*root)->root_)
-                (*root)->left_ = &rend_;
-        }
-
-        if ((*root)->root_) {
-            if ((*root)->right_ == &end_)
-                (*root)->right_ = &end_;
-            if ((*root)->left_ == &rend_)
-                (*root)->left_ = &rend_;
-        }
-*/
         Node* new_node = nullptr;
         bool no_replace = true;
 
@@ -1251,15 +1134,12 @@ private:
         if (new_node && !new_node->root_)
             root_ = new_node;
 
-        // if (updateBothEnds) {
         if (root_) {
             updateEnd();
             updateReverseEnd();
         }
 
         return result;
-     
-
     }
 
 public:
@@ -1268,6 +1148,50 @@ public:
             assert(0 && "Trying to erase from empty tree!");
         return erase_recursive(root_, pos);
     }
+
+
+
+
+protected:
+    iterator find_recursive(Node* root, const_reference value)
+    {
+        assert(root && "root should exist!");
+    
+        if (comparator_(value, root->value_)) {  // key < root->value_
+            if (root->left_ && root->left_ != &rend_) {
+                return find_recursive(root->left_, value);
+            } else {
+                //not found
+                return end();
+            }
+        } else if (comparator_(root->value_, value)) {
+            if (root->right_ && root->right_ != &end_) {
+                return find_recursive(root->right_, value);
+            } else {
+                //not found
+                return end();
+            }
+        } else {
+            // found
+            return iterator(root);
+        }
+    }
+
+protected:
+    iterator find(const_reference value) {
+        if (!root_)
+            return end();
+        return find_recursive(root_, value);
+    }
+    const_iterator find(const_reference value) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, value);    
+    }
+
+    // template< class K > iterator find( const K& x );
+    // template< class K > const_iterator find( const K& x ) const;
+
 };
 
 
@@ -1285,8 +1209,8 @@ public:
 
 public:
     using value_type        = typename Base::value_type;
-    // using mapped_type       = typename Base::mapped_type;
-    // using key_type          = typename Base::key_type;
+    using mapped_type       = Type;
+    using key_type          = Key;
     using size_type         = typename Base::size_type;
     using difference_type   = typename Base::difference_type;
     using reference         = typename Base::reference;
@@ -1302,6 +1226,17 @@ public:
 
 public:
     using Base::Base;
+
+
+    
+    
+    
+    iterator Find(const key_type& key) {
+        return this->find(value_type(key, mapped_type()));
+    }
+    const_iterator Find(const key_type& key) const {
+        return this->find(value_type(key, mapped_type()));
+    }
 };
 
 
