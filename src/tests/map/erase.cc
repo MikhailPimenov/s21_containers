@@ -35,8 +35,10 @@ TEST(Map, T0EraseBegin)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
 
-    s21_map.Erase(s21_map.cbegin());
-    map.erase(map.begin());
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_map.cbegin());
+    std::map<int, Item>::iterator it_result = map.erase(map.cbegin());
+
+    EXPECT_EQ(*s21_it_result, *it_result);
     std::cout << "After erase: \n";
 
     for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
@@ -70,8 +72,11 @@ TEST(Map, T1EraseRBegin)
         ++it;
     }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(s21_it_result, s21_map.end());
+    EXPECT_EQ(it_result, map.end());
 
     std::cout << "After erase: \n";
 
@@ -101,8 +106,10 @@ TEST(Map, T2EraseRoot)
         ++it;
     }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     std::cout << "After erase: \n";
 
@@ -130,8 +137,11 @@ TEST(Map, T2_1EraseRoot)
         ++it;
     }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(s21_it_result, s21_map.end());
+    EXPECT_EQ(it_result, map.end());
 
     std::cout << "After erase: \n";
 
@@ -200,8 +210,10 @@ TEST(Map, T3RandomErase)
         ++it;
     }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -266,8 +278,10 @@ TEST(Map, T4RandomErase)
         ++it;
     }
 
-    map.erase(it);
-    s21_map.Erase(s21_it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -331,8 +345,10 @@ TEST(Map, T5RandomErase)
         ++it;
     }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -398,8 +414,10 @@ TEST(Map, T6RandomErase)
 
     EXPECT_EQ(s21_map, map);
     
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -465,8 +483,10 @@ TEST(Map, T7RandomEraseRoot)
     }
 
     std::cout << "Erase: " << s21_it->first << '\n';
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -522,8 +542,10 @@ TEST(Map, T8RandomEraseRoot)
     }
 
     std::cout << "Erase: " << s21_it->first << '\n';
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -587,8 +609,10 @@ TEST(Map, T9RandomErase)
         ++it;
     }
 
-    s21_map.Erase(s21_it);
-    map.erase(it);
+    s21::Map<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
+    std::map<int, Item>::iterator it_result = map.erase(it);
+
+    EXPECT_EQ(*s21_it_result, *it_result);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
