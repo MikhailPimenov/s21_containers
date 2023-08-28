@@ -23,7 +23,7 @@ class MapIteratorBase
     using pointer = Pointer;
     using reference = Reference;
     using size_type = typename Map::size_type;
-    using iterator_category = std::random_access_iterator_tag;
+    using iterator_category = std::bidirectional_iterator_tag;
     using node_pointer = Node_pointer;
 
 
@@ -166,11 +166,18 @@ class MapIteratorBase
     node_pointer pointer_;
 };
 
-template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference>
-class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
+template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference, typename Node_pointer = typename Map::node_pointer>
+class MapIterator : public MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
 {
+    // template<typename K, typename V, typename C>
+    // friend class Map;  // to compare const_iterator with iterator
+
+    // template<typename K, typename V, typename C>
+    friend Map;  // to compare const_iterator with iterator
+
+
   private:
-    using Base = MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
+    using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
                                   typename Map::value_type>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
@@ -196,37 +203,7 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
     //          2               6
     //        1   3       5          7
     //     re         4.5  5.5
-    /*
-    Tree* next(Tree* node) {
-    // if no children -> go up
-    // if right exists -> go right
-    if (!node->_left && !node->_right) {
-        while (1) {
-            // find greater root
-            if (!node->_root)
-                return NULL;
-            Tree* root = node->_root;
-            if (root->_data > node->_data)
-                return root;
-            node = node->_root; 
-        }
-    }
 
-    if (!node->_right)
-        return node;
-        
-    node = node->_right;
-    
-    while(1) {
-        if (node->_left)
-            node = node->_left;
-        else
-            return node;
-    }
-    
-    return node;
-}
-    */
 
     // MapIterator &operator++() noexcept override  // ++i
     MapIterator &operator++() noexcept  // ++i
@@ -325,19 +302,20 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map
 
     operator int() const = delete;
 
-    // // to enable creating iterator from const_iterator via static_cast
-    // template <typename OtherPointer, typename OtherReference>
-    // explicit operator VectorIterator<Vector, OtherPointer, OtherReference>() const noexcept
-    // {
-    //     return VectorIterator<Vector, OtherPointer, OtherReference>(const_cast<OtherPointer>(this->pointer_));
-    // }
+    // to enable creating iterator from const_iterator via static_cast
+private:
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
+    explicit operator MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
+    {
+        return MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>(const_cast<OtherNode_pointer>(this->pointer_));
+    }
 };
 
-template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference>
-class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
+template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference, typename Node_pointer = typename Map::node_pointer>
+class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
 {
   private:
-    using Base = MapIteratorBase<Map, Pointer, Reference, typename Map::node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
+    using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
                                   typename Map::value_type>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
@@ -440,12 +418,12 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
 
     operator int() const = delete;
 
-    // // to enable creating iterator from const_iterator via static_cast
-    // template <typename OtherPointer, typename OtherReference>
-    // explicit operator VectorIterator<Vector, OtherPointer, OtherReference>() const noexcept
-    // {
-    //     return VectorIterator<Vector, OtherPointer, OtherReference>(const_cast<OtherPointer>(this->pointer_));
-    // }
+private:
+    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
+    explicit operator MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
+    {
+        return MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>(const_cast<OtherNode_pointer>(this->pointer_));
+    }
 };
 
 
@@ -460,9 +438,8 @@ class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, typen
 
 template <typename Type>
 class ComparatorSet {
-
 public:
-    bool operator()(const Type& left, const Type& right) {
+    bool operator()(const Type& left, const Type& right) const {
         return left < right;
     }
 
@@ -470,9 +447,8 @@ public:
 
 template <typename PairType>
 class ComparatorMap {
-
 public:
-    bool operator()(const PairType& left, const PairType& right) {
+    bool operator()(const PairType& left, const PairType& right) const {
         return left.first < right.first;
     }
 
@@ -497,13 +473,14 @@ template <typename Value, typename Comparator> class MapBase
     using const_pointer = const value_type *;
 
     using node_pointer = Node*;
+    using const_node_pointer = const Node*;
     using comparator = Comparator;
 
   public:
     using iterator = MapIterator<MapBase<Value, Comparator>>;
-    using const_iterator = MapIterator<MapBase<Value, Comparator>, const_pointer, const_reference>;
+    using const_iterator = MapIterator<MapBase<Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
     using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator> >;
-    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator>, const_pointer, const_reference>;
+    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
 
   private:
     size_type size_;
@@ -1153,7 +1130,7 @@ public:
 
 
 protected:
-    iterator find_recursive(Node* root, const_reference value)
+    const_iterator find_recursive(Node* root, const_reference value) const
     {
         assert(root && "root should exist!");
     
@@ -1173,7 +1150,7 @@ protected:
             }
         } else {
             // found
-            return iterator(root);
+            return const_iterator(root);
         }
     }
 
@@ -1181,7 +1158,8 @@ protected:
     iterator find(const_reference value) {
         if (!root_)
             return end();
-        return find_recursive(root_, value);
+        // return static_cast<iterator>(find_recursive(root_, value));
+        return static_cast<iterator>(find_recursive(root_, value));
     }
     const_iterator find(const_reference value) const {
         if (!root_)
@@ -1191,6 +1169,12 @@ protected:
 
     // template< class K > iterator find( const K& x );
     // template< class K > const_iterator find( const K& x ) const;
+
+    bool contains(const_reference value) const {
+        return find(value) != end();
+    }
+
+    // template< class K > bool contains( const K& x ) const;
 
 };
 
@@ -1236,6 +1220,9 @@ public:
     }
     const_iterator Find(const key_type& key) const {
         return this->find(value_type(key, mapped_type()));
+    }
+    bool Contains(const key_type& key) const {
+        return this->contains(value_type(key, mapped_type()));
     }
 };
 

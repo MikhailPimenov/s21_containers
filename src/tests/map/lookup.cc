@@ -12,7 +12,7 @@ class Item2 {
 private:
     int a_;
 public:
-     
+
 
     friend std::ostream& operator<<(std::ostream& out, const Item2& object) {
         out << "Item2(" << object.a_ << ')';
@@ -161,6 +161,86 @@ TEST(Map, T4FindEnd)
     EXPECT_EQ(s21_map, map);
 }
 
+
+TEST(Map, T0Contains)
+{
+    s21::Map<int, Item> s21_map;
+    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(1, Item(1)));
+
+    EXPECT_EQ(s21_map.Contains(4), true);
+}
+
+TEST(Map, T1Contains)
+{
+    s21::Map<int, Item> s21_map;
+    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(1, Item(1)));
+
+    EXPECT_EQ(s21_map.Contains(5), true);
+}
+
+TEST(Map, T2Contains)
+{
+    s21::Map<int, Item> s21_map;
+    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(1, Item(1)));
+
+    EXPECT_EQ(s21_map.Contains(6), true);
+}
+
+TEST(Map, T3Contains)
+{
+    s21::Map<int, Item> s21_map;
+    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(1, Item(1)));
+
+    EXPECT_EQ(s21_map.Contains(7), true);
+}
+
+TEST(Map, T4Contains)
+{
+    s21::Map<int, Item> s21_map;
+    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(1, Item(1)));
+
+    EXPECT_EQ(s21_map.Contains(1), true);
+}
+
+
+TEST(Map, T5ContainsNo)
+{
+    s21::Map<int, Item> s21_map;
+    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(1, Item(1)));
+
+    EXPECT_EQ(s21_map.Contains(99), false);
+}
+
+
+TEST(Map, T6ContainsEmpty)
+{
+    s21::Map<int, Item> s21_map;
+    EXPECT_EQ(s21_map.Contains(99), false);
+}
 
 }; // namespace
 
