@@ -63,6 +63,31 @@ TEST(Map, T2Destructor)
 
 
 
+TEST(Map, T0ConstructorInitializer)
+{
+    s21::Map<int, Item> s21_map {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+    std::map<int, Item> map {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+
+    EXPECT_EQ(s21_map, map);
+}
+
+
+
+
 
 
 }  // namespace

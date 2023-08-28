@@ -525,6 +525,12 @@ public:
         // end_.root_ = &rend_;
     }
 
+    MapBase(std::initializer_list<value_type> list) : MapBase()
+    {
+        for (auto&& element : list)
+            Insert(std::move(element));
+    }
+
 private:
     void deallocate(Node** node) {
         if((*node)->left_ && (*node)->left_ != &rend_) 
@@ -1130,22 +1136,45 @@ public:
 
 
 protected:
-    const_iterator find_recursive(Node* root, const_reference value) const
+
+    // greater or equal
+
+    //                    4
+    //          2                  6
+    //       1      3            5  7
+    //           2.9  3.1 
+    //          -
+
+    //4.5 -> 5
+    //3.5 -> 4
+    //2.5 -> 2.9
+    const_iterator find_recursive(Node* root, const_reference value, bool lower = false, bool upper = false, Node* result = nullptr) const
     {
         assert(root && "root should exist!");
     
         if (comparator_(value, root->value_)) {  // key < root->value_
             if (root->left_ && root->left_ != &rend_) {
-                return find_recursive(root->left_, value);
+                result = root;
+                return find_recursive(root->left_, value, lower, upper, result);
             } else {
                 //not found
+                //or return root if lower_bound
+                if (lower)
+                    return const_iterator(root);
+                // if (upper && root->root_)
+                    // return const_iterator(root->root_);
                 return end();
             }
         } else if (comparator_(root->value_, value)) {
             if (root->right_ && root->right_ != &end_) {
-                return find_recursive(root->right_, value);
+                return find_recursive(root->right_, value, lower, upper, result);
             } else {
                 //not found
+                //or return root if upper_bound
+                if (upper)
+                    return const_iterator(root);
+                if (lower)
+                    return const_iterator(result);
                 return end();
             }
         } else {
@@ -1174,6 +1203,18 @@ protected:
         return find(value) != end();
     }
 
+    iterator lower_bound(const_reference value) {
+        if (!root_)
+            return end();
+        return static_cast<iterator>(find_recursive(root_, value, true, false, &end_)); 
+    }
+
+    const_iterator lower_bound(const_reference value) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, value, true, false, &end_); 
+    }
+
     // template< class K > bool contains( const K& x ) const;
 
 };
@@ -1187,6 +1228,13 @@ class Set : public MapBase<Type, Comparator> {
 
 template <typename Key, typename Type, typename Comparator = ComparatorMap<std::pair<const Key, Type>>>
 class Map : public MapBase<std::pair<const Key, Type>, Comparator> {
+
+// template <typename Type, typename Comparator = ComparatorSet<Type>>
+// class MultiSet : public MapBase<List<Type>, Comparator> {
+
+// };
+
+
 
 public:
     using Base = MapBase<std::pair<const Key, Type>, Comparator>;
@@ -1223,6 +1271,12 @@ public:
     }
     bool Contains(const key_type& key) const {
         return this->contains(value_type(key, mapped_type()));
+    }
+    iterator Lower_bound(const Key& key) {
+        return this->lower_bound(value_type(key, mapped_type()));
+    }
+    const_iterator Lower_bound(const Key& key) const {
+        return this->lower_bound(value_type(key, mapped_type()));
     }
 };
 
