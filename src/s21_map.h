@@ -7,6 +7,8 @@
 #include <new>
 #include <cstring>
 
+#include "s21_list.h"
+
 namespace s21
 {
 
@@ -1226,15 +1228,13 @@ class Set : public MapBase<Type, Comparator> {
 
 };
 
+template <typename Type, typename Comparator = ComparatorSet<Type>>
+class MultiSet : public MapBase<List<Type>, Comparator> {
+
+};
+
 template <typename Key, typename Type, typename Comparator = ComparatorMap<std::pair<const Key, Type>>>
 class Map : public MapBase<std::pair<const Key, Type>, Comparator> {
-
-// template <typename Type, typename Comparator = ComparatorSet<Type>>
-// class MultiSet : public MapBase<List<Type>, Comparator> {
-
-// };
-
-
 
 public:
     using Base = MapBase<std::pair<const Key, Type>, Comparator>;
