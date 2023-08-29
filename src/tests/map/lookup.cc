@@ -1336,7 +1336,7 @@ TEST(Map, T5EqualRange)
 
 TEST(Map, T6EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
+    s21::Map<int, Item> s21_map {
         {10, Item(10, 'a', 0.1)},
         {20, Item(20, 'b', 0.2)},
         {30, Item(30, 'c', 0.3)},
@@ -1348,7 +1348,7 @@ TEST(Map, T6EqualRange)
         {90, Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
+    std::map<int, Item> map {
         {10, Item(10, 'a', 0.1)},
         {20, Item(20, 'b', 0.2)},
         {30, Item(30, 'c', 0.3)},
@@ -1369,7 +1369,7 @@ TEST(Map, T6EqualRange)
 
 TEST(Map, T7EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
+    s21::Map<int, Item> s21_map {
         {10, Item(10, 'a', 0.1)},
         {20, Item(20, 'b', 0.2)},
         {30, Item(30, 'c', 0.3)},
@@ -1381,7 +1381,7 @@ TEST(Map, T7EqualRange)
         {90, Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
+    std::map<int, Item> map {
         {10, Item(10, 'a', 0.1)},
         {20, Item(20, 'b', 0.2)},
         {30, Item(30, 'c', 0.3)},

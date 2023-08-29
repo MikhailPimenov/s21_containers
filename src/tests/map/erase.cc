@@ -620,6 +620,174 @@ TEST(Map, T9RandomErase)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEST(Map, T0RandomExtract)
+{
+    // return;
+    s21::Map<int, Item> s21_map;
+
+    s21_map.Insert(std::make_pair(3, Item(3)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(4, Item(4)));
+
+    s21_map.Insert(std::make_pair(14, Item(14)));
+    s21_map.Insert(std::make_pair(11, Item(11)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(8, Item(8)));
+    s21_map.Insert(std::make_pair(-8, Item(-8)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(-18, Item(-18)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(3, Item(3)));
+    s21_map.Insert(std::make_pair(29, Item(29)));
+    s21_map.Insert(std::make_pair(30, Item(30)));
+    s21_map.Insert(std::make_pair(31, Item(31)));
+    s21_map.Insert(std::make_pair(34, Item(34)));
+    s21_map.Insert(std::make_pair(37, Item(37)));
+
+
+    std::map<int, Item> map;
+
+    map.insert(std::make_pair(3, Item(3)));
+    map.insert(std::make_pair(5, Item(5)));
+    map.insert(std::make_pair(5, Item(5)));
+    map.insert(std::make_pair(4, Item(4)));
+
+    map.insert(std::make_pair(14, Item(14)));
+    map.insert(std::make_pair(11, Item(11)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(8, Item(8)));
+    map.insert(std::make_pair(-8, Item(-8)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(-18, Item(-18)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(3, Item(3)));
+    map.insert(std::make_pair(29, Item(29)));
+    map.insert(std::make_pair(30, Item(30)));
+    map.insert(std::make_pair(31, Item(31)));
+    map.insert(std::make_pair(34, Item(34)));
+    map.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_map << "\n\n";
+    s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
+    std::map<int, Item>::const_iterator it = map.cbegin();
+    for (int i = 0; i < 8; ++i) {
+        ++s21_it;
+        ++it;
+    }
+
+    s21::Map<int, Item>::node_type s21_it_result = s21_map.Extract(s21_it);
+    std::map<int, Item>::node_type it_result = map.extract(it);
+
+    EXPECT_EQ(it_result.key(), s21_it_result.value().first);
+    EXPECT_EQ(it_result.mapped(), s21_it_result.value().second);
+
+    EXPECT_EQ(s21_map, map);
+    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+
+// TODO: leaks?
+//    delete &s21_it_result;
+//    delete &it_result;
+
+}
+
+
+
+
+
+
+TEST(Map, T1RandomExtract)
+{
+    // return;
+    s21::Map<int, Item> s21_map;
+
+    s21_map.Insert(std::make_pair(3, Item(3)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(5, Item(5)));
+    s21_map.Insert(std::make_pair(4, Item(4)));
+
+    s21_map.Insert(std::make_pair(14, Item(14)));
+    s21_map.Insert(std::make_pair(11, Item(11)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(8, Item(8)));
+    s21_map.Insert(std::make_pair(-8, Item(-8)));
+    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21_map.Insert(std::make_pair(-18, Item(-18)));
+    s21_map.Insert(std::make_pair(6, Item(6)));
+    s21_map.Insert(std::make_pair(3, Item(3)));
+    s21_map.Insert(std::make_pair(29, Item(29)));
+    s21_map.Insert(std::make_pair(30, Item(30)));
+    s21_map.Insert(std::make_pair(31, Item(31)));
+    s21_map.Insert(std::make_pair(34, Item(34)));
+    s21_map.Insert(std::make_pair(37, Item(37)));
+
+
+    std::map<int, Item> map;
+
+    map.insert(std::make_pair(3, Item(3)));
+    map.insert(std::make_pair(5, Item(5)));
+    map.insert(std::make_pair(5, Item(5)));
+    map.insert(std::make_pair(4, Item(4)));
+
+    map.insert(std::make_pair(14, Item(14)));
+    map.insert(std::make_pair(11, Item(11)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(8, Item(8)));
+    map.insert(std::make_pair(-8, Item(-8)));
+    map.insert(std::make_pair(7, Item(7)));
+    map.insert(std::make_pair(-18, Item(-18)));
+    map.insert(std::make_pair(6, Item(6)));
+    map.insert(std::make_pair(3, Item(3)));
+    map.insert(std::make_pair(29, Item(29)));
+    map.insert(std::make_pair(30, Item(30)));
+    map.insert(std::make_pair(31, Item(31)));
+    map.insert(std::make_pair(34, Item(34)));
+    map.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_map << "\n\n";
+    s21::Map<int, Item>::const_iterator s21_it = s21_map.cbegin();
+    std::map<int, Item>::const_iterator it = map.cbegin();
+    for (int i = 0; i < 4; ++i) {
+        ++s21_it;
+        ++it;
+    }
+
+    s21::Map<int, Item>::node_type s21_it_result = s21_map.Extract(s21_it);
+    std::map<int, Item>::node_type it_result = map.extract(it);
+
+    EXPECT_EQ(it_result.key(), s21_it_result.value().first);
+    EXPECT_EQ(it_result.mapped(), s21_it_result.value().second);
+
+    EXPECT_EQ(s21_map, map);
+    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+}
+
+
 }  // namespace
 
 // GCOVR_EXCL_STOP
