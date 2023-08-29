@@ -1163,8 +1163,8 @@ protected:
                 //or return root if lower_bound
                 if (lower)
                     return const_iterator(root);
-                // if (upper && root->root_)
-                    // return const_iterator(root->root_);
+                if (upper && root->root_)
+                    return const_iterator(root->root_);
                 return end();
             }
         } else if (comparator_(root->value_, value)) {
@@ -1173,7 +1173,7 @@ protected:
             } else {
                 //not found
                 //or return root if upper_bound
-                if (upper)
+                if (upper && root->root_)
                     return const_iterator(root);
                 if (lower)
                     return const_iterator(result);
@@ -1215,6 +1215,18 @@ protected:
         if (!root_)
             return end();
         return find_recursive(root_, value, true, false, &end_); 
+    }
+
+    iterator upper_bound(const_reference value) {
+        if (!root_)
+            return end();
+        return static_cast<iterator>(find_recursive(root_, value, true, true, &end_)); 
+    }
+
+    const_iterator upper_bound(const_reference value) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, value, true, true, &end_); 
     }
 
     // template< class K > bool contains( const K& x ) const;
@@ -1277,6 +1289,12 @@ public:
     }
     const_iterator Lower_bound(const Key& key) const {
         return this->lower_bound(value_type(key, mapped_type()));
+    }
+    iterator Upper_bound(const Key& key) {
+        return this->upper_bound(value_type(key, mapped_type()));
+    }
+    const_iterator Upper_bound(const Key& key) const {
+        return this->upper_bound(value_type(key, mapped_type()));
     }
 };
 

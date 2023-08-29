@@ -713,6 +713,68 @@ TEST(Map, T13LowerBound)
     EXPECT_EQ(*s21_map.Lower_bound(30), *map.lower_bound(30));
 }
 
+TEST(Map, T14UpperBound)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    // std::cout << s21_map.Upper_bound(30) << '\n';
+
+    EXPECT_EQ(*s21_map.Upper_bound(30), *map.upper_bound(30));
+}
+
+TEST(Map, T15UpperBound)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    // std::cout << s21_map.Upper_bound(30) << '\n';
+
+    EXPECT_EQ(*s21_map.Upper_bound(25), *map.upper_bound(25));
+}
+
 
 
 
