@@ -1217,6 +1217,28 @@ protected:
 
     // template< class K > bool contains( const K& x ) const;
 
+
+    std::pair<iterator,iterator> equal_range(const_reference value) {
+        if (!root_)
+            return std::make_pair(end(), end());
+
+        iterator lower = lower_bound(value);
+        iterator upper = upper_bound(value);
+        return std::make_pair(lower, upper);
+    }
+    std::pair<const_iterator,const_iterator> equal_range(const_reference value) const {
+        if (!root_)
+            return std::make_pair(end(), end());
+
+        const_iterator lower = static_cast<const_iterator>(lower_bound(value));
+        const_iterator upper = static_cast<const_iterator>(upper_bound(value));
+        return std::make_pair(lower, upper);
+    }
+    //template< class K >
+    //std::pair<iterator,iterator> equal_range( const K& x );
+    //template< class K >
+    //std::pair<const_iterator,const_iterator> equal_range( const K& x ) const;
+
 };
 
 
@@ -1281,6 +1303,13 @@ public:
     }
     const_iterator Upper_bound(const Key& key) const {
         return this->upper_bound(value_type(key, mapped_type()));
+    }
+
+    std::pair<iterator,iterator> Equal_range(const Key& key) {
+        return this->equal_range(value_type(key, mapped_type()));
+    }
+    std::pair<const_iterator,const_iterator> Equal_range(const Key& key) const {
+        return this->equal_range(value_type(key, mapped_type()));
     }
 };
 

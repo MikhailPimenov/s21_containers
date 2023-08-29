@@ -1132,6 +1132,309 @@ TEST(Map, T13UpperBound)
 
 
 
+TEST(Map, T0EqualRangeEnd)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(105);
+    const auto pair = map.equal_range(105);
+
+    EXPECT_EQ(s21_pair.first, s21_map.end()); 
+    EXPECT_EQ(s21_pair.second, s21_map.end()); 
+    EXPECT_EQ(pair.first, map.end()); 
+    EXPECT_EQ(pair.second, map.end()); 
+}
+
+TEST(Map, T1EqualRangeEnd)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(500);
+    const auto pair = map.equal_range(500);
+
+    EXPECT_EQ(s21_pair.first, s21_map.end()); 
+    EXPECT_EQ(s21_pair.second, s21_map.end()); 
+    EXPECT_EQ(pair.first, map.end()); 
+    EXPECT_EQ(pair.second, map.end()); 
+}
+
+TEST(Map, T2EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(10);
+    const auto pair = map.equal_range(10);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+TEST(Map, T3EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(20);
+    const auto pair = map.equal_range(20);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+TEST(Map, T4EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(30);
+    const auto pair = map.equal_range(30);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+TEST(Map, T5EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(35);
+    const auto pair = map.equal_range(35);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+TEST(Map, T6EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(40);
+    const auto pair = map.equal_range(40);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+TEST(Map, T7EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(45);
+    const auto pair = map.equal_range(45);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+TEST(Map, T8EqualRange)
+{
+    const s21::Map<int, Item> s21_map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const std::map<int, Item> map {
+        {10, Item(10, 'a', 0.1)},
+        {20, Item(20, 'b', 0.2)},
+        {30, Item(30, 'c', 0.3)},
+        {40, Item(40, 'd', 0.4)},
+        {50, Item(50, 'e', 0.5)},
+        {60, Item(60, 'f', 0.6)},
+        {70, Item(70, 'g', 0.7)},
+        {80, Item(80, 'h', 0.8)},
+        {90, Item(90, 'i', 0.9)},
+    };
+
+    const auto s21_pair = s21_map.Equal_range(50);
+    const auto pair = map.equal_range(50);
+
+    EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
+    EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+}
+
+
+
 
 
 
