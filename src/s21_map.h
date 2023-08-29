@@ -1138,49 +1138,36 @@ public:
 
 
 protected:
-
-    // greater or equal
-
-    //                    4
-    //          2                  6
-    //       1      3            5  7
-    //           2.9  3.1 
-    //          -
-
-    //4.5 -> 5
-    //3.5 -> 4
-    //2.5 -> 2.9
-    const_iterator find_recursive(Node* root, const_reference value, bool lower = false, bool upper = false, Node* result = nullptr) const
+    const_iterator find_recursive(Node* root, const_reference value, bool lowerBound = false, bool upperBound = false, Node* bound = nullptr) const
     {
         assert(root && "root should exist!");
     
         if (comparator_(value, root->value_)) {  // key < root->value_
             if (root->left_ && root->left_ != &rend_) {
-                result = root;
-                return find_recursive(root->left_, value, lower, upper, result);
+                bound = root;
+                return find_recursive(root->left_, value, lowerBound, upperBound, bound);
             } else {
-                //not found
-                //or return root if lower_bound
-                if (lower)
+                // not found
+                // or return root if lowerBound or upperBound
+                if (lowerBound || upperBound)
                     return const_iterator(root);
-                if (upper && root->root_)
-                    return const_iterator(root->root_);
                 return end();
             }
         } else if (comparator_(root->value_, value)) {
             if (root->right_ && root->right_ != &end_) {
-                return find_recursive(root->right_, value, lower, upper, result);
+                return find_recursive(root->right_, value, lowerBound, upperBound, bound);
             } else {
-                //not found
-                //or return root if upper_bound
-                if (upper && root->root_)
-                    return const_iterator(root);
-                if (lower)
-                    return const_iterator(result);
+                // not found
+                // or if lowerBound or upperBound return the last time we took left subtree
+                if (lowerBound || upperBound)
+                    return const_iterator(bound);
                 return end();
             }
         } else {
             // found
+            // or return next if upperBound
+            if (upperBound)
+                return ++const_iterator(root);
             return const_iterator(root);
         }
     }
@@ -1189,7 +1176,6 @@ protected:
     iterator find(const_reference value) {
         if (!root_)
             return end();
-        // return static_cast<iterator>(find_recursive(root_, value));
         return static_cast<iterator>(find_recursive(root_, value));
     }
     const_iterator find(const_reference value) const {
@@ -1220,13 +1206,13 @@ protected:
     iterator upper_bound(const_reference value) {
         if (!root_)
             return end();
-        return static_cast<iterator>(find_recursive(root_, value, true, true, &end_)); 
+        return static_cast<iterator>(find_recursive(root_, value, false, true, &end_)); 
     }
 
     const_iterator upper_bound(const_reference value) const {
         if (!root_)
             return end();
-        return find_recursive(root_, value, true, true, &end_); 
+        return find_recursive(root_, value, false, true, &end_); 
     }
 
     // template< class K > bool contains( const K& x ) const;
