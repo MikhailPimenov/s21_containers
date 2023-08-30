@@ -4,7 +4,7 @@
 #include "../../s21_array.h"
 
 #include "item.h"
-#include "../arry_helpers.h"
+#include "../array_helpers.h"
 
 // GCOVR_EXCL_START
 
