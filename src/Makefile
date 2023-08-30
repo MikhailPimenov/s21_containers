@@ -39,6 +39,8 @@ SOURCES+=tests/map/lookup.cc
 
 SOURCES+=tests/multiset/constructors.cc
 
+SOURCES+=tests/array/accessor.cc
+
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
 # SOURCES+=tests/list/push_front.cc
@@ -80,7 +82,7 @@ gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
 # open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
-		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 
