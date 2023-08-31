@@ -114,7 +114,7 @@ class ArrayIteratorBase
     }
 
     template <typename OtherPointer, typename OtherReference>
-    bool operator!=(const ArrayIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) const noexcept
+    bool operator!=(const ArrayIteratorBase<Array, OtherPointer, OtherReference, Difference_type, Value_type> &other) const noexcept
     {
         return !(*this == other);
     }
@@ -258,7 +258,7 @@ class ArrayReverseIterator : public ArrayIteratorBase<Array, Pointer, Reference,
 
     ArrayReverseIterator operator++(int) noexcept
     {
-        VectorReverseIterator temporary(*this);
+        ArrayReverseIterator temporary(*this);
         --(this->pointer_);
         return temporary;
     }
@@ -271,7 +271,7 @@ class ArrayReverseIterator : public ArrayIteratorBase<Array, Pointer, Reference,
 
     ArrayReverseIterator operator--(int) noexcept
     {
-        VectorReverseIterator temporary(*this);
+        ArrayReverseIterator temporary(*this);
         ++(this->pointer_);
         return temporary;
     }
@@ -433,7 +433,7 @@ template <typename Type> class Array
         }            
     }
 
-    Array(Vector&& other) noexcept : capacity_{other.capacity_}, size_{other.size_}, data_{other.data_}
+    Array(Array&& other) noexcept : capacity_{other.capacity_}, size_{other.size_}, data_{other.data_}
     {
         other.data_ = nullptr;
         other.size_ = 0;
@@ -884,7 +884,7 @@ public:
         size_ = new_size;
     }
 
-    constexpr void Swap(Vector& other) 
+    constexpr void Swap(Array& other) 
     {
         using namespace std;                    // to enable ADL
         swap(data_, other.data_);
