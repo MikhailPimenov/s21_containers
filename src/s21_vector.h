@@ -383,10 +383,13 @@ template <typename Type> class Vector
         }
         void reallocate(size_type exact_count)
         {
-            pointer new_data = new Type[exact_count];
+            // pointer new_data = new Type[exact_count];
+            char* preallocated_buffer = new char[sizeof(value_type) * exact_count]; // no constructors were called
             size_type new_size = size_;
+            pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
             for (size_type i = 0; i < size_; ++i)
-                new_data[i] = data_[i];
+                // new_data[i] = data_[i];
+                new (new_data + i) value_type(data_[i]);
             
             deallocate();
             data_ = new_data;
@@ -824,7 +827,8 @@ public:
             size_type new_capacity = calculate_capacity(new_size);
             reallocate(new_capacity);
         }
-        data_[old_size] = element;
+        // data_[old_size] = element;
+        new(data_ + old_size) value_type(element);
         size_ = new_size;
     };
 
@@ -838,7 +842,8 @@ public:
             size_type new_capacity = calculate_capacity(new_size);
             reallocate(new_capacity);
         }
-        data_[old_size] = std::move(element);
+        // data_[old_size] = std::move(element);
+        new(data_ + old_size) value_type(std::move(element));
         size_ = new_size;
     };
 
@@ -880,7 +885,8 @@ public:
             size_type new_capacity = calculate_capacity(new_size);
             reallocate(new_capacity);
         }
-        data_[old_size] = value_type(std::forward<Args>(args)...);
+        // data_[old_size] = value_type(std::forward<Args>(args)...);
+        new (data_ + old_size) value_type(std::forward<Args>(args)...);
         size_ = new_size;
     }
 

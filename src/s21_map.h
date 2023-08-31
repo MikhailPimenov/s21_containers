@@ -493,11 +493,13 @@ template <typename Value, typename AggregatorType>
 class ComparatorMultiMap {
 public:
     bool operator()(const AggregatorType& left, const Value& right) const {
-        assert(left.size() >= 1ull);
+        // assert(left.size() >= 1ull);
+        assert(left.Size() >= 1ull);
         return left[0ull].first < right.first;
     }
     bool operator()(const Value& left, const AggregatorType& right) const {
-        assert(right.size() >= 1ull);
+        // assert(right.size() >= 1ull);
+        assert(right.Size() >= 1ull);
         return left.first < right[0ull].first;
     }
 
@@ -510,8 +512,8 @@ public:
     using type = Value;                 // what is stored in vector or list
 public:
     bool operator()(Aggregator& aggregator, const Value& value) const {
-        // aggregator.Push_back(value);
-        aggregator.push_back(value);
+        aggregator.Push_back(value);
+        // aggregator.push_back(value);
         return true;
     }
 };
@@ -550,16 +552,17 @@ public:
 
 
 template <typename T>
-// class VectorFromSingleT : public Vector<T> {
-class VectorFromSingleT : public std::vector<T> {
+class VectorFromSingleT : public Vector<T> {
+// class VectorFromSingleT : public std::vector<T> {
 public:
-    // using Base = Vector<T>;
-    using Base = std::vector<T>;
+    using Base = Vector<T>;
+    // using Base = std::vector<T>;
 
 public:
     VectorFromSingleT(T&& single) : Base() {
         // Base::Emplace_back(std::move(single));
-        Base::emplace_back(std::move(single));
+        // Base::emplace_back(std::move(single));
+        Base::Push_back(std::move(single));
     };
     VectorFromSingleT() = default;
     // VectorFromSingleT(const T& single) = delete; 
