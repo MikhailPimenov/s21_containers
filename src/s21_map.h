@@ -8,12 +8,13 @@
 #include <cstring>
 
 #include "s21_list.h"
-
+#include "s21_vector.h"
+#include "tests/vector_helpers.h"   // TODO: remove from here and add everywhere map is printed
 namespace s21
 {
 
 template <typename Map, typename Pointer, typename Reference, typename Node_pointer, typename Difference_type,
-          /*typename Key_type,*/ typename Value_type>
+          /*typename Key_type,*/ typename Value_type, typename Getter>
 // template <typename Vector, typename Pointer, typename Reference, typename Difference_type,
         //   typename Value_type>
 class MapIteratorBase
@@ -28,13 +29,16 @@ class MapIteratorBase
     using iterator_category = std::bidirectional_iterator_tag;
     using node_pointer = Node_pointer;
 
+private:
+    using getter = Getter;
+
 
     // template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherDifference_type, typename OtherValue_type>
     // friend class VectorIteratorBase;  // to be able to compare iterator and const_iterator
 
 
   public:
-    MapIteratorBase(node_pointer p) noexcept : pointer_{p} {}
+    MapIteratorBase(node_pointer p, size_type shift = 0ull) noexcept : pointer_{p}, shift_{shift} {}
 
 
     // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
@@ -46,7 +50,7 @@ class MapIteratorBase
 
 
     MapIteratorBase(const MapIteratorBase &other) noexcept
-        : MapIteratorBase(other.pointer_)
+        : MapIteratorBase(other.pointer_, other.shift_)
     {
 
     }
@@ -60,15 +64,17 @@ class MapIteratorBase
     // }
 
     MapIteratorBase(MapIteratorBase &&other) noexcept
-        : MapIteratorBase(other.pointer_)
+        : MapIteratorBase(other.pointer_, other.shift_)
     {
         other.pointer_ = nullptr;
+        other.shift_ = 0ull;
     }
 
     friend void swap(MapIteratorBase &left, MapIteratorBase &right) noexcept
     {
         using namespace std; // to enable ADL
         swap(left.pointer_, right.pointer_);
+        swap(left.shift_, right.shift_);
     }
 
     // MapIteratorBase &operator++() noexcept
@@ -103,13 +109,16 @@ class MapIteratorBase
     MapIteratorBase &operator=(const MapIteratorBase &other) noexcept
     {
         pointer_ = other.pointer_;
+        shift_ = other.shift_;
         return *this;
     }
 
     MapIteratorBase &operator=(MapIteratorBase &&other) noexcept
     {
         pointer_ = other.pointer_;
+        shift_ = other.shift_;
         other.pointer_ = nullptr;
+        other.shift_ = 0ull;
         return *this;
     }
 
@@ -117,12 +126,13 @@ class MapIteratorBase
 
     reference operator*() const noexcept
     {
-        return pointer_->value_;
+        // return pointer_->aggregator_[shift_];
+        return getter_(pointer_->aggregator_, shift_);
     }
 
     pointer operator->() const noexcept
     {
-        return &(pointer_->value_);
+        return &getter_(pointer_->aggregator_, shift_);
     }
 
     size_type LeftHeight() const noexcept
@@ -143,7 +153,7 @@ class MapIteratorBase
     // }
     bool operator==(const MapIteratorBase &other) const noexcept
     {
-        return pointer_ == other.pointer_;
+        return pointer_ == other.pointer_ && shift_ == other.shift_;
     }
 
     // template <typename OtherPointer, typename OtherReference>
@@ -166,10 +176,22 @@ class MapIteratorBase
 
   protected:
     node_pointer pointer_;
+    size_type shift_;
+    getter getter_;
 };
 
-template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference, typename Node_pointer = typename Map::node_pointer>
-class MapIterator : public MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
+template <typename Map, 
+          typename Pointer = typename Map::pointer, 
+          typename Reference = typename Map::reference, 
+          typename Node_pointer = typename Map::node_pointer,
+          typename Getter = typename Map::getter>
+class MapIterator : public MapIteratorBase<Map, 
+                                           Pointer, 
+                                           Reference, 
+                                           Node_pointer, 
+                                           typename Map::difference_type, /*typename Map::key_type,*/ 
+                                           typename Map::value_type,
+                                           Getter>
 {
     // template<typename K, typename V, typename C>
     // friend class Map;  // to compare const_iterator with iterator
@@ -180,7 +202,7 @@ class MapIterator : public MapIteratorBase<Map, Pointer, Reference, Node_pointer
 
   private:
     using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
-                                  typename Map::value_type>;
+                                  typename Map::value_type, Getter>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
     using typename Base::node_pointer;
@@ -313,12 +335,22 @@ private:
     }
 };
 
-template <typename Map, typename Pointer = typename Map::pointer, typename Reference = typename Map::reference, typename Node_pointer = typename Map::node_pointer>
-class MapReverseIterator : public MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/ typename Map::value_type>
+template <typename Map, 
+          typename Pointer = typename Map::pointer, 
+          typename Reference = typename Map::reference, 
+          typename Node_pointer = typename Map::node_pointer,
+          typename Getter = typename Map::getter>
+class MapReverseIterator : public MapIteratorBase<Map, 
+                                                  Pointer, 
+                                                  Reference, 
+                                                  Node_pointer, 
+                                                  typename Map::difference_type, /*typename Map::key_type,*/ 
+                                                  typename Map::value_type,
+                                                  Getter>
 {
   private:
     using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
-                                  typename Map::value_type>;
+                                  typename Map::value_type, Getter>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
 
@@ -456,45 +488,111 @@ public:
 
 };
 
+template <typename Value, typename Aggregator = Vector<Value>>
+class MultiAdder {
+public:
+    using aggregator_type = Aggregator; // vector or list
+    using type = Value;                 // what is stored in vector or list
+public:
+    bool operator()(Aggregator& aggregator, const Value& value) const {
+        aggregator.Push_back(value);
+        return true;
+    }
+};
+template <typename Value, typename Aggregator = Value>
+class Adder {
+    static_assert(std::is_same_v<Value, Aggregator>);
+public:
+    using aggregator_type = Aggregator; // vector or list
+    using type = Value;                 // pair key-value
+public:
+    bool operator()(const Aggregator&, const Value&) const {
+        return false;
+    }
+};
+template<typename Value, typename Aggregator = Value>
+class Getter {
+    static_assert(std::is_same_v<Value, Aggregator>);
+public:
+    Value& operator()(Aggregator& aggregator, std::size_t) {
+        return aggregator;
+    }
+    const Value& operator()(const Aggregator& aggregator, std::size_t) const {
+        return aggregator;
+    }
+};
+template<typename Value, typename Aggregator = Vector<Value>>
+class MultiGetter {
+public:
+    Value& operator()(Aggregator& aggregator, std::size_t shift) {
+        return aggregator[shift];
+    }
+    const Value& operator()(const Aggregator& aggregator, std::size_t shift) const {
+        return aggregator[shift];
+    }
+};
 
 
+template <typename T>
+class VectorFromSingleT : public Vector<T> {
+public:
+    using Base = Vector<T>;
+public:
+    VectorFromSingleT(const T& single) : Base(1, single) {};
 
-template <typename Value, typename Comparator> class MapBase
+};
+
+
+template <typename Value, 
+          typename Comparator, 
+          typename Adder, 
+          typename Aggregator,
+          typename Getter> 
+class MapBase
 {
     struct Node;
   public:
     // using value_type = std::pair<const Key, Type>;
+    // using value_type = Value::value_type;
     using value_type = Value;
-    // using mapped_type = Type;
-    // using key_type = Key;
+    // using value_type = typename Adder::aggregator_type;
+
+    using aggregator_type = Aggregator;
+    // using mapped_type = typename Adder::type;
+    //using key_type = Key;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using reference = value_type &;
+    // using reference = typename Adder::type &;
     using const_reference = const value_type &;
+    // using const_reference = const typename Adder::type &;
     using pointer = value_type *;
+    // using pointer = typename Adder::type *;
     using const_pointer = const value_type *;
+    // using const_pointer = const typename Adder::type *;
 
     using node_type = Node;
     using node_pointer = Node*;
     using const_node_pointer = const Node*;
     using comparator = Comparator;
+    using adder = Adder;
+    using getter = Getter;
 
   public:
-    using iterator = MapIterator<MapBase<Value, Comparator>>;
-    using const_iterator = MapIterator<MapBase<Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
-    using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator> >;
-    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
+    using iterator = MapIterator<MapBase<Value, Comparator,  Adder, Aggregator, Getter> >;
+    using const_iterator = MapIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter>, const_pointer, const_reference, const_node_pointer>;
+    using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter> >;
+    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter>, const_pointer, const_reference, const_node_pointer>;
 
   private:
-    size_type size_;
+    size_type size_; 
 
 private:
     struct Node {
     // private:
-        value_type value_;  // key + value
+        aggregator_type aggregator_;  // <key,value> for map, <value> for set, <key, vector<value>> for multimap, vector<value> for multiset
 
-        // template<typename V, typename C>
-        // friend class MapBase;
+
 
         Node* root_;
         Node* left_;
@@ -503,24 +601,25 @@ private:
         size_type lHeight_;
         size_type rHeight_;
 
-        Node() : value_{value_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr}, lHeight_{0ull}, rHeight_{0ull} {}
+        Node() : aggregator_{aggregator_type()}, root_{nullptr}, left_{nullptr}, right_{nullptr}, lHeight_{0ull}, rHeight_{0ull} {}
 
         Node(const_reference value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-         : value_{value}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
-
+         : aggregator_{value}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
+            
         }
-        Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-         : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
+        // Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
+        //  : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
 
-        }
+        // }
 
-        reference value() {
-            return value_;
-        }
+        // TODO: for extract
+        // reference value() {
+        //     return value_;
+        // }
 
-        const_reference value() const {
-            return value_;
-        }
+        // const_reference value() const {
+        //     return value_;
+        // }
 
 
     };
@@ -532,7 +631,7 @@ private:
 
 private:
     comparator comparator_;
-
+    adder adder_;
 
 public:
     MapBase() : size_{0},  end_{}, rend_{}, root_{nullptr}
@@ -563,15 +662,12 @@ public:
     ~MapBase() {
         Clear();
     }
-
     bool Empty() const noexcept {
         return size_ == 0ull;
     }
-
     size_type Size() const noexcept {
         return size_;
     }
-
     size_type Height() const noexcept {
         if (!root_)
             return 0ull;
@@ -621,16 +717,11 @@ public:
 
 private:
     //modifiers==============================================================
-    //         4
-    //    2           6
-    //  1   3       5    7
-    //                      8
     Node* create_node(Node* root, const_reference value) {
         Node* new_node = new Node(value, root);
         ++size_;
         return new_node;
     }
-
     void updateEnd() {
         assert(root_ && "Root should always exist!");
         Node* new_end = root_;
@@ -640,7 +731,6 @@ private:
         end_.root_ = new_end;
         new_end->right_ = &end_;     // otherwise it will not stop when if (new_end->right_)
     }
-
     void updateReverseEnd() {
         assert(root_ && "Root should always exist!");
         Node* new_end = root_;
@@ -650,8 +740,6 @@ private:
         rend_.root_ = new_end;
         new_end->left_ = &rend_;     // otherwise it will not stop when if (new_end->left_)
     }
-
-    //       4
     bool leftLeftCase(Node* root) const noexcept {
         if (root->lHeight_ - root->rHeight_ != 2ull)
             return false;
@@ -704,8 +792,6 @@ private:
         return true;
         // return unbalanced(root) && root->right_ && root->right_->lHeight_ - root->right_->rHeight_ == 1ull;
     }
-
-
     void leftLeftBalance(Node* root) {
         // assert(0 && "leftleftBalance");
         Node* root_root = root->root_;
@@ -764,12 +850,12 @@ private:
         // assert(0 && "left right balance");
         if (!root->left_) {
 //            std::cout << *this << '\n';
-            std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
+            // std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(root->left_ && "left_ should exist!");
         }
         if (!root->left_->right_) {
 //            std::cout << *this << '\n';
-            std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
+            // std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(root->left_->right_ && "left_->right_ should exist!");
         }
 
@@ -816,10 +902,6 @@ private:
 
         rightRightBalance(root);
     }
-
-
-
-
     void balance(Node* root) noexcept {
         // return;
         if (leftRightCase(root))
@@ -832,11 +914,10 @@ private:
             rightRightBalance(root);
         else {
             // std::cout << *this << '\n';
-            std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
+            // std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
             assert(0 && "Unknown type of unbalanced case!");
         }
     }
-
     void updateLeftHeight(Node* node) {
         assert(node && "Node should exist!");
         if (!node->left_ || node->left_ == &rend_) {
@@ -849,7 +930,6 @@ private:
         else
             node->lHeight_ = 1ull + node->left_->rHeight_;
     }
-
     void updateRightHeight(Node* node) {
         assert(node && "Node should exist!");
         if (!node->right_ || node->right_ == &end_) {
@@ -868,7 +948,7 @@ private:
         // root always exists
         // if (value.first < root->value_.first) {
         // if (value < root->value_) {
-        if (comparator_(value, root->value_)) {
+        if (comparator_(value, root->aggregator_)) {
             if (root->left_ && root->left_ != &rend_) {
                 const auto [_, created] = insert_recursive(root->left_, value);
                 if (created) {
@@ -884,7 +964,7 @@ private:
                 return std::make_pair(iterator(root->left_), true);
             }
         // } else if (root->value_.first < value.first) {
-        } else if (comparator_(root->value_, value)) {
+        } else if (comparator_(root->aggregator_, value)) {
             if (root->right_ && root->right_ != &end_) {
                 const auto [_, created] = insert_recursive(root->right_, value);
                 if (created) {
@@ -901,6 +981,7 @@ private:
             }
         }
         // equal
+        adder_(root->aggregator_, value);
         return std::make_pair(iterator(root), false);
     }
 public:
@@ -935,29 +1016,6 @@ public:
         }
         return {_, created};
     }
-    // template< class P >
-    // std::pair<iterator, bool> insert( P&& value );
-// (2)	(since C++11)
-// std::pair<iterator, bool> insert( value_type&& value );
-// (3)	(since C++17)
-// (4)
-
-// iterator insert( const_iterator pos, const value_type& value );
-// (since C++11)
-// template< class P >
-// iterator insert( const_iterator pos, P&& value );
-// (5)	(since C++11)
-// iterator insert( const_iterator pos, value_type&& value );
-// (6)	(since C++17)
-// template< class InputIt >
-// void insert( InputIt first, InputIt last );
-// (7)
-// void insert( std::initializer_list<value_type> ilist );
-// (8)	(since C++11)
-// insert_return_type insert( node_type&& nh );
-// (9)	(since C++17)
-// iterator insert( const_iterator pos, node_type&& nh );
-// (10)	(since C++17)
 private:
     //modifiers==============================================================
     //                      4
@@ -1159,7 +1217,6 @@ public:
 
         return result.first;
     }
-
     node_type Extract(const_iterator pos) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
@@ -1174,8 +1231,7 @@ public:
 
 
 protected:
-    const_iterator find_recursive(Node* root, const_reference value, bool lowerBound = false, bool upperBound = false, Node* bound = nullptr) const
-    {
+    const_iterator find_recursive(Node* root, const_reference value, bool lowerBound = false, bool upperBound = false, Node* bound = nullptr) const {
         assert(root && "root should exist!");
 
         if (comparator_(value, root->value_)) {  // key < root->value_
@@ -1226,25 +1282,21 @@ protected:
     bool contains(const_reference value) const {
         return find(value) != end();
     }
-
     iterator lower_bound(const_reference value) {
         if (!root_)
             return end();
         return static_cast<iterator>(find_recursive(root_, value, true, false, &end_));
     }
-
     const_iterator lower_bound(const_reference value) const {
         if (!root_)
             return end();
         return find_recursive(root_, value, true, false, &end_);
     }
-
     iterator upper_bound(const_reference value) {
         if (!root_)
             return end();
         return static_cast<iterator>(find_recursive(root_, value, false, true, &end_));
     }
-
     const_iterator upper_bound(const_reference value) const {
         if (!root_)
             return end();
@@ -1252,8 +1304,6 @@ protected:
     }
 
     // template< class K > bool contains( const K& x ) const;
-
-
     std::pair<iterator,iterator> equal_range(const_reference value) {
         if (!root_)
             return std::make_pair(end(), end());
@@ -1279,21 +1329,60 @@ protected:
 
 
 
-template <typename Type, typename Comparator = ComparatorSet<Type>>
-class Set : public MapBase<Type, Comparator> {
+// template <typename Type, typename Comparator = ComparatorSet<Type>>
+// class Set : public MapBase<Type, Comparator, Adder<Type, Type>, Type, Getter<Type>> {
 
-};
+// };
 
-template <typename Type, typename Comparator = ComparatorSet<Type>>
-class MultiSet : public MapBase<List<Type>, Comparator> {
 
-};
-
-template <typename Key, typename Type, typename Comparator = ComparatorMap<std::pair<const Key, Type>>>
-class Map : public MapBase<std::pair<const Key, Type>, Comparator> {
+template <typename Key, typename Type, typename Comparator = ComparatorSet<Type>>
+class MultiMap : public MapBase<std::pair<const Key, Type>, 
+                                Comparator, 
+                                MultiAdder<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>,
+                                Vector<std::pair<const Key, Type>>,
+                                MultiGetter<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>> {
+public:
+    using Base = MapBase<std::pair<const Key, Type>, 
+                         Comparator, 
+                         MultiAdder<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>,
+                         Vector<std::pair<const Key, Type>>,
+                         MultiGetter<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>> ;
+public:
+    using value_type        = typename Base::value_type;
+    using mapped_type       = Type;
+    using key_type          = Key;
+    using size_type         = typename Base::size_type;
+    using difference_type   = typename Base::difference_type;
+    using reference         = typename Base::reference;
+    using const_reference   = typename Base::const_reference;
+    using pointer           = typename Base::pointer;
+    using const_pointer     = typename Base::const_pointer;
 
 public:
-    using Base = MapBase<std::pair<const Key, Type>, Comparator>;
+    using iterator                  = typename Base::iterator;
+    using const_iterator            = typename Base::const_iterator;
+    using reverse_iterator          = typename Base::reverse_iterator;
+    using const_reverse_iterator    = typename Base::const_reverse_iterator;
+
+public:
+    using Base::Base;
+};
+
+template <typename Key, 
+          typename Type, 
+          typename Comparator = ComparatorMap<std::pair<const Key, Type>>>
+class Map : public MapBase<std::pair<const Key, Type>, 
+                           Comparator, 
+                           Adder<std::pair<const Key, Type>, std::pair<const Key, Type>>, 
+                           std::pair<const Key, Type>,
+                           Getter<std::pair<const Key, Type>>> {
+
+public:
+    using Base = MapBase<std::pair<const Key, Type>, 
+                         Comparator, 
+                         Adder<std::pair<const Key, Type>, std::pair<const Key, Type>>,
+                         std::pair<const Key, Type>,
+                         Getter<std::pair<const Key, Type>>> ;
 
 public:
     using value_type        = typename Base::value_type;

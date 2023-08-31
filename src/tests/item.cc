@@ -48,6 +48,11 @@ bool Item::operator!=(const Item &right) const
     return !(*this == right);
 }
 
+int Item::number() const
+{
+    return number_;
+}
+
 std::ostream &operator<<(std::ostream &out, const Item &object)
 {
     out << "Item(" << object.number_ << ", " << object.symbol_ << ", " << object.fraction_ << ')';

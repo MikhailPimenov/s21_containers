@@ -6,8 +6,29 @@
 #include <cmath>
 
 #include "../s21_map.h"
+#include "../s21_vector.h"
 
 // GCOVR_EXCL_START
+
+template<typename Key, typename Type>
+bool operator==(const std::pair<const Key, s21::Vector<Type>>& multipair, const std::pair<const Key, Type>& pair) {
+    if (multipair.second.Size() != 1ull)
+        return false;
+    
+    if (multipair.first != pair.first)
+        return false;
+    
+    if (*(multipair.second.cbegin()) != pair.second)
+        return false;
+    
+    return true;
+}
+
+template<typename Key, typename Type>
+bool operator!=(const std::pair<const Key, s21::Vector<Type>>& multipair, const std::pair<const Key, Type>& pair) {
+    return !(multipair == pair);
+}
+
 
 template<typename Key, typename Type>
 bool operator==(const s21::Map<Key, Type>& s21_map, const std::map<Key, Type>& map) {

@@ -20,6 +20,8 @@ class Item
     bool operator==(const Item &right) const;
     bool operator!=(const Item &right) const;
 
+    int number() const;
+
     friend std::ostream &operator<<(std::ostream &out, const Item &object);
 };
 
