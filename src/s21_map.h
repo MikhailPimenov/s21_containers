@@ -15,7 +15,7 @@ namespace s21
 {
 
 template <typename Map, typename Pointer, typename Reference, typename Node_pointer, typename Difference_type,
-          /*typename Key_type,*/ typename Value_type, typename Getter>
+          /*typename Key_type,*/ typename Value_type, typename Getter, typename Checker>
 // template <typename Vector, typename Pointer, typename Reference, typename Difference_type,
         //   typename Value_type>
 class MapIteratorBase
@@ -32,6 +32,7 @@ class MapIteratorBase
 
 private:
     using getter = Getter;
+    using checker = Checker;
 
 
     // template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherDifference_type, typename OtherValue_type>
@@ -123,12 +124,23 @@ private:
         return *this;
     }
 
-
+    reference operator*() noexcept
+    {
+        // return pointer_->value_;
+        // return pointer_->aggregator_;
+        return getter_(pointer_->aggregator_, shift_);
+    }
 
     reference operator*() const noexcept
     {
-        // return pointer_->aggregator_[shift_];
+        // return pointer_->value_;
+        // return pointer_->aggregator_;
         return getter_(pointer_->aggregator_, shift_);
+    }
+
+    pointer operator->() noexcept
+    {
+        return &getter_(pointer_->aggregator_, shift_);
     }
 
     pointer operator->() const noexcept
@@ -179,20 +191,23 @@ private:
     node_pointer pointer_;
     size_type shift_;
     getter getter_;
+    checker checker_;
 };
 
 template <typename Map, 
           typename Pointer = typename Map::pointer, 
           typename Reference = typename Map::reference, 
           typename Node_pointer = typename Map::node_pointer,
-          typename Getter = typename Map::getter>
+          typename Getter = typename Map::getter,
+          typename Checker = typename Map::checker>
 class MapIterator : public MapIteratorBase<Map, 
                                            Pointer, 
                                            Reference, 
                                            Node_pointer, 
                                            typename Map::difference_type, /*typename Map::key_type,*/ 
                                            typename Map::value_type,
-                                           Getter>
+                                           Getter,
+                                           Checker>
 {
     // template<typename K, typename V, typename C>
     // friend class Map;  // to compare const_iterator with iterator
@@ -203,7 +218,7 @@ class MapIterator : public MapIteratorBase<Map,
 
   private:
     using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
-                                  typename Map::value_type, Getter>;
+                                  typename Map::value_type, Getter, Checker>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
     using typename Base::node_pointer;
@@ -231,8 +246,20 @@ class MapIterator : public MapIteratorBase<Map,
 
 
     // MapIterator &operator++() noexcept override  // ++i
-    MapIterator &operator++() noexcept  // ++i
+    MapIterator& operator++() noexcept  // ++i
     {
+        // decide if iterate through aggregator
+        // if (shift_ < this->pointer_->aggregator_.Size())
+            // return // step through aggregator
+        // checks if iterate through aggregator. For map/set does nothing
+        if (this->checker_(this->pointer_->aggregator_, this->shift_)) {
+            // MapIterator temp(this->pointer_, this->shift_);
+            ++(this->shift_);
+            // return temp; 
+            return *this; 
+        }
+        this->shift_ = 0ull;
+
         if (!this->pointer_->right_) {
             node_pointer temp = this->pointer_;
             while (true) {
@@ -340,18 +367,20 @@ template <typename Map,
           typename Pointer = typename Map::pointer, 
           typename Reference = typename Map::reference, 
           typename Node_pointer = typename Map::node_pointer,
-          typename Getter = typename Map::getter>
+          typename Getter = typename Map::getter,
+          typename Checker = typename Map::checker>
 class MapReverseIterator : public MapIteratorBase<Map, 
                                                   Pointer, 
                                                   Reference, 
                                                   Node_pointer, 
                                                   typename Map::difference_type, /*typename Map::key_type,*/ 
                                                   typename Map::value_type,
-                                                  Getter>
+                                                  Getter,
+                                                  Checker>
 {
   private:
     using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type, /*typename Map::key_type,*/
-                                  typename Map::value_type, Getter>;
+                                  typename Map::value_type, Getter, Checker>;
   public:
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
 
@@ -511,8 +540,9 @@ public:
     using aggregator_type = Aggregator; // vector or list
     using type = Value;                 // what is stored in vector or list
 public:
-    bool operator()(Aggregator& aggregator, const Value& value) const {
+    bool operator()(Aggregator& aggregator, const Value& value, std::size_t& size) const {
         aggregator.Push_back(value);
+        ++size;
         // aggregator.push_back(value);
         return true;
     }
@@ -524,7 +554,7 @@ public:
     using aggregator_type = Aggregator; // vector or list
     using type = Value;                 // pair key-value
 public:
-    bool operator()(const Aggregator&, const Value&) const {
+    bool operator()(const Aggregator&, const Value&, std::size_t&) const {
         return false;
     }
 };
@@ -547,6 +577,23 @@ public:
     }
     const Value& operator()(const Aggregator& aggregator, std::size_t shift) const {
         return aggregator[shift];
+    }
+};
+
+
+template <typename Aggregator>
+class Checker {
+public:
+    bool operator()(const Aggregator& aggregator, std::size_t shift) {
+        return false;
+    }
+};
+
+template <typename Aggregator>
+class MultiChecker {
+public:
+    bool operator()(const Aggregator& aggregator, std::size_t shift) {
+        return shift < aggregator.Size() - 1ull;
     }
 };
 
@@ -575,7 +622,8 @@ template <typename Value,
           typename Comparator, 
           typename Adder, 
           typename Aggregator,
-          typename Getter> 
+          typename Getter,
+          typename Checker> 
 class MapBase
 {
     struct Node;
@@ -605,12 +653,13 @@ class MapBase
     using comparator = Comparator;
     using adder = Adder;
     using getter = Getter;
+    using checker = Checker;
 
   public:
-    using iterator = MapIterator<MapBase<Value, Comparator,  Adder, Aggregator, Getter> >;
-    using const_iterator = MapIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter>, const_pointer, const_reference, const_node_pointer>;
-    using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter> >;
-    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter>, const_pointer, const_reference, const_node_pointer>;
+    using iterator = MapIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter, Checker> >;
+    using const_iterator = MapIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter, Checker>, const_pointer, const_reference, const_node_pointer>;
+    using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter, Checker> >;
+    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, Adder, Aggregator, Getter, Checker>, const_pointer, const_reference, const_node_pointer>;
 
   private:
     size_type size_; 
@@ -1014,7 +1063,7 @@ private:
             }
         }
         // equal
-        adder_(root->aggregator_, value);
+        adder_(root->aggregator_, value, size_);
         return std::make_pair(iterator(root), false);
     }
     std::pair<iterator, bool> insert_recursive(Node* root, value_type&& value) {
@@ -1055,7 +1104,7 @@ private:
             }
         }
         // equal
-        adder_(root->aggregator_, value);
+        adder_(root->aggregator_, value, size_);
         return std::make_pair(iterator(root), false);
     }
 public:
@@ -1325,7 +1374,7 @@ protected:
     const_iterator find_recursive(Node* root, const_reference value, bool lowerBound = false, bool upperBound = false, Node* bound = nullptr) const {
         assert(root && "root should exist!");
 
-        if (comparator_(value, root->value_)) {  // key < root->value_
+        if (comparator_(value, root->aggregator_)) {  // key < root->value_
             if (root->left_ && root->left_ != &rend_) {
                 bound = root;
                 return find_recursive(root->left_, value, lowerBound, upperBound, bound);
@@ -1336,7 +1385,7 @@ protected:
                     return const_iterator(root);
                 return end();
             }
-        } else if (comparator_(root->value_, value)) {
+        } else if (comparator_(root->aggregator_, value)) {
             if (root->right_ && root->right_ != &end_) {
                 return find_recursive(root->right_, value, lowerBound, upperBound, bound);
             } else {
@@ -1426,18 +1475,22 @@ protected:
 // };
 
 
-template <typename Key, typename Type, typename Comparator = ComparatorMultiMap<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>>
+template <typename Key, 
+          typename Type, 
+          typename Comparator = ComparatorMultiMap<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>>
 class MultiMap : public MapBase<std::pair<const Key, Type>, 
                                 Comparator, 
                                 MultiAdder<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>,
                                 VectorFromSingleT<std::pair<const Key, Type>>,
-                                MultiGetter<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>> {
+                                MultiGetter<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>,
+                                MultiChecker< VectorFromSingleT<std::pair<const Key, Type>>>> {
 public:
     using Base = MapBase<std::pair<const Key, Type>, 
                          Comparator, 
                          MultiAdder<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>,
                          VectorFromSingleT<std::pair<const Key, Type>>,
-                         MultiGetter<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>> ;
+                         MultiGetter<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>,
+                         MultiChecker< VectorFromSingleT<std::pair<const Key, Type>>>> ;
 public:
     using value_type        = typename Base::value_type;
     using mapped_type       = Type;
@@ -1466,14 +1519,16 @@ class Map : public MapBase<std::pair<const Key, Type>,
                            Comparator, 
                            Adder<std::pair<const Key, Type>, std::pair<const Key, Type>>, 
                            std::pair<const Key, Type>,
-                           Getter<std::pair<const Key, Type>>> {
+                           Getter<std::pair<const Key, Type>>,
+                           Checker<std::pair<const Key, Type>>> {
 
 public:
     using Base = MapBase<std::pair<const Key, Type>, 
                          Comparator, 
                          Adder<std::pair<const Key, Type>, std::pair<const Key, Type>>,
                          std::pair<const Key, Type>,
-                         Getter<std::pair<const Key, Type>>> ;
+                         Getter<std::pair<const Key, Type>>,
+                         Checker<std::pair<const Key, Type>>> ;
 
 public:
     using value_type        = typename Base::value_type;

@@ -10,6 +10,7 @@
 #include "../../s21_map.h"
 #include "../item.h"
 #include "../map_helpers.h"
+#include "../multimap_helpers.h"
 
 // GCOVR_EXCL_START
 
@@ -32,16 +33,66 @@ std::ostream& operator<<(std::ostream& out, const std::multimap<Key, Type, Less>
     return out;
 }
 
-TEST(Map, T0DefaultConstructor)
+TEST(MultiMap, T0DefaultConstructor)
+{
+    s21::MultiMap<int, Item> s21_multimap;
+    std::multimap<int, Item> multimap;
+
+    s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(1, Item(10, 'a', 0.1)));
+    s21_multimap.Insert(std::make_pair(1, Item(100, 'b', 0.1)));
+    s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    s21_multimap.Insert(std::make_pair(1, Item(1, 'c', 0.1)));
+    s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
+
+    multimap.insert(std::make_pair(3, Item(3, 'c', 0.3)));
+    multimap.insert(std::make_pair(1, Item(10, 'a', 0.1)));
+    multimap.insert(std::make_pair(1, Item(100, 'b', 0.1)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(1, Item(1, 'c', 0.1)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(3, Item(3, 'c', 0.3)));
+
+    std::cout << s21_multimap << '\n';
+
+    // s21::Set<int, Item> s21_set;
+    // s21_set.Insert(Item(1, 'a', 0.1));
+    // s21_set.Insert(Item(2, 'b', 0.2));
+    // s21_set.Insert(Item(3, 'c', 0.3));
+
+
+
+    EXPECT_EQ(s21_multimap, multimap);
+}
+
+
+
+TEST(MultiMap, T1Insert)
 {
     s21::MultiMap<int, Item> s21_multimap;
     // // std::multiset<Item> multiset;
 
+    s21_multimap.Insert(std::make_pair(10, Item(3, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(10, Item(10, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(12, Item(3, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(13, Item(3, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(1, Item(1, 'a', 0.1)));
+    s21_multimap.Insert(std::make_pair(1, Item(1, 'a', 0.1)));
     s21_multimap.Insert(std::make_pair(1, Item(1, 'a', 0.1)));
     s21_multimap.Insert(std::make_pair(1, Item(1, 'a', 0.1)));
     s21_multimap.Insert(std::make_pair(1, Item(1, 'a', 0.1)));
     s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    s21_multimap.Insert(std::make_pair(2, Item(2, 'b', 0.2)));
     s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
+    s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
+
+    std::cout << s21_multimap << '\n';
 
     // s21::Set<int, Item> s21_set;
     // s21_set.Insert(Item(1, 'a', 0.1));
@@ -52,8 +103,6 @@ TEST(Map, T0DefaultConstructor)
 
     //EXPECT_EQ(s21_map, map);
 }
-
-
 
 
 
