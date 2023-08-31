@@ -8,14 +8,14 @@
 
 // GCOVR_EXCL_START
 
-template<typename Type>
-bool operator==(const s21::Array<Type>& s21_Array, const std::array<Type, N>& array) {
-    if (s21_vector.Size() != vector.size())
-        return false;
+template<typename Type, std::size_t N>
+bool operator==(const s21::Array<Type, N>& s21_Array, const std::array<Type, N>& array) {
+    // if (s21_Array.Size() != array.size())
+        // return false;
 
-    auto s21_it = s21_vector.cbegin();
-    auto it = vector.cbegin();
-    while (s21_it != s21_vector.cend())
+    auto s21_it = s21_Array.cbegin();
+    auto it = array.cbegin();
+    while (s21_it != s21_Array.cend())
     {
         if (*s21_it != *it)
             return false;
@@ -26,23 +26,23 @@ bool operator==(const s21::Array<Type>& s21_Array, const std::array<Type, N>& ar
     return true;   
 }
 
-template<typename Type>
-bool operator==(std::vector<Type> vector, s21::Array<Type> s21_vector) {
-    return s21_vector == vector;   
+template<typename Type, std::size_t N>
+bool operator==(std::array<Type, N> array, s21::Array<Type, N> s21_Array) {
+    return s21_Array == array;   
 }
 
-template<typename Type>
-bool operator!=(const s21::Array<Type>& s21_vector, const std::vector<Type>& vector) {
-    return !(s21_vector == vector);   
+template<typename Type, std::size_t N>
+bool operator!=(const s21::Array<Type, N>& s21_Array, const std::array<Type, N>& array) {
+    return !(s21_Array == array);   
 }
 
-template<typename Type>
-bool operator!=(std::vector<Type> vector, s21::Array<Type> s21_vector) {
-    return !(s21_vector == vector);   
+template<typename Type, std::size_t N>
+bool operator!=(std::array<Type, N> array, s21::Array<Type, N> s21_Array) {
+    return !(s21_Array == array);   
 }
 
-template<typename Type>
-std::ostream& operator<<(std::ostream& out, const s21::Array<Type>& object)
+template<typename Type, std::size_t N>
+std::ostream& operator<<(std::ostream& out, const s21::Array<Type, N>& object)
 {
     out << "Vector: ";
     for (const auto& element : object)

@@ -13,7 +13,7 @@ namespace
 
 TEST(Array, T0Operator)
 {
-    s21::Array<int> s21_array { 3, 5, 7 };
+    s21::Array<int, 3> s21_array { 3, 5, 7 };
     std::array<int, 3> array { 3, 5, 7 };
 
     EXPECT_EQ(s21_array[0], array[0]);
@@ -21,21 +21,21 @@ TEST(Array, T0Operator)
 
 TEST(Vector, T1Operator)
 {
-    s21::Array<double> s21_array { 3.5, 8.77, 9.65, 8.08 };
+    s21::Array<double, 4> s21_array { 3.5, 8.77, 9.65, 8.08 };
     std::array<double, 4> array { 3.5, 8.77, 9.65, 8.08 };
 
     EXPECT_EQ(s21_array[1], array[1]);
 }
 
-/*TEST(Vector, T2Operator)
+TEST(Vector, T2Operator)
 {
-    s21::Vector<Item> s21_vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
-    std::vector<Item> vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
+    s21::Array<Item, 3> s21_array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
+    std::array<Item, 3> array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
 
-    EXPECT_EQ(s21_vector[2], vector[2]);
+    EXPECT_EQ(s21_array[2], array[2]);
 }
 
-TEST(Vector, T3Operator)
+/*TEST(Vector, T3Operator)
 {
     s21::Vector<Item> s21_vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     std::vector<Item> vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };

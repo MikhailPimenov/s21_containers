@@ -343,7 +343,7 @@ class ArrayReverseIterator : public ArrayIteratorBase<Array, Pointer, Reference,
 
 
 
-template <typename Type> class Array
+template <typename Type, std::size_t N> class Array
 {
   public:
     using value_type = Type;
@@ -356,10 +356,10 @@ template <typename Type> class Array
     using const_pointer = const value_type *;
 
   public:
-    using iterator = ArrayIterator<Array<Type> >;
-    using const_iterator = ArrayIterator<Array<Type>, const_pointer, const_reference>;
-    using reverse_iterator = ArrayReverseIterator<Array<Type> >;
-    using const_reverse_iterator = ArrayReverseIterator<Array<Type>, const_pointer, const_reference>;
+    using iterator = ArrayIterator<Array<Type, N> >;
+    using const_iterator = ArrayIterator<Array<Type, N>, const_pointer, const_reference>;
+    using reverse_iterator = ArrayReverseIterator<Array<Type, N> >;
+    using const_reverse_iterator = ArrayReverseIterator<Array<Type, N>, const_pointer, const_reference>;
 
   private:
     size_type capacity_;
@@ -893,7 +893,8 @@ public:
     }
 };
 
-template <typename Type> bool operator==(const Array<Type> &left, const Array<Type> &right)
+template <typename Type, std::size_t N>  
+bool operator==(const Array<Type, N> &left, const Array<Type, N> &right)
 {
     if (left.Size() != right.Size())
         return false;
@@ -912,7 +913,7 @@ template <typename Type> bool operator==(const Array<Type> &left, const Array<Ty
     return true;
 }
 
-template <typename Type> bool operator!=(const Array<Type> &left, const Array<Type> &right)
+template <typename Type, std::size_t N> bool operator!=(const Array<Type, N> &left, const Array<Type, N> &right)
 {
     return !(left == right);
 }
