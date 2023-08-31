@@ -6,6 +6,7 @@
 #include <iterator>
 #include <new>
 #include <cstring>
+#include <vector>
 
 #include "s21_list.h"
 #include "s21_vector.h"
@@ -488,6 +489,20 @@ public:
 
 };
 
+template <typename Value, typename AggregatorType>
+class ComparatorMultiMap {
+public:
+    bool operator()(const AggregatorType& left, const Value& right) const {
+        assert(left.size() >= 1ull);
+        return left[0ull].first < right.first;
+    }
+    bool operator()(const Value& left, const AggregatorType& right) const {
+        assert(right.size() >= 1ull);
+        return left.first < right[0ull].first;
+    }
+
+};
+
 template <typename Value, typename Aggregator = Vector<Value>>
 class MultiAdder {
 public:
@@ -495,7 +510,8 @@ public:
     using type = Value;                 // what is stored in vector or list
 public:
     bool operator()(Aggregator& aggregator, const Value& value) const {
-        aggregator.Push_back(value);
+        // aggregator.Push_back(value);
+        aggregator.push_back(value);
         return true;
     }
 };
@@ -534,11 +550,20 @@ public:
 
 
 template <typename T>
-class VectorFromSingleT : public Vector<T> {
+// class VectorFromSingleT : public Vector<T> {
+class VectorFromSingleT : public std::vector<T> {
 public:
-    using Base = Vector<T>;
+    // using Base = Vector<T>;
+    using Base = std::vector<T>;
+
 public:
-    VectorFromSingleT(const T& single) : Base(1, single) {};
+    VectorFromSingleT(T&& single) : Base() {
+        // Base::Emplace_back(std::move(single));
+        Base::emplace_back(std::move(single));
+    };
+    VectorFromSingleT() = default;
+    // VectorFromSingleT(const T& single) = delete; 
+    
 
 };
 
@@ -607,10 +632,10 @@ private:
          : aggregator_{value}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
             
         }
-        // Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-        //  : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
+        Node(value_type&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
+         : aggregator_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
 
-        // }
+        }
 
         // TODO: for extract
         // reference value() {
@@ -717,6 +742,11 @@ public:
 
 private:
     //modifiers==============================================================
+    Node* create_node(Node* root, value_type&& value) {
+        Node* new_node = new Node(std::move(value), root);
+        ++size_;
+        return new_node;
+    }
     Node* create_node(Node* root, const_reference value) {
         Node* new_node = new Node(value, root);
         ++size_;
@@ -984,6 +1014,47 @@ private:
         adder_(root->aggregator_, value);
         return std::make_pair(iterator(root), false);
     }
+    std::pair<iterator, bool> insert_recursive(Node* root, value_type&& value) {
+        assert(root && "Root should always exist!");
+        // root always exists
+        // if (value.first < root->value_.first) {
+        // if (value < root->value_) {
+        if (comparator_(value, root->aggregator_)) {
+            if (root->left_ && root->left_ != &rend_) {
+                const auto [_, created] = insert_recursive(root->left_, std::move(value));
+                if (created) {
+                    updateLeftHeight(root);
+                    if (unbalanced(root))
+                        balance(root);
+                }
+                return {_, created};
+            } else {
+                root->left_ = create_node(root, std::move(value));
+                root->lHeight_ = 1ull;
+                updateReverseEnd();
+                return std::make_pair(iterator(root->left_), true);
+            }
+        // } else if (root->value_.first < value.first) {
+        } else if (comparator_(root->aggregator_, value)) {
+            if (root->right_ && root->right_ != &end_) {
+                const auto [_, created] = insert_recursive(root->right_, std::move(value));
+                if (created) {
+                    updateRightHeight(root);
+                    if (unbalanced(root))
+                        balance(root);
+                }
+                return {_, created};
+            } else {
+                root->right_ = create_node(root, std::move(value));
+                root->rHeight_ = 1ull;
+                updateEnd();
+                return std::make_pair(iterator(root->right_), true);
+            }
+        }
+        // equal
+        adder_(root->aggregator_, value);
+        return std::make_pair(iterator(root), false);
+    }
 public:
     bool unbalanced(Node* node) const noexcept {
         const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
@@ -1008,6 +1079,23 @@ public:
         }
         // return insert_recursive(root_, value);
         const auto [_, created] = insert_recursive(root_, value);
+        if (created) {
+            updateLeftHeight(root_);
+            updateRightHeight(root_);
+            if (unbalanced(root_))
+                balance(root_);
+        }
+        return {_, created};
+    }
+    std::pair<iterator, bool> Insert(value_type&& value) {
+        if (!root_) {
+            root_ = create_node(nullptr, std::move(value));
+            updateReverseEnd();
+            updateEnd();
+            return std::make_pair(iterator(root_), true);
+        }
+        // return insert_recursive(root_, value);
+        const auto [_, created] = insert_recursive(root_, std::move(value));
         if (created) {
             updateLeftHeight(root_);
             updateRightHeight(root_);
@@ -1335,18 +1423,18 @@ protected:
 // };
 
 
-template <typename Key, typename Type, typename Comparator = ComparatorSet<Type>>
+template <typename Key, typename Type, typename Comparator = ComparatorMultiMap<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>>
 class MultiMap : public MapBase<std::pair<const Key, Type>, 
                                 Comparator, 
-                                MultiAdder<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>,
-                                Vector<std::pair<const Key, Type>>,
-                                MultiGetter<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>> {
+                                MultiAdder<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>,
+                                VectorFromSingleT<std::pair<const Key, Type>>,
+                                MultiGetter<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>> {
 public:
     using Base = MapBase<std::pair<const Key, Type>, 
                          Comparator, 
-                         MultiAdder<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>,
-                         Vector<std::pair<const Key, Type>>,
-                         MultiGetter<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>> ;
+                         MultiAdder<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>,
+                         VectorFromSingleT<std::pair<const Key, Type>>,
+                         MultiGetter<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>> ;
 public:
     using value_type        = typename Base::value_type;
     using mapped_type       = Type;
