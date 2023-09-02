@@ -50,8 +50,8 @@ TEST(Map, T0Find)
     map.insert(std::make_pair(1, Item(1)));
 
 
-    const auto s21_it = s21_map.Find(7);
-    const auto it = map.find(7);
+    auto s21_it = s21_map.Find(7);
+    auto it = map.find(7);
 
 
 
@@ -1431,6 +1431,10 @@ TEST(Map, T8EqualRange)
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
+
+    // s21::BaseNode b;
+    // s21::SingleNode s;
+    // s21::MultiNode m;
 }
 
 
