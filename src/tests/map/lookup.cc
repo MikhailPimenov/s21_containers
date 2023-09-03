@@ -1435,6 +1435,7 @@ TEST(Map, T8EqualRange)
     // s21::BaseNode b;
     // s21::SingleNode s;
     // s21::MultiNode m;
+    // static_assert(0 && "??");
 }
 
 

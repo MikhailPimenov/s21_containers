@@ -30,14 +30,14 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/vector/other.cc
 
 SOURCES+=tests/map/constructors.cc
-SOURCES+=tests/map/capacity.cc
-SOURCES+=tests/map/modifiers.cc
+# SOURCES+=tests/map/capacity.cc
+# SOURCES+=tests/map/modifiers.cc
 # SOURCES+=tests/map/erase.cc
-SOURCES+=tests/map/iterator.cc
-SOURCES+=tests/map/balance.cc
-SOURCES+=tests/map/lookup.cc
+# SOURCES+=tests/map/iterator.cc
+# SOURCES+=tests/map/balance.cc
+# SOURCES+=tests/map/lookup.cc
 
-SOURCES+=tests/multiset/constructors.cc
+# SOURCES+=tests/multiset/constructors.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 

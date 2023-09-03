@@ -15,9 +15,6 @@ namespace s21
 {
 
 template <typename Map, typename Pointer, typename Reference, typename Node_pointer, typename Difference_type>
-        //   /*typename Key_type,*/ typename Value_type, typename Getter, typename Checker>
-// template <typename Vector, typename Pointer, typename Reference, typename Difference_type,
-        //   typename Value_type>
 class MapIteratorBase
 {
   public:
@@ -197,27 +194,20 @@ private:
 };
 
 template <typename Map,
-        //   typename Getter,
           typename Pointer = typename Map::pointer, 
           typename Reference = typename Map::reference, 
-          typename Node_pointer = typename Map::node_pointer
-        //   typename Checker = typename Map::checker
-          >
+          typename Node_pointer = typename Map::node_pointer>
 class MapIterator : public MapIteratorBase<Map, 
                                            Pointer, 
                                            Reference, 
                                            Node_pointer, 
-                                           typename Map::difference_type /*typename Map::key_type,*/ 
-                                        //    typename Map::value_type,
-                                        //    Getter,
-                                        //    Checker
-                                           >
+                                           typename Map::difference_type>
 {
     // template<typename K, typename V, typename C>
     // friend class Map;  // to compare const_iterator with iterator
 
     // template<typename K, typename V, typename C>
-    friend Map;  // to compare const_iterator with iterator
+    // friend Map;  // to compare const_iterator with iterator
 
 
   private:
@@ -249,61 +239,62 @@ class MapIterator : public MapIteratorBase<Map,
 
 
     // MapIterator &operator++() noexcept override  // ++i
-    MapIterator& operator++() noexcept  // ++i
-    {
-        // decide if iterate through aggregator
-        // if (shift_ < this->pointer_->aggregator_.Size())
-            // return // step through aggregator
-        // checks if iterate through aggregator. For map/set does nothing
-        if (this->checker_(this->pointer_->aggregator_, this->shift_)) {
-            // MapIterator temp(this->pointer_, this->shift_);
-            ++(this->shift_);
-            // return temp; 
-            return *this; 
-        }
-        this->shift_ = 0ull;
+    // MapIterator& operator++() noexcept  // ++i
+    // {
+    //     // decide if iterate through aggregator
+    //     // if (shift_ < this->pointer_->aggregator_.Size())
+    //         // return // step through aggregator
+    //     // checks if iterate through aggregator. For map/set does nothing
+    //     // if (this->checker_(this->pointer_->aggregator_, this->shift_)) {
+    //     if (this->shift_ + 1ull < this->pointer_->Size()) {
+    //         // MapIterator temp(this->pointer_, this->shift_);
+    //         ++(this->shift_);
+    //         // return temp; 
+    //         return *this; 
+    //     }
+    //     this->shift_ = 0ull;
 
-        if (!this->pointer_->right_) {
-            node_pointer temp = this->pointer_;
-            while (true) {
-                // find greater root
-                if (!this->pointer_->root_) {
-                    this->pointer_ = temp->right_;  // temp->right_ may be nullptr
-                    return *this;
-                }
-                node_pointer root = this->pointer_->root_;
-                // if we are in left subtree - root is greater
-                if (root->left_ && root->left_ == this->pointer_) {
-                // if (root->value_.first > temp->value_.first) {
-                    this->pointer_ = root;
-                    return *this;
-                }
-                this->pointer_ = this->pointer_->root_;
-            }
-        }
+    //     if (!this->pointer_->right_) {
+    //         node_pointer temp = this->pointer_;
+    //         while (true) {
+    //             // find greater root
+    //             if (!this->pointer_->root_) {
+    //                 this->pointer_ = temp->right_;  // temp->right_ may be nullptr
+    //                 return *this;
+    //             }
+    //             node_pointer root = this->pointer_->root_;
+    //             // if we are in left subtree - root is greater
+    //             if (root->left_ && root->left_ == this->pointer_) {
+    //             // if (root->value_.first > temp->value_.first) {
+    //                 this->pointer_ = root;
+    //                 return *this;
+    //             }
+    //             this->pointer_ = this->pointer_->root_;
+    //         }
+    //     }
 
-        if (!this->pointer_->right_)
-            return *this;
+    //     if (!this->pointer_->right_)
+    //         return *this;
 
-        this->pointer_ = this->pointer_->right_;
+    //     this->pointer_ = this->pointer_->right_;
 
-        while (true) {
-            if (this->pointer_->left_)
-            // if (this->pointer_)
-                this->pointer_ = this->pointer_->left_;
-            else
-                return *this;
-        }
+    //     while (true) {
+    //         if (this->pointer_->left_)
+    //         // if (this->pointer_)
+    //             this->pointer_ = this->pointer_->left_;
+    //         else
+    //             return *this;
+    //     }
 
-        return *this;
-    }
+    //     return *this;
+    // }
 
-    MapIterator operator++(int) noexcept         // i++
-    {
-        MapIterator temporary(*this);
-        // ++(this->pointer_);
-        return temporary;
-    }
+    // MapIterator operator++(int) noexcept         // i++
+    // {
+    //     MapIterator temporary(*this);
+    //     // ++(this->pointer_);
+    //     return temporary;
+    // }
 
 
     //
@@ -311,181 +302,181 @@ class MapIterator : public MapIteratorBase<Map,
     //             2                 6
     //        1      3         5          7
     //     re  1.5    3.5   4.5  5.5        e
-    MapIterator &operator--() noexcept
-    {
-        if (!this->pointer_->left_) {
-            node_pointer temp = this->pointer_;
-            while (true) {
-                // find lower root
-                if (!this->pointer_->root_) {
-                    this->pointer_ = temp->left_;       // temp->left_ may be nullptr
-                    return *this;
-                }
-                node_pointer root = this->pointer_->root_;
-                // if we are in left subtree - root is greater
-                if (root->right_ && root->right_ == this->pointer_) { // root is lower
+    // MapIterator &operator--() noexcept
+    // {
+    //     if (!this->pointer_->left_) {
+    //         node_pointer temp = this->pointer_;
+    //         while (true) {
+    //             // find lower root
+    //             if (!this->pointer_->root_) {
+    //                 this->pointer_ = temp->left_;       // temp->left_ may be nullptr
+    //                 return *this;
+    //             }
+    //             node_pointer root = this->pointer_->root_;
+    //             // if we are in left subtree - root is greater
+    //             if (root->right_ && root->right_ == this->pointer_) { // root is lower
 
-                // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
-                    this->pointer_ = root;
-                    return *this;
-                }
-                this->pointer_ = this->pointer_->root_;
-            }
-        }
+    //             // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
+    //                 this->pointer_ = root;
+    //                 return *this;
+    //             }
+    //             this->pointer_ = this->pointer_->root_;
+    //         }
+    //     }
 
-        if (!this->pointer_->left_)
-            return *this;
+    //     if (!this->pointer_->left_)
+    //         return *this;
 
-        this->pointer_ = this->pointer_->left_;
+    //     this->pointer_ = this->pointer_->left_;
 
-        while(true) {
-            if (this->pointer_->right_)
-                this->pointer_ = this->pointer_->right_;
-            else
-                return *this;
-        }
+    //     while(true) {
+    //         if (this->pointer_->right_)
+    //             this->pointer_ = this->pointer_->right_;
+    //         else
+    //             return *this;
+    //     }
 
-        return *this;
-    }
+    //     return *this;
+    // }
 
-    MapIterator operator--(int) noexcept
-    {
-        MapIterator temporary(*this);
-        // --(this->pointer_);
-        return temporary;
-    }
+    // MapIterator operator--(int) noexcept
+    // {
+    //     MapIterator temporary(*this);
+    //     // --(this->pointer_);
+    //     return temporary;
+    // }
 
     operator int() const = delete;
 
     // to enable creating iterator from const_iterator via static_cast
 private:
-    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
-    explicit operator MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
-    {
-        return MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>(const_cast<OtherNode_pointer>(this->pointer_));
-    }
+    // template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
+    // explicit operator MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
+    // {
+    //     return MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>(const_cast<OtherNode_pointer>(this->pointer_));
+    // }
 };
 
-template <typename Map, 
-          typename Pointer = typename Map::pointer, 
-          typename Reference = typename Map::reference, 
-          typename Node_pointer = typename Map::node_pointer>
-class MapReverseIterator : public MapIteratorBase<Map, 
-                                                  Pointer, 
-                                                  Reference, 
-                                                  Node_pointer,
-                                                  typename Map::difference_type>
-{
-  private:
-    using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type>;
-  public:
-    using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
+// template <typename Map, 
+//           typename Pointer = typename Map::pointer, 
+//           typename Reference = typename Map::reference, 
+//           typename Node_pointer = typename Map::node_pointer>
+// class MapReverseIterator : public MapIteratorBase<Map, 
+//                                                   Pointer, 
+//                                                   Reference, 
+//                                                   Node_pointer,
+//                                                   typename Map::difference_type>
+// {
+//   private:
+//     using Base = MapIteratorBase<Map, Pointer, Reference, Node_pointer, typename Map::difference_type>;
+//   public:
+//     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
 
-    // template<typename VectorType, typename PointerType, typename ReferenceType>
-    // friend class VectorIterator;  // to compare const_iterator with iterator
+//     // template<typename VectorType, typename PointerType, typename ReferenceType>
+//     // friend class VectorIterator;  // to compare const_iterator with iterator
 
-  public:
-    using Base::Base;
+//   public:
+//     using Base::Base;
 
-    // MapReverseIterator &operator++() noexcept override  // ++i
-    MapReverseIterator &operator++() noexcept  // ++i
-    {
-        // --(this->pointer_);
-        if (!this->pointer_->left_) {
-            typename Map::node_pointer temp = this->pointer_;   // очень странная херь!! проверить===============
-            while (true) {
-                // find lower root
-                if (!this->pointer_->root_) {
-                    this->pointer_ = temp->left_;       // temp->left_ may be nullptr
-                    return *this;
-                }
-                typename Map::node_pointer root = this->pointer_->root_;
-                // if we are in left subtree - root is greater
-                if (root->right_ && root->right_ == this->pointer_) { // root is lower
+//     // MapReverseIterator &operator++() noexcept override  // ++i
+//     MapReverseIterator &operator++() noexcept  // ++i
+//     {
+//         // --(this->pointer_);
+//         if (!this->pointer_->left_) {
+//             typename Map::node_pointer temp = this->pointer_;   // очень странная херь!! проверить===============
+//             while (true) {
+//                 // find lower root
+//                 if (!this->pointer_->root_) {
+//                     this->pointer_ = temp->left_;       // temp->left_ may be nullptr
+//                     return *this;
+//                 }
+//                 typename Map::node_pointer root = this->pointer_->root_;
+//                 // if we are in left subtree - root is greater
+//                 if (root->right_ && root->right_ == this->pointer_) { // root is lower
 
-                // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
-                    this->pointer_ = root;
-                    return *this;
-                }
-                this->pointer_ = this->pointer_->root_;
-            }
-        }
+//                 // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
+//                     this->pointer_ = root;
+//                     return *this;
+//                 }
+//                 this->pointer_ = this->pointer_->root_;
+//             }
+//         }
 
-        if (!this->pointer_->left_)
-            return *this;
+//         if (!this->pointer_->left_)
+//             return *this;
 
-        this->pointer_ = this->pointer_->left_;
+//         this->pointer_ = this->pointer_->left_;
 
-        while(true) {
-            if (this->pointer_->right_)
-                this->pointer_ = this->pointer_->right_;
-            else
-                return *this;
-        }
+//         while(true) {
+//             if (this->pointer_->right_)
+//                 this->pointer_ = this->pointer_->right_;
+//             else
+//                 return *this;
+//         }
 
-        return *this;
-    }
+//         return *this;
+//     }
 
-    MapReverseIterator operator++(int) noexcept         // i++
-    {
-        MapReverseIterator temporary(*this);
-        // --(this->pointer_);
-        return temporary;
-    }
+//     MapReverseIterator operator++(int) noexcept         // i++
+//     {
+//         MapReverseIterator temporary(*this);
+//         // --(this->pointer_);
+//         return temporary;
+//     }
 
-    MapReverseIterator &operator--() noexcept
-    {
-        // ++(this->pointer_);
-        if (!this->pointer_->right_) {
-            typename Map::node_pointer temp = this->pointer_;
-            while (true) {
-                // find greater root
-                if (!this->pointer_->root_) {
-                    this->pointer_ = temp->right_;  // temp->right_ may be nullptr
-                    return *this;
-                }
-                typename Map::node_pointer root = this->pointer_->root_;
-                // if we are in left subtree - root is greater
-                if (root->left_ && root->left_ == this->pointer_) {
-                // if (root->value_.first > temp->value_.first) {
-                    this->pointer_ = root;
-                    return *this;
-                }
-                this->pointer_ = this->pointer_->root_;
-            }
-        }
+//     MapReverseIterator &operator--() noexcept
+//     {
+//         // ++(this->pointer_);
+//         if (!this->pointer_->right_) {
+//             typename Map::node_pointer temp = this->pointer_;
+//             while (true) {
+//                 // find greater root
+//                 if (!this->pointer_->root_) {
+//                     this->pointer_ = temp->right_;  // temp->right_ may be nullptr
+//                     return *this;
+//                 }
+//                 typename Map::node_pointer root = this->pointer_->root_;
+//                 // if we are in left subtree - root is greater
+//                 if (root->left_ && root->left_ == this->pointer_) {
+//                 // if (root->value_.first > temp->value_.first) {
+//                     this->pointer_ = root;
+//                     return *this;
+//                 }
+//                 this->pointer_ = this->pointer_->root_;
+//             }
+//         }
 
-        if (!this->pointer_->right_)
-            return *this;
+//         if (!this->pointer_->right_)
+//             return *this;
 
-        this->pointer_ = this->pointer_->right_;
+//         this->pointer_ = this->pointer_->right_;
 
-        while(true) {
-            if (this->pointer_->left_)
-                this->pointer_ = this->pointer_->left_;
-            else
-                return *this;
-        }
+//         while(true) {
+//             if (this->pointer_->left_)
+//                 this->pointer_ = this->pointer_->left_;
+//             else
+//                 return *this;
+//         }
 
-        return *this;
-    }
+//         return *this;
+//     }
 
-    MapReverseIterator operator--(int) noexcept
-    {
-        MapReverseIterator temporary(*this);
-        // ++(this->pointer_);
-        return temporary;
-    }
+//     MapReverseIterator operator--(int) noexcept
+//     {
+//         MapReverseIterator temporary(*this);
+//         // ++(this->pointer_);
+//         return temporary;
+//     }
 
-    operator int() const = delete;
+//     operator int() const = delete;
 
-private:
-    template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
-    explicit operator MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
-    {
-        return MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>(const_cast<OtherNode_pointer>(this->pointer_));
-    }
-};
+// private:
+//     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
+//     explicit operator MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
+//     {
+//         return MapIterator<Map, OtherPointer, OtherReference, OtherNode_pointer>(const_cast<OtherNode_pointer>(this->pointer_));
+//     }
+// };
 
 
 
@@ -531,87 +522,6 @@ public:
 
 };
 
-template <typename Value, typename Aggregator = Vector<Value>>
-class MultiAdder {
-public:
-    using aggregator_type = Aggregator; // vector or list
-    using type = Value;                 // what is stored in vector or list
-public:
-    bool operator()(Aggregator& aggregator, const Value& value, std::size_t& size) const {
-        aggregator.Push_back(value);
-        ++size;
-        // aggregator.push_back(value);
-        return true;
-    }
-};
-template <typename Value, typename Aggregator = Value>
-class Adder {
-    static_assert(std::is_same_v<Value, Aggregator>);
-public:
-    using aggregator_type = Aggregator; // vector or list
-    using type = Value;                 // pair key-value
-public:
-    bool operator()(const Aggregator&, const Value&, std::size_t&) const {
-        return false;
-    }
-};
-template<typename Value>
-class Getter {
-public:
-    Value& operator()(Value& aggregator, std::size_t) {
-        return aggregator;
-    }
-    const Value& operator()(const Value& aggregator, std::size_t) const {
-        return aggregator;
-    }
-};
-template<typename Value, typename Aggregator = Vector<Value>>
-class MultiGetter {
-public:
-    Value& operator()(Aggregator& aggregator, std::size_t shift) {
-        return aggregator[shift];
-    }
-    const Value& operator()(const Aggregator& aggregator, std::size_t shift) const {
-        return aggregator[shift];
-    }
-};
-
-
-template <typename Aggregator>
-class Checker {
-public:
-    bool operator()(const Aggregator& aggregator, std::size_t shift) {
-        return false;
-    }
-};
-
-template <typename Aggregator>
-class MultiChecker {
-public:
-    bool operator()(const Aggregator& aggregator, std::size_t shift) {
-        return shift < aggregator.Size() - 1ull;
-    }
-};
-
-
-template <typename T>
-class VectorFromSingleT : public Vector<T> {
-// class VectorFromSingleT : public std::vector<T> {
-public:
-    using Base = Vector<T>;
-    // using Base = std::vector<T>;
-
-public:
-    VectorFromSingleT(T&& single) : Base() {
-        // Base::Emplace_back(std::move(single));
-        // Base::emplace_back(std::move(single));
-        Base::Push_back(std::move(single));
-    };
-    VectorFromSingleT() = default;
-    // VectorFromSingleT(const T& single) = delete; 
-    
-
-};
 
 template <typename Value, typename size_type>
 class BaseNode {
@@ -622,7 +532,7 @@ public:
 
         size_type lHeight_;
         size_type rHeight_;
-public:
+protected:
         BaseNode(BaseNode* root = nullptr, BaseNode* left = nullptr, BaseNode* right = nullptr)
          : root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
             
@@ -643,9 +553,9 @@ private:
 
 public:
     SingleNode() : Base(), value_{Value()} {}
-    SingleNode(const Value& value, Base* root = nullptr, Base* left = nullptr, Base* right = nullptr)
+    SingleNode(const Value& value, SingleNode* root = nullptr, SingleNode* left = nullptr, SingleNode* right = nullptr)
         : Base(root, left, right), value_{value} {}
-    SingleNode(Value&& value, Base* root = nullptr, Base* left = nullptr, Base* right = nullptr)
+    SingleNode(Value&& value, SingleNode* root = nullptr, SingleNode* left = nullptr, SingleNode* right = nullptr)
         : Base(root, left, right), value_{std::move(value)} {}
 
     void Push_back(const Value& value) override {
@@ -665,17 +575,17 @@ private:
 
 public:
     MultiNode() : Base(), aggregator_{Value()} {}
-    MultiNode(const Value& value, Base* root = nullptr, Base* left = nullptr, Base* right = nullptr)
+    MultiNode(const Value& value, MultiNode* root = nullptr, MultiNode* left = nullptr, MultiNode* right = nullptr)
         : Base(root, left, right), aggregator_{} {
         aggregator_.Push_back(value);
     }
-    MultiNode(Value&& value, Base* root = nullptr, Base* left = nullptr, Base* right = nullptr)
+    MultiNode(Value&& value, MultiNode* root = nullptr, MultiNode* left = nullptr, MultiNode* right = nullptr)
         : Base(root, left, right), aggregator_{} {
         aggregator_.Push_back(std::move(value));
     }
 
     void Push_back(const Value& value) override {
-        aggregator_.Push_back(value);         
+        return aggregator_.Push_back(value);         
     }
     size_type Size() const noexcept override {
         return aggregator_.Size();    
@@ -685,12 +595,14 @@ public:
 
 
 
+
 template <typename Value, 
           typename Comparator, 
           typename Node> 
 class MapBase
 {
-    static_assert(!std::is_abstract_v<Node> && "AAAAAAAAAARGH!!");
+    static_assert(!std::is_abstract_v<Node> && "Node should not be abstract!");
+    static_assert(!std::is_same_v<Node, BaseNode<Value, std::size_t>> && "Node should not be Base node!");
   public:
     using value_type = Value;
     using size_type = std::size_t;
@@ -703,14 +615,10 @@ class MapBase
     using node_type = Node;
     using base_node_type = typename Node::BaseNode;
     using node_pointer = node_type*;
+    using base_node_pointer = typename Node::BaseNode*;
     using const_node_pointer = const node_type*;
     using comparator = Comparator;
 
-  public:
-    using iterator = MapIterator<MapBase<Value, Comparator, base_node_type> >;
-    using const_iterator = MapIterator<MapBase<Value, Comparator, base_node_type>, const_pointer, const_reference, const_node_pointer>;
-    using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, base_node_type> >;
-    using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, base_node_type>, const_pointer, const_reference, const_node_pointer>;
 
   private:
     size_type size_; 
@@ -718,13 +626,18 @@ class MapBase
 private:
     
 private:
-    Node* root_;
+    base_node_pointer root_;
     mutable node_type end_;      // non-existing element, element after last existing element
     mutable node_type rend_;     // non-existing element, element before begin
 
 private:
     comparator comparator_;
-    // adder adder_;
+
+  public:
+    using iterator = MapIterator<MapBase<Value, Comparator, base_node_type> >;
+    // using const_iterator = MapIterator<MapBase<Value, Comparator, base_node_type>, const_pointer, const_reference, const_node_pointer>;
+    // using reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, base_node_type> >;
+    // using const_reverse_iterator = MapReverseIterator<MapBase<Value, Comparator, base_node_type>, const_pointer, const_reference, const_node_pointer>;
 
 public:
     MapBase() : size_{0},  end_{}, rend_{}, root_{nullptr}
@@ -740,7 +653,7 @@ public:
     }
 
 private:
-    void deallocate(Node** node) {
+    void deallocate(base_node_pointer* node) {
         if((*node)->left_ && (*node)->left_ != &rend_)
             deallocate(&(*node)->left_);
 
@@ -771,39 +684,39 @@ public:
     // Map<int, float>::iterator azaza = m1.begin();
     // ++azaza;
     // iterators============================================================
-    iterator begin() {          // existing beginning
-        return size_ ? iterator(rend_.root_) : end();
-    }
-    reverse_iterator rbegin() {
-        return size_ ? reverse_iterator(end_.root_) : rend();
-    }
-    const_iterator begin() const {    // existing beginning
-        return cbegin();
-    }
-    const_reverse_iterator rbegin() const {
-        return rbegin();
-    }
-    const_iterator cbegin() const {
-        return size_ ? const_iterator(rend_.root_) : cend();
-    }
-    iterator end() {        // non-existing end
-        return iterator(&end_);
-    }
-    reverse_iterator rend() {        // non-existing begin
-        return reverse_iterator(&rend_);
-    }
-    const_iterator end() const {
-        return cend();
-    }
-    const_reverse_iterator rend() const {
-        return crend();
-    }
-    const_iterator cend() const {
-        return const_iterator(&end_);
-    }
-    const_reverse_iterator crend() const {
-        return const_iterator(&rend_);
-    }
+    // iterator begin() {          // existing beginning
+    //     return size_ ? iterator(rend_.root_) : end();
+    // }
+    // reverse_iterator rbegin() {
+    //     return size_ ? reverse_iterator(end_.root_) : rend();
+    // }
+    // const_iterator begin() const {    // existing beginning
+    //     return cbegin();
+    // }
+    // const_reverse_iterator rbegin() const {
+    //     return rbegin();
+    // }
+    // const_iterator cbegin() const {
+    //     return size_ ? const_iterator(rend_.root_) : cend();
+    // }
+    // iterator end() {        // non-existing end
+    //     return iterator(&end_);
+    // }
+    // reverse_iterator rend() {        // non-existing begin
+    //     return reverse_iterator(&rend_);
+    // }
+    // const_iterator end() const {
+    //     return cend();
+    // }
+    // const_reverse_iterator rend() const {
+    //     return crend();
+    // }
+    // const_iterator cend() const {
+    //     return const_iterator(&end_);
+    // }
+    // const_reverse_iterator crend() const {
+    //     return const_iterator(&rend_);
+    // }
 
 
 
@@ -1041,88 +954,88 @@ private:
                 node->rHeight_ = 1ull + node->right_->rHeight_;
     }
 
-    std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
-        assert(root && "Root should always exist!");
-        // root always exists
-        // if (value.first < root->value_.first) {
-        // if (value < root->value_) {
-        if (comparator_(value, root->aggregator_)) {
-            if (root->left_ && root->left_ != &rend_) {
-                const auto [_, created] = insert_recursive(root->left_, value);
-                if (created) {
-                    updateLeftHeight(root);
-                    if (unbalanced(root))
-                        balance(root);
-                }
-                return {_, created};
-            } else {
-                root->left_ = create_node(root, value);
-                root->lHeight_ = 1ull;
-                updateReverseEnd();
-                return std::make_pair(iterator(root->left_), true);
-            }
-        // } else if (root->value_.first < value.first) {
-        } else if (comparator_(root->aggregator_, value)) {
-            if (root->right_ && root->right_ != &end_) {
-                const auto [_, created] = insert_recursive(root->right_, value);
-                if (created) {
-                    updateRightHeight(root);
-                    if (unbalanced(root))
-                        balance(root);
-                }
-                return {_, created};
-            } else {
-                root->right_ = create_node(root, value);
-                root->rHeight_ = 1ull;
-                updateEnd();
-                return std::make_pair(iterator(root->right_), true);
-            }
-        }
-        // equal
-        adder_(root->aggregator_, value, size_);
-        return std::make_pair(iterator(root), false);
-    }
-    std::pair<iterator, bool> insert_recursive(Node* root, value_type&& value) {
-        assert(root && "Root should always exist!");
-        // root always exists
-        // if (value.first < root->value_.first) {
-        // if (value < root->value_) {
-        if (comparator_(value, root->aggregator_)) {
-            if (root->left_ && root->left_ != &rend_) {
-                const auto [_, created] = insert_recursive(root->left_, std::move(value));
-                if (created) {
-                    updateLeftHeight(root);
-                    if (unbalanced(root))
-                        balance(root);
-                }
-                return {_, created};
-            } else {
-                root->left_ = create_node(root, std::move(value));
-                root->lHeight_ = 1ull;
-                updateReverseEnd();
-                return std::make_pair(iterator(root->left_), true);
-            }
-        // } else if (root->value_.first < value.first) {
-        } else if (comparator_(root->aggregator_, value)) {
-            if (root->right_ && root->right_ != &end_) {
-                const auto [_, created] = insert_recursive(root->right_, std::move(value));
-                if (created) {
-                    updateRightHeight(root);
-                    if (unbalanced(root))
-                        balance(root);
-                }
-                return {_, created};
-            } else {
-                root->right_ = create_node(root, std::move(value));
-                root->rHeight_ = 1ull;
-                updateEnd();
-                return std::make_pair(iterator(root->right_), true);
-            }
-        }
-        // equal
-        adder_(root->aggregator_, value, size_);
-        return std::make_pair(iterator(root), false);
-    }
+    // std::pair<iterator, bool> insert_recursive(Node* root, const_reference value) {
+    //     assert(root && "Root should always exist!");
+    //     // root always exists
+    //     // if (value.first < root->value_.first) {
+    //     // if (value < root->value_) {
+    //     if (comparator_(value, root->aggregator_)) {
+    //         if (root->left_ && root->left_ != &rend_) {
+    //             const auto [_, created] = insert_recursive(root->left_, value);
+    //             if (created) {
+    //                 updateLeftHeight(root);
+    //                 if (unbalanced(root))
+    //                     balance(root);
+    //             }
+    //             return {_, created};
+    //         } else {
+    //             root->left_ = create_node(root, value);
+    //             root->lHeight_ = 1ull;
+    //             updateReverseEnd();
+    //             return std::make_pair(iterator(root->left_), true);
+    //         }
+    //     // } else if (root->value_.first < value.first) {
+    //     } else if (comparator_(root->aggregator_, value)) {
+    //         if (root->right_ && root->right_ != &end_) {
+    //             const auto [_, created] = insert_recursive(root->right_, value);
+    //             if (created) {
+    //                 updateRightHeight(root);
+    //                 if (unbalanced(root))
+    //                     balance(root);
+    //             }
+    //             return {_, created};
+    //         } else {
+    //             root->right_ = create_node(root, value);
+    //             root->rHeight_ = 1ull;
+    //             updateEnd();
+    //             return std::make_pair(iterator(root->right_), true);
+    //         }
+    //     }
+    //     // equal
+    //     adder_(root->aggregator_, value, size_);
+    //     return std::make_pair(iterator(root), false);
+    // }
+    // std::pair<iterator, bool> insert_recursive(Node* root, value_type&& value) {
+    //     assert(root && "Root should always exist!");
+    //     // root always exists
+    //     // if (value.first < root->value_.first) {
+    //     // if (value < root->value_) {
+    //     if (comparator_(value, root->aggregator_)) {
+    //         if (root->left_ && root->left_ != &rend_) {
+    //             const auto [_, created] = insert_recursive(root->left_, std::move(value));
+    //             if (created) {
+    //                 updateLeftHeight(root);
+    //                 if (unbalanced(root))
+    //                     balance(root);
+    //             }
+    //             return {_, created};
+    //         } else {
+    //             root->left_ = create_node(root, std::move(value));
+    //             root->lHeight_ = 1ull;
+    //             updateReverseEnd();
+    //             return std::make_pair(iterator(root->left_), true);
+    //         }
+    //     // } else if (root->value_.first < value.first) {
+    //     } else if (comparator_(root->aggregator_, value)) {
+    //         if (root->right_ && root->right_ != &end_) {
+    //             const auto [_, created] = insert_recursive(root->right_, std::move(value));
+    //             if (created) {
+    //                 updateRightHeight(root);
+    //                 if (unbalanced(root))
+    //                     balance(root);
+    //             }
+    //             return {_, created};
+    //         } else {
+    //             root->right_ = create_node(root, std::move(value));
+    //             root->rHeight_ = 1ull;
+    //             updateEnd();
+    //             return std::make_pair(iterator(root->right_), true);
+    //         }
+    //     }
+    //     // equal
+    //     adder_(root->aggregator_, value, size_);
+    //     return std::make_pair(iterator(root), false);
+    // }
 public:
     bool unbalanced(Node* node) const noexcept {
         const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
@@ -1138,40 +1051,40 @@ public:
         size_ = 0;
     }
 
-    std::pair<iterator, bool> Insert(const_reference value) {
-        if (!root_) {
-            root_ = create_node(nullptr, value);
-            updateReverseEnd();
-            updateEnd();
-            return std::make_pair(iterator(root_), true);
-        }
-        // return insert_recursive(root_, value);
-        const auto [_, created] = insert_recursive(root_, value);
-        if (created) {
-            updateLeftHeight(root_);
-            updateRightHeight(root_);
-            if (unbalanced(root_))
-                balance(root_);
-        }
-        return {_, created};
-    }
-    std::pair<iterator, bool> Insert(value_type&& value) {
-        if (!root_) {
-            root_ = create_node(nullptr, std::move(value));
-            updateReverseEnd();
-            updateEnd();
-            return std::make_pair(iterator(root_), true);
-        }
-        // return insert_recursive(root_, value);
-        const auto [_, created] = insert_recursive(root_, std::move(value));
-        if (created) {
-            updateLeftHeight(root_);
-            updateRightHeight(root_);
-            if (unbalanced(root_))
-                balance(root_);
-        }
-        return {_, created};
-    }
+    // std::pair<iterator, bool> Insert(const_reference value) {
+    //     if (!root_) {
+    //         root_ = create_node(nullptr, value);
+    //         updateReverseEnd();
+    //         updateEnd();
+    //         return std::make_pair(iterator(root_), true);
+    //     }
+    //     // return insert_recursive(root_, value);
+    //     const auto [_, created] = insert_recursive(root_, value);
+    //     if (created) {
+    //         updateLeftHeight(root_);
+    //         updateRightHeight(root_);
+    //         if (unbalanced(root_))
+    //             balance(root_);
+    //     }
+    //     return {_, created};
+    // }
+    // std::pair<iterator, bool> Insert(value_type&& value) {
+    //     if (!root_) {
+    //         root_ = create_node(nullptr, std::move(value));
+    //         updateReverseEnd();
+    //         updateEnd();
+    //         return std::make_pair(iterator(root_), true);
+    //     }
+    //     // return insert_recursive(root_, value);
+    //     const auto [_, created] = insert_recursive(root_, std::move(value));
+    //     if (created) {
+    //         updateLeftHeight(root_);
+    //         updateRightHeight(root_);
+    //         if (unbalanced(root_))
+    //             balance(root_);
+    //     }
+    //     return {_, created};
+    // }
 private:
     //modifiers==============================================================
     //                      4
@@ -1182,203 +1095,203 @@ private:
     //          1.8                               5.7                             8.2        9
     //       1.7                                                                8.1
 
-    std::pair<iterator, Node*> extract_recursive(Node* root, const_iterator pos) {
-        assert(root && "root should exist!");
+    // std::pair<iterator, Node*> extract_recursive(Node* root, const_iterator pos) {
+    //     assert(root && "root should exist!");
 
-        if (comparator_(*pos, (root)->value_)) {  // pos < root->value_
-            if ((root)->left_ && (root)->left_ != &rend_) {
-                const std::pair<iterator, Node*> result = extract_recursive(((root)->left_), pos);
-                updateLeftHeight(root);
-                if (unbalanced(root))
-                    balance(root);
-                return result;
-            } else {
-                // not found
-                assert(0 && "Element should exist!");
-            }
+    //     if (comparator_(*pos, (root)->value_)) {  // pos < root->value_
+    //         if ((root)->left_ && (root)->left_ != &rend_) {
+    //             const std::pair<iterator, Node*> result = extract_recursive(((root)->left_), pos);
+    //             updateLeftHeight(root);
+    //             if (unbalanced(root))
+    //                 balance(root);
+    //             return result;
+    //         } else {
+    //             // not found
+    //             assert(0 && "Element should exist!");
+    //         }
 
-        } else if (comparator_((root)->value_, *pos)) {
-            if ((root)->right_ && (root)->right_ != &end_) {
-                const std::pair<iterator, Node*> result = extract_recursive(((root)->right_), pos);
-                updateRightHeight(root);
-                if (unbalanced(root))
-                    balance(root);
-                return result;
-            } else {
-                // not found
-                assert(0 && "Element should exist!");
-            }
-        }
+    //     } else if (comparator_((root)->value_, *pos)) {
+    //         if ((root)->right_ && (root)->right_ != &end_) {
+    //             const std::pair<iterator, Node*> result = extract_recursive(((root)->right_), pos);
+    //             updateRightHeight(root);
+    //             if (unbalanced(root))
+    //                 balance(root);
+    //             return result;
+    //         } else {
+    //             // not found
+    //             assert(0 && "Element should exist!");
+    //         }
+    //     }
 
-        // found
-        iterator it_result(root);
-        ++it_result;
-        Node* const result = root;
+    //     // found
+    //     iterator it_result(root);
+    //     ++it_result;
+    //     Node* const result = root;
 
-        Node* new_node = nullptr;
-        bool no_replace = true;
+    //     Node* new_node = nullptr;
+    //     bool no_replace = true;
 
-        if ((root)->left_ && (root)->left_ != &rend_) {
+    //     if ((root)->left_ && (root)->left_ != &rend_) {
 
-            no_replace = false;
-            new_node = (root)->left_;
+    //         no_replace = false;
+    //         new_node = (root)->left_;
 
-            if (!new_node->right_) {
+    //         if (!new_node->right_) {
 
-                new_node->right_ = (root)->right_;
-                if ((root)->right_)
-                    (root)->right_->root_ = new_node;
-                updateRightHeight(new_node);
+    //             new_node->right_ = (root)->right_;
+    //             if ((root)->right_)
+    //                 (root)->right_->root_ = new_node;
+    //             updateRightHeight(new_node);
 
-                if ((root)->root_)
-                    if ((root)->root_->right_ == (root))
-                        (root)->root_->right_ = new_node;
-                    else
-                        (root)->root_->left_ = new_node;
-                new_node->root_ = (root)->root_;
+    //             if ((root)->root_)
+    //                 if ((root)->root_->right_ == (root))
+    //                     (root)->root_->right_ = new_node;
+    //                 else
+    //                     (root)->root_->left_ = new_node;
+    //             new_node->root_ = (root)->root_;
 
-                if (unbalanced(new_node))
-                    balance(new_node);
+    //             if (unbalanced(new_node))
+    //                 balance(new_node);
 
-            } else {
+    //         } else {
 
-                while (new_node->right_)
-                    new_node = new_node->right_;
+    //             while (new_node->right_)
+    //                 new_node = new_node->right_;
 
-                new_node->right_ = (root)->right_;
-                if ((root)->right_)
-                    (root)->right_ = new_node;
-                updateRightHeight(new_node);
+    //             new_node->right_ = (root)->right_;
+    //             if ((root)->right_)
+    //                 (root)->right_ = new_node;
+    //             updateRightHeight(new_node);
 
-                new_node->root_->right_ = new_node->left_;
-                if (new_node->left_)
-                    new_node->left_->root_ = new_node->root_;
+    //             new_node->root_->right_ = new_node->left_;
+    //             if (new_node->left_)
+    //                 new_node->left_->root_ = new_node->root_;
 
-                Node* temp = new_node->root_;
-                while (temp != (root)->left_) {
-                    updateRightHeight(temp);
-                    temp = temp->root_;
-                }
+    //             Node* temp = new_node->root_;
+    //             while (temp != (root)->left_) {
+    //                 updateRightHeight(temp);
+    //                 temp = temp->root_;
+    //             }
 
-                new_node->left_ = (root)->left_;
-                (root)->left_->root_ = new_node;
-                updateLeftHeight(new_node);
+    //             new_node->left_ = (root)->left_;
+    //             (root)->left_->root_ = new_node;
+    //             updateLeftHeight(new_node);
 
-                if ((root)->root_)
-                    if ((root)->root_->right_ == (root))
-                        (root)->root_->right_ = new_node;
-                    else
-                        (root)->root_->left_ = new_node;
-                new_node->root_ = (root)->root_;
+    //             if ((root)->root_)
+    //                 if ((root)->root_->right_ == (root))
+    //                     (root)->root_->right_ = new_node;
+    //                 else
+    //                     (root)->root_->left_ = new_node;
+    //             new_node->root_ = (root)->root_;
 
-                if (unbalanced(new_node))
-                    balance(new_node);
+    //             if (unbalanced(new_node))
+    //                 balance(new_node);
 
-            }
-
-
-        } else if ((root)->right_ && (root)->right_ != &end_) {
-
-            no_replace = false;
-            new_node = (root)->right_;
-
-            if (!new_node->left_) {
-
-                new_node->left_ = (root)->left_;
-                if ((root)->left_)
-                    (root)->left_->root_ = new_node;
-                updateLeftHeight(new_node);
+    //         }
 
 
-                if ((root)->root_)
-                    if ((root)->root_->left_ == (root))
-                        (root)->root_->left_ = new_node;
-                    else
-                        (root)->root_->right_ = new_node;
-                new_node->root_ = (root)->root_;
+    //     } else if ((root)->right_ && (root)->right_ != &end_) {
 
-                if (unbalanced(new_node))
-                    balance(new_node);
+    //         no_replace = false;
+    //         new_node = (root)->right_;
 
-            } else {
+    //         if (!new_node->left_) {
 
-                while (new_node->left_)
-                    new_node = new_node->left_;
-
-                new_node->left_ = (root)->left_;
-                if ((root)->left_)
-                    (root)->left_ = new_node;
-                updateLeftHeight(new_node);
-
-                new_node->root_->left_ = new_node->right_;
-                if (new_node->right_)
-                    new_node->right_->root_ = new_node->root_;
-
-                Node* temp = new_node->root_;
-                while (temp != (root)->right_) {
-                    updateLeftHeight(temp);
-                    temp = temp->root_;
-                }
-
-                new_node->right_ = (root)->right_;
-                (root)->right_->root_ = new_node;
-                updateRightHeight(new_node);
-
-                if ((root)->root_)
-                    if ((root)->root_->left_ == (root))
-                        (root)->root_->left_ = new_node;
-                    else
-                        (root)->root_->right_ = new_node;
-                new_node->root_ = (root)->root_;
-
-                if (unbalanced(new_node))
-                    balance(new_node);
-
-            }
+    //             new_node->left_ = (root)->left_;
+    //             if ((root)->left_)
+    //                 (root)->left_->root_ = new_node;
+    //             updateLeftHeight(new_node);
 
 
-        }
+    //             if ((root)->root_)
+    //                 if ((root)->root_->left_ == (root))
+    //                     (root)->root_->left_ = new_node;
+    //                 else
+    //                     (root)->root_->right_ = new_node;
+    //             new_node->root_ = (root)->root_;
 
-        if (no_replace && root->root_)
-            if (root->root_->left_ == root)
-                root->root_->left_ = nullptr;
-            else
-                root->root_->right_ = nullptr;
+    //             if (unbalanced(new_node))
+    //                 balance(new_node);
 
-        // if (remove) {
-        //     delete root;
-        //     root = nullptr;
-        // }
-        --size_;
+    //         } else {
 
-        if (new_node && !new_node->root_)
-            root_ = new_node;
+    //             while (new_node->left_)
+    //                 new_node = new_node->left_;
 
-        if (root_) {
-            updateEnd();
-            updateReverseEnd();
-        }
+    //             new_node->left_ = (root)->left_;
+    //             if ((root)->left_)
+    //                 (root)->left_ = new_node;
+    //             updateLeftHeight(new_node);
 
-        return std::make_pair(it_result, result);
-    }
+    //             new_node->root_->left_ = new_node->right_;
+    //             if (new_node->right_)
+    //                 new_node->right_->root_ = new_node->root_;
+
+    //             Node* temp = new_node->root_;
+    //             while (temp != (root)->right_) {
+    //                 updateLeftHeight(temp);
+    //                 temp = temp->root_;
+    //             }
+
+    //             new_node->right_ = (root)->right_;
+    //             (root)->right_->root_ = new_node;
+    //             updateRightHeight(new_node);
+
+    //             if ((root)->root_)
+    //                 if ((root)->root_->left_ == (root))
+    //                     (root)->root_->left_ = new_node;
+    //                 else
+    //                     (root)->root_->right_ = new_node;
+    //             new_node->root_ = (root)->root_;
+
+    //             if (unbalanced(new_node))
+    //                 balance(new_node);
+
+    //         }
+
+
+    //     }
+
+    //     if (no_replace && root->root_)
+    //         if (root->root_->left_ == root)
+    //             root->root_->left_ = nullptr;
+    //         else
+    //             root->root_->right_ = nullptr;
+
+    //     // if (remove) {
+    //     //     delete root;
+    //     //     root = nullptr;
+    //     // }
+    //     --size_;
+
+    //     if (new_node && !new_node->root_)
+    //         root_ = new_node;
+
+    //     if (root_) {
+    //         updateEnd();
+    //         updateReverseEnd();
+    //     }
+
+    //     return std::make_pair(it_result, result);
+    // }
 
 public:
-    iterator Erase(const_iterator pos) {
-        if (!root_)
-            assert(0 && "Trying to erase from empty tree!");
+    // iterator Erase(const_iterator pos) {
+    //     if (!root_)
+    //         assert(0 && "Trying to erase from empty tree!");
 
-        std::pair<iterator, Node*> result = extract_recursive(root_, pos);
-        delete result.second;
-        result.second = nullptr;
+    //     std::pair<iterator, Node*> result = extract_recursive(root_, pos);
+    //     delete result.second;
+    //     result.second = nullptr;
 
-        return result.first;
-    }
-    node_type Extract(const_iterator pos) {
-        if (!root_)
-            assert(0 && "Trying to extract from empty tree!");
-        const auto& [_, node] = extract_recursive(root_, pos);
-        return *node;
-    }
+    //     return result.first;
+    // }
+    // node_type Extract(const_iterator pos) {
+    //     if (!root_)
+    //         assert(0 && "Trying to extract from empty tree!");
+    //     const auto& [_, node] = extract_recursive(root_, pos);
+    //     return *node;
+    // }
 
     // node_type Extract(const_iterator position );
 // (1)	(since C++17)
@@ -1387,95 +1300,95 @@ public:
 
 
 protected:
-    const_iterator find_recursive(Node* root, const_reference value, bool lowerBound = false, bool upperBound = false, Node* bound = nullptr) const {
-        assert(root && "root should exist!");
+    // const_iterator find_recursive(Node* root, const_reference value, bool lowerBound = false, bool upperBound = false, Node* bound = nullptr) const {
+    //     assert(root && "root should exist!");
 
-        if (comparator_(value, root->aggregator_)) {  // key < root->value_
-            if (root->left_ && root->left_ != &rend_) {
-                bound = root;
-                return find_recursive(root->left_, value, lowerBound, upperBound, bound);
-            } else {
-                // not found
-                // or return root if lowerBound or upperBound
-                if (lowerBound || upperBound)
-                    return const_iterator(root);
-                return end();
-            }
-        } else if (comparator_(root->aggregator_, value)) {
-            if (root->right_ && root->right_ != &end_) {
-                return find_recursive(root->right_, value, lowerBound, upperBound, bound);
-            } else {
-                // not found
-                // or if lowerBound or upperBound return the last time we took left subtree
-                if (lowerBound || upperBound)
-                    return const_iterator(bound);
-                return end();
-            }
-        } else {
-            // found
-            // or return next if upperBound
-            if (upperBound)
-                return ++const_iterator(root);
-            return const_iterator(root);
-        }
-    }
+    //     if (comparator_(value, root->aggregator_)) {  // key < root->value_
+    //         if (root->left_ && root->left_ != &rend_) {
+    //             bound = root;
+    //             return find_recursive(root->left_, value, lowerBound, upperBound, bound);
+    //         } else {
+    //             // not found
+    //             // or return root if lowerBound or upperBound
+    //             if (lowerBound || upperBound)
+    //                 return const_iterator(root);
+    //             return end();
+    //         }
+    //     } else if (comparator_(root->aggregator_, value)) {
+    //         if (root->right_ && root->right_ != &end_) {
+    //             return find_recursive(root->right_, value, lowerBound, upperBound, bound);
+    //         } else {
+    //             // not found
+    //             // or if lowerBound or upperBound return the last time we took left subtree
+    //             if (lowerBound || upperBound)
+    //                 return const_iterator(bound);
+    //             return end();
+    //         }
+    //     } else {
+    //         // found
+    //         // or return next if upperBound
+    //         if (upperBound)
+    //             return ++const_iterator(root);
+    //         return const_iterator(root);
+    //     }
+    // }
 
 protected:
-    iterator find(const_reference value) {
-        if (!root_)
-            return end();
-        return static_cast<iterator>(find_recursive(root_, value));
-    }
-    const_iterator find(const_reference value) const {
-        if (!root_)
-            return end();
-        return find_recursive(root_, value);
-    }
+    // iterator find(const_reference value) {
+    //     if (!root_)
+    //         return end();
+    //     return static_cast<iterator>(find_recursive(root_, value));
+    // }
+    // const_iterator find(const_reference value) const {
+    //     if (!root_)
+    //         return end();
+    //     return find_recursive(root_, value);
+    // }
 
     // template< class K > iterator find( const K& x );
     // template< class K > const_iterator find( const K& x ) const;
 
-    bool contains(const_reference value) const {
-        return find(value) != end();
-    }
-    iterator lower_bound(const_reference value) {
-        if (!root_)
-            return end();
-        return static_cast<iterator>(find_recursive(root_, value, true, false, &end_));
-    }
-    const_iterator lower_bound(const_reference value) const {
-        if (!root_)
-            return end();
-        return find_recursive(root_, value, true, false, &end_);
-    }
-    iterator upper_bound(const_reference value) {
-        if (!root_)
-            return end();
-        return static_cast<iterator>(find_recursive(root_, value, false, true, &end_));
-    }
-    const_iterator upper_bound(const_reference value) const {
-        if (!root_)
-            return end();
-        return find_recursive(root_, value, false, true, &end_);
-    }
+    // bool contains(const_reference value) const {
+    //     return find(value) != end();
+    // }
+    // iterator lower_bound(const_reference value) {
+    //     if (!root_)
+    //         return end();
+    //     return static_cast<iterator>(find_recursive(root_, value, true, false, &end_));
+    // }
+    // const_iterator lower_bound(const_reference value) const {
+    //     if (!root_)
+    //         return end();
+    //     return find_recursive(root_, value, true, false, &end_);
+    // }
+    // iterator upper_bound(const_reference value) {
+    //     if (!root_)
+    //         return end();
+    //     return static_cast<iterator>(find_recursive(root_, value, false, true, &end_));
+    // }
+    // const_iterator upper_bound(const_reference value) const {
+    //     if (!root_)
+    //         return end();
+    //     return find_recursive(root_, value, false, true, &end_);
+    // }
 
     // template< class K > bool contains( const K& x ) const;
-    std::pair<iterator,iterator> equal_range(const_reference value) {
-        if (!root_)
-            return std::make_pair(end(), end());
+    // std::pair<iterator,iterator> equal_range(const_reference value) {
+    //     if (!root_)
+    //         return std::make_pair(end(), end());
 
-        iterator lower = lower_bound(value);
-        iterator upper = upper_bound(value);
-        return std::make_pair(lower, upper);
-    }
-    std::pair<const_iterator,const_iterator> equal_range(const_reference value) const {
-        if (!root_)
-            return std::make_pair(end(), end());
+    //     iterator lower = lower_bound(value);
+    //     iterator upper = upper_bound(value);
+    //     return std::make_pair(lower, upper);
+    // }
+    // std::pair<const_iterator,const_iterator> equal_range(const_reference value) const {
+    //     if (!root_)
+    //         return std::make_pair(end(), end());
 
-        const_iterator lower = static_cast<const_iterator>(lower_bound(value));
-        const_iterator upper = static_cast<const_iterator>(upper_bound(value));
-        return std::make_pair(lower, upper);
-    }
+    //     const_iterator lower = static_cast<const_iterator>(lower_bound(value));
+    //     const_iterator upper = static_cast<const_iterator>(upper_bound(value));
+    //     return std::make_pair(lower, upper);
+    // }
     //template< class K >
     //std::pair<iterator,iterator> equal_range( const K& x );
     //template< class K >
@@ -1490,20 +1403,24 @@ protected:
 
 // };
 
-
 template <typename Key, 
           typename Type, 
-          typename Comparator = ComparatorMultiMap<std::pair<const Key, Type>, VectorFromSingleT<std::pair<const Key, Type>>>>
+          typename Comparator = ComparatorMultiMap<std::pair<const Key, Type>, Vector<std::pair<const Key, Type>>>,
+          typename Node = MultiNode<std::pair<const Key, Type>, std::size_t>>
 class MultiMap : public MapBase<std::pair<const Key, Type>, 
                                 Comparator, 
-                                MultiNode<std::pair<const Key, Type>, std::size_t>> 
+                                Node> 
 {
+    // static_assert(!std::is_abstract_v<typename Node> && "MultiNode is abstract???");
+    // static_assert(std::is_abstract_v<typename Node> && "MultiNode is abstract???");
     static_assert(!std::is_abstract_v<MultiNode<std::pair<const Key, Type>, std::size_t>> && "MultiNode is abstract???");
+    static_assert(std::is_abstract_v<MultiNode<std::pair<const Key, Type>, std::size_t>> && "MultiNode is abstract???");
+    // static_assert(0 && "MultiNode is abstract???");
 
 public:
     using Base = MapBase<std::pair<const Key, Type>, 
                          Comparator, 
-                         MultiNode<std::pair<const Key, Type>, std::size_t>
+                         Node
                          > ;
 public:
     using value_type        = typename Base::value_type;
@@ -1517,10 +1434,10 @@ public:
     using const_pointer     = typename Base::const_pointer;
 
 public:
-    using iterator                  = typename Base::iterator;
-    using const_iterator            = typename Base::const_iterator;
-    using reverse_iterator          = typename Base::reverse_iterator;
-    using const_reverse_iterator    = typename Base::const_reverse_iterator;
+    // using iterator                  = typename Base::iterator;
+    // using const_iterator            = typename Base::const_iterator;
+    // using reverse_iterator          = typename Base::reverse_iterator;
+    // using const_reverse_iterator    = typename Base::const_reverse_iterator;
 
 public:
     using Base::Base;
@@ -1528,16 +1445,17 @@ public:
 
 template <typename Key, 
           typename Type, 
-          typename Comparator = ComparatorMap<std::pair<const Key, Type>>>
+          typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
+          typename Node = SingleNode<std::pair<const Key, Type>, std::size_t>>
 class Map : public MapBase<std::pair<const Key, Type>, 
                            Comparator, 
-                           SingleNode<std::pair<const Key, Type>, std::size_t>> {
-    static_assert(!std::is_abstract_v<SingleNode<std::pair<const Key, Type>, std::size_t>> && "SingleNode is abstract???");
+                           Node> {
+    static_assert(!std::is_abstract_v<Node> && "SingleNode is abstract???");
 
 public:
     using Base = MapBase<std::pair<const Key, Type>, 
                          Comparator, 
-                         SingleNode<std::pair<const Key, Type>, std::size_t>> ;
+                         Node> ;
 
 public:
     using value_type        = typename Base::value_type;
@@ -1551,10 +1469,10 @@ public:
     using const_pointer     = typename Base::const_pointer;
 
 public:
-    using iterator                  = typename Base::iterator;
-    using const_iterator            = typename Base::const_iterator;
-    using reverse_iterator          = typename Base::reverse_iterator;
-    using const_reverse_iterator    = typename Base::const_reverse_iterator;
+    // using iterator                  = typename Base::iterator;
+    // using const_iterator            = typename Base::const_iterator;
+    // using reverse_iterator          = typename Base::reverse_iterator;
+    // using const_reverse_iterator    = typename Base::const_reverse_iterator;
 
 public:
     using Base::Base;
@@ -1563,34 +1481,34 @@ public:
 
 
 
-    iterator Find(const key_type& key) {
-        return this->find(value_type(key, mapped_type()));
-    }
-    const_iterator Find(const key_type& key) const {
-        return this->find(value_type(key, mapped_type()));
-    }
-    bool Contains(const key_type& key) const {
-        return this->contains(value_type(key, mapped_type()));
-    }
-    iterator Lower_bound(const Key& key) {
-        return this->lower_bound(value_type(key, mapped_type()));
-    }
-    const_iterator Lower_bound(const Key& key) const {
-        return this->lower_bound(value_type(key, mapped_type()));
-    }
-    iterator Upper_bound(const Key& key) {
-        return this->upper_bound(value_type(key, mapped_type()));
-    }
-    const_iterator Upper_bound(const Key& key) const {
-        return this->upper_bound(value_type(key, mapped_type()));
-    }
+    // iterator Find(const key_type& key) {
+        // return this->find(value_type(key, mapped_type()));
+    // }
+    // const_iterator Find(const key_type& key) const {
+        // return this->find(value_type(key, mapped_type()));
+    // }
+    // bool Contains(const key_type& key) const {
+        // return this->contains(value_type(key, mapped_type()));
+    // }
+    // iterator Lower_bound(const Key& key) {
+        // return this->lower_bound(value_type(key, mapped_type()));
+    // }
+    // const_iterator Lower_bound(const Key& key) const {
+        // return this->lower_bound(value_type(key, mapped_type()));
+    // }
+    // iterator Upper_bound(const Key& key) {
+        // return this->upper_bound(value_type(key, mapped_type()));
+    // }
+    // const_iterator Upper_bound(const Key& key) const {
+        // return this->upper_bound(value_type(key, mapped_type()));
+    // }
 
-    std::pair<iterator,iterator> Equal_range(const Key& key) {
-        return this->equal_range(value_type(key, mapped_type()));
-    }
-    std::pair<const_iterator,const_iterator> Equal_range(const Key& key) const {
-        return this->equal_range(value_type(key, mapped_type()));
-    }
+    // std::pair<iterator,iterator> Equal_range(const Key& key) {
+        // return this->equal_range(value_type(key, mapped_type()));
+    // }
+    // std::pair<const_iterator,const_iterator> Equal_range(const Key& key) const {
+        // return this->equal_range(value_type(key, mapped_type()));
+    // }
 };
 
 
