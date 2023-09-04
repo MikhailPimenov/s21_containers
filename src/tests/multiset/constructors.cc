@@ -56,15 +56,6 @@ TEST(MultiMap, T0DefaultConstructor)
     multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
     multimap.insert(std::make_pair(3, Item(3, 'c', 0.3)));
 
-    std::cout << s21_multimap << '\n';
-
-    // s21::Set<int, Item> s21_set;
-    // s21_set.Insert(Item(1, 'a', 0.1));
-    // s21_set.Insert(Item(2, 'b', 0.2));
-    // s21_set.Insert(Item(3, 'c', 0.3));
-
-
-
     EXPECT_EQ(s21_multimap, multimap);
 }
 
@@ -73,8 +64,6 @@ TEST(MultiMap, T0DefaultConstructor)
 TEST(MultiMap, T1Insert)
 {
     s21::MultiMap<int, Item> s21_multimap;
-    // // std::multiset<Item> multiset;
-
     s21_multimap.Insert(std::make_pair(10, Item(3, 'c', 0.3)));
     s21_multimap.Insert(std::make_pair(10, Item(10, 'c', 0.3)));
     s21_multimap.Insert(std::make_pair(12, Item(3, 'c', 0.3)));
@@ -92,18 +81,194 @@ TEST(MultiMap, T1Insert)
     s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
     s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
 
-    std::cout << s21_multimap << '\n';
+    std::multimap<int, Item> multimap;
+    multimap.insert(std::make_pair(10, Item(3, 'c', 0.3)));
+    multimap.insert(std::make_pair(10, Item(10, 'c', 0.3)));
+    multimap.insert(std::make_pair(12, Item(3, 'c', 0.3)));
+    multimap.insert(std::make_pair(13, Item(3, 'c', 0.3)));
+    multimap.insert(std::make_pair(3, Item(3, 'c', 0.3)));
+    multimap.insert(std::make_pair(1, Item(1, 'a', 0.1)));
+    multimap.insert(std::make_pair(1, Item(1, 'a', 0.1)));
+    multimap.insert(std::make_pair(1, Item(1, 'a', 0.1)));
+    multimap.insert(std::make_pair(1, Item(1, 'a', 0.1)));
+    multimap.insert(std::make_pair(1, Item(1, 'a', 0.1)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(2, Item(2, 'b', 0.2)));
+    multimap.insert(std::make_pair(3, Item(3, 'c', 0.3)));
+    multimap.insert(std::make_pair(3, Item(3, 'c', 0.3)));
 
-    // s21::Set<int, Item> s21_set;
-    // s21_set.Insert(Item(1, 'a', 0.1));
-    // s21_set.Insert(Item(2, 'b', 0.2));
-    // s21_set.Insert(Item(3, 'c', 0.3));
 
-
-
-    //EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_multimap, multimap);
 }
 
+
+
+
+
+TEST(MultiMap, T2ConstructorInitializer)
+{
+    const s21::MultiMap<int, Item> s21_multimap {
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    const std::multimap<int, Item> multimap{
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    EXPECT_EQ(s21_multimap, multimap);
+}
+
+
+
+
+TEST(MultiMap, T0ReverseIterator)
+{
+    s21::MultiMap<int, Item> s21_multimap {
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    std::multimap<int, Item> multimap{
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    // for (auto it = multimap.rbegin(); it != multimap.rend(); ++it) {
+    //     std::cout << "{" << it->first << ", " << it->second << "},  ";
+    // }
+    // std::cout << '\n';
+
+    EXPECT_EQ(s21_multimap, multimap);
+
+    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_multimap.rbegin();
+    std::multimap<int, Item>::reverse_iterator it = multimap.rbegin();
+
+    while (s21_it != s21_multimap.rend() && it != multimap.rend()) {
+        EXPECT_EQ(*s21_it, *it);
+        ++s21_it;
+        ++it;
+    }
+}
+
+
+
+
+TEST(MultiMap, T1IteratorOperatorMinusPre)
+{
+    s21::MultiMap<int, Item> s21_multimap {
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    std::multimap<int, Item> multimap{
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    // for (auto it = multimap.rbegin(); it != multimap.rend(); ++it) {
+    //     std::cout << "{" << it->first << ", " << it->second << "},  ";
+    // }
+    // std::cout << '\n';
+
+    EXPECT_EQ(s21_multimap, multimap);
+
+    s21::MultiMap<int, Item>::iterator s21_it = s21_multimap.end();
+    std::multimap<int, Item>::iterator it = multimap.end();
+
+    while (s21_it != s21_multimap.begin() && it != multimap.begin()) {
+        --s21_it;
+        --it;
+        EXPECT_EQ(*s21_it, *it);
+    }
+}
 
 
 

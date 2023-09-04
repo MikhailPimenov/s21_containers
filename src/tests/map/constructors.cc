@@ -42,11 +42,13 @@ TEST(Map, T1Destructor)
 TEST(Map, T2Destructor)
 {
     s21::Map<int, Item> s21_map;
-    // s21_map.Insert(std::make_pair(4, Item()));
+    s21_map.Insert(std::make_pair(4, Item()));
 
-    // EXPECT_EQ(s21_map, map);
+    std::map<int, Item> map;
+    map.insert(std::make_pair(4, Item()));
 
 
+    EXPECT_EQ(s21_map, map);
 
     // s21::Set<int> s21_set;
     // s21_set.Insert(4);
@@ -65,30 +67,25 @@ TEST(Map, T2Destructor)
 
 TEST(Map, T0ConstructorInitializer)
 {
-    // s21::Map<int, Item> s21_map {
-    //     {1, Item(1, 'a', 0.1)},
-    //     {2, Item(2, 'b', 0.2)},
-    //     {3, Item(3, 'c', 0.3)},
-    //     {4, Item(4, 'd', 0.4)},
-    //     {5, Item(5, 'e', 0.5)},
-    //     {6, Item(6, 'f', 0.6)},
-    // };
-    // std::map<int, Item> map {
-    //     {1, Item(1, 'a', 0.1)},
-    //     {2, Item(2, 'b', 0.2)},
-    //     {3, Item(3, 'c', 0.3)},
-    //     {4, Item(4, 'd', 0.4)},
-    //     {5, Item(5, 'e', 0.5)},
-    //     {6, Item(6, 'f', 0.6)},
-    // };
+    s21::Map<int, Item> s21_map {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+    std::map<int, Item> map {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_map, map);
 }
-
-
-
-
-
 
 }  // namespace
 
