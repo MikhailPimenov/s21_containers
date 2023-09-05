@@ -125,29 +125,26 @@ private:
 
 
 
-    reference operator*() noexcept
-    {
-        // return pointer_->value_;
-        // return pointer_->aggregator_;
-        // auto* g = const_cast<const Getter*>(getter_);
-        // return getter_(pointer_->aggregator_, shift_);
-        // return g->operator()(pointer_->aggregator_, shift_);
-        return this->pointer_->Get(this->shift_);
-    }
+
 
 
 
 
  
+    //          0 1 2
+    // 6 7 8            2 1 0
 
 
-    MapIteratorBase preincrement() noexcept  // ++i
+
+
+    // MapIteratorBase preincrement() noexcept  // ++i
+    MapIteratorBase& operator++() noexcept  // ++i
     {
-        if (this->shift_ + 1ull < this->pointer_->Size()) {
+        if (this->shift_ + 1ll < static_cast<difference_type>(this->pointer_->Size())) {
             ++(this->shift_);
             return *this; 
         }
-        this->shift_ = 0ull;
+        this->shift_ = 0ll;
 
         if (!this->pointer_->right_) {
             node_pointer temp = this->pointer_;
@@ -182,17 +179,21 @@ private:
         return *this;
     }
 
-    MapIteratorBase predecrement() noexcept  // ++i
+    // MapIteratorBase predecrement() noexcept  // ++i
+    MapIteratorBase& operator--() noexcept  // ++i
     {
-        // --(this->pointer_);
-        if (this->shift_ + 1ull < this->pointer_->Size()) {
-            // MapIterator temp(this->pointer_, this->shift_);
-            ++(this->shift_);
-            // return temp; 
-            return MapIteratorBase(this->pointer_, this->pointer_->Size() - this->shift_ - 1ull); 
+        // size 10
+        // shift 0
+        
+        //                                                10
+        if (0ll < this->shift_ && this->shift_ < static_cast<difference_type>(this->pointer_->Size())) {
+            // 0 -1 -2 -3 -4 -5 -6 -7 -8 -9  
+            --(this->shift_);
+            
+            // -1 -2 -3 -4 -5 -6 -7 -8 -9 -10 
+            return *this; 
         }
-        this->shift_ = 0ull;   // on purpose negative for unsigned
-
+        // this->shift_ = 0ll;
 
         if (!this->pointer_->left_) {
             node_pointer temp = this->pointer_; 
@@ -200,6 +201,7 @@ private:
                 // find lower root
                 if (!this->pointer_->root_) {
                     this->pointer_ = temp->left_;       // temp->left_ may be nullptr
+                    this->shift_ = static_cast<difference_type>(this->pointer_->Size()) - 1ll;
                     return *this;
                 }
                 node_pointer root = this->pointer_->root_;
@@ -208,61 +210,42 @@ private:
 
                 // if (root->value_.first < temp->value_.first) {  // TODO: sign of comparison
                     this->pointer_ = root;
+                    this->shift_ = static_cast<difference_type>(this->pointer_->Size()) - 1ll;
                     return *this;
                 }
                 this->pointer_ = this->pointer_->root_;
             }
         }
 
-        if (!this->pointer_->left_)
+        if (!this->pointer_->left_) {
+            this->shift_ = static_cast<difference_type>(this->pointer_->Size()) - 1ll;
             return *this;
+        }
 
         this->pointer_ = this->pointer_->left_;
 
-        while(true) {
+        while (true) {
             if (this->pointer_->right_)
                 this->pointer_ = this->pointer_->right_;
-            else
+            else {
+                this->shift_ = static_cast<difference_type>(this->pointer_->Size()) - 1ll;
                 return *this;
+            }
         }
 
+        this->shift_ = static_cast<difference_type>(this->pointer_->Size()) - 1ll;
         return *this;
     }
 
 
-
-
-
-
-
-
-
-
-    // reference operator*() noexcept
-    // {
-    //     // return pointer_->value_;
-    //     // return pointer_->aggregator_;
-    //     // auto* g = const_cast<const Getter*>(getter_);
-    //     // return getter_(pointer_->aggregator_, shift_);
-    //     // return g->operator()(pointer_->aggregator_, shift_);
-    //     return pointer_->Get(shift_);
-    // }
-
-    // reference operator*() const noexcept
-    // {
-    //     // return pointer_->value_;
-    //     // return pointer_->aggregator_;
-    //     return getter_(pointer_->aggregator_, shift_);
-    // }
-
-    // pointer operator->() noexcept
-    // {
-    //     return &getter_(pointer_->aggregator_, shift_);
-    // }
-
-    pointer operator->() const noexcept
+    reference operator*() noexcept
     {
-        return &getter_(pointer_->aggregator_, shift_);
+        return pointer_->Get(shift_);
+    }
+
+    pointer operator->() noexcept
+    {
+        return &(pointer_->Get(shift_));
     }
 
     size_type LeftHeight() const noexcept
@@ -306,7 +289,7 @@ private:
 
   protected:
     node_pointer pointer_;
-    size_type shift_;
+    difference_type shift_;
     // getter getter_;
     // checker checker_;
 };
@@ -370,13 +353,15 @@ class MapIterator : public MapIteratorBase<Map,
     // //        1   3       5          7
     // //     re         4.5  5.5
 
-    MapIterator operator++() noexcept  // ++i
+    MapIterator& operator++() noexcept  // ++i
     {
-        return static_cast<MapIterator>(this->preincrement());
+        Base::operator++();
+        return *this;
     }
-    MapIterator operator--() noexcept  // ++i
+    MapIterator& operator--() noexcept  // --i
     {
-        return static_cast<MapIterator>(this->predecrement());
+        Base::operator--();
+        return *this;
     }
 
 
@@ -536,15 +521,15 @@ class MapReverseIterator : public MapIteratorBase<Map,
     using Base::Base;
 
 
-    reference operator*() noexcept
-    {
-        // return pointer_->value_;
-        // return pointer_->aggregator_;
-        // auto* g = const_cast<const Getter*>(getter_);
-        // return getter_(pointer_->aggregator_, shift_);
-        // return g->operator()(pointer_->aggregator_, shift_);
-        return this->pointer_->Get(this->pointer_->Size() - this->shift_ - 1ull);
-    }
+    // reference operator*() noexcept
+    // {
+    //     // return pointer_->value_;
+    //     // return pointer_->aggregator_;
+    //     // auto* g = const_cast<const Getter*>(getter_);
+    //     // return getter_(pointer_->aggregator_, shift_);
+    //     // return g->operator()(pointer_->aggregator_, shift_);
+    //     return this->pointer_->Get(this->pointer_->Size() - this->shift_ - 1ull);
+    // }
 
 
 
@@ -596,13 +581,17 @@ class MapReverseIterator : public MapIteratorBase<Map,
     //     return *this;
     // }
 
-    MapReverseIterator operator++() noexcept  // ++i
+    MapReverseIterator& operator++() noexcept  // ++i
     {
-        return static_cast<MapReverseIterator>(this->predecrement());
+        // return static_cast<MapReverseIterator>(this->predecrement());
+        Base::operator--();
+        return *this;
     }
-    MapReverseIterator operator--() noexcept  // ++i
+    MapReverseIterator& operator--() noexcept  // ++i
     {
-        return static_cast<MapReverseIterator>(this->preincrement());
+        // return static_cast<MapReverseIterator>(this->preincrement());
+        Base::operator++();
+        return *this;
     }
 
 //     MapReverseIterator operator++(int) noexcept         // i++
@@ -717,15 +706,15 @@ public:
 // };
 
 
-template <typename Value, typename size_type>
+template <typename Value, typename signed_size_type>
 class BaseNode {
 public:
         BaseNode* root_;
         BaseNode* left_;
         BaseNode* right_;
 
-        size_type lHeight_;
-        size_type rHeight_;
+        signed_size_type lHeight_;
+        signed_size_type rHeight_;
 public:
         BaseNode(BaseNode* root = nullptr, BaseNode* left = nullptr, BaseNode* right = nullptr)
          : root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {
@@ -734,18 +723,18 @@ public:
         virtual ~BaseNode() {}
 
 public:
-    virtual size_type Push_back(const Value& value) = 0;
-    virtual size_type Size() const noexcept  = 0;
+    virtual signed_size_type Push_back(const Value& value) = 0;
+    virtual signed_size_type Size() const noexcept  = 0;
     virtual const Value& Get() const noexcept = 0;
     virtual Value& Get() noexcept = 0;
-    virtual const Value& Get(size_type) const noexcept = 0;
-    virtual Value& Get(size_type) noexcept = 0;
+    virtual const Value& Get(signed_size_type) const noexcept = 0;
+    virtual Value& Get(signed_size_type) noexcept = 0;
 };
 
-template <typename Value, typename size_type>
-class SingleNode : public BaseNode<Value, size_type> {
+template <typename Value, typename signed_size_type>
+class SingleNode : public BaseNode<Value, signed_size_type> {
 public:
-    using Base = BaseNode<Value, size_type>;
+    using Base = BaseNode<Value, signed_size_type>;
 
 private:
     Value value_;
@@ -757,11 +746,11 @@ public:
     SingleNode(Value&& value, Base* root = nullptr, Base* left = nullptr, Base* right = nullptr)
         : Base(root, left, right), value_{std::move(value)} {}
 
-    size_type Push_back(const Value& value) override {
-        return 0ull;         // does nothing;
+    signed_size_type Push_back(const Value& value) override {
+        return 0ll;         // does nothing;
     }
-    size_type Size() const noexcept override {
-        return 1ull;    // always single node
+    signed_size_type Size() const noexcept override {
+        return 1ll;    // always single node
     }
     const Value& Get() const noexcept override {
         return value_;
@@ -769,18 +758,18 @@ public:
     Value& Get() noexcept override {
         return value_;
     }
-    const Value& Get(size_type) const noexcept override {
+    const Value& Get(signed_size_type) const noexcept override {
         return Get();
     }
-    Value& Get(size_type) noexcept override {
+    Value& Get(signed_size_type) noexcept override {
         return Get();
     }
 };
 
-template <typename Value, typename size_type>
-class MultiNode : public BaseNode<Value, size_type> {
+template <typename Value, typename signed_size_type>
+class MultiNode : public BaseNode<Value, signed_size_type> {
 public:
-    using Base = BaseNode<Value, size_type>;
+    using Base = BaseNode<Value, signed_size_type>;
 private:
     Vector<Value> aggregator_;
 
@@ -795,11 +784,11 @@ public:
         aggregator_.Push_back(std::move(value));
     }
 
-    size_type Push_back(const Value& value) override {
+    signed_size_type Push_back(const Value& value) override {
         aggregator_.Push_back(value);         
         return 1ull; 
     }
-    size_type Size() const noexcept override {
+    signed_size_type Size() const noexcept override {
         return aggregator_.Size();    
     }
     const Value& Get() const noexcept override {
@@ -808,10 +797,18 @@ public:
     Value& Get() noexcept override {
         return Get(0ull);
     }
-    const Value& Get(size_type index) const noexcept override {
+    // 10
+    // -1
+    // -1 -> 9
+    // 9
+    const Value& Get(signed_size_type index) const noexcept override {
+        // if (index < 0ll)
+            index %= static_cast<signed_size_type>(aggregator_.Size());
         return aggregator_[index];
     }
-    Value& Get(size_type index) noexcept override {
+    Value& Get(signed_size_type index) noexcept override {
+        // if (index < 0ll)
+            index %= static_cast<signed_size_type>(aggregator_.Size());
         return aggregator_[index];
     }
 };
@@ -826,7 +823,7 @@ template <typename Value,
 class MapBase
 {
     static_assert(!std::is_abstract_v<Node> && "Node should not be abstract!");
-    static_assert(!std::is_same_v<Node, BaseNode<Value, std::size_t>> && "Node should not be Base node!");
+    static_assert(!std::is_same_v<Node, BaseNode<Value, std::ptrdiff_t>> && "Node should not be Base node!");
   public:
     using value_type = Value;
     using size_type = std::size_t;
@@ -913,13 +910,16 @@ public:
         return size_ ? iterator(rend_.root_) : end();
     }
     reverse_iterator rbegin() {
-        return size_ ? reverse_iterator(end_.root_) : rend();
+        return size_ ? reverse_iterator(end_.root_, end_.root_->Size() - 1ull) : rend();
+    }
+    const_reverse_iterator crbegin() const {
+        return size_ ? const_reverse_iterator(end_.root_, end_.root_->Size() - 1ull) : rend();
     }
     const_iterator begin() const {    // existing beginning
         return cbegin();
     }
     const_reverse_iterator rbegin() const {
-        return rbegin();
+        return crbegin();
     }
     const_iterator cbegin() const {
         return size_ ? const_iterator(rend_.root_) : cend();
@@ -1634,14 +1634,14 @@ protected:
 template <typename Key, 
           typename Type, 
           typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
-          typename Node = MultiNode<std::pair<const Key, Type>, std::size_t>>
+          typename Node = MultiNode<std::pair<const Key, Type>, std::ptrdiff_t>>
 class MultiMap : public MapBase<std::pair<const Key, Type>, 
                                 Comparator, 
                                 Node> 
 {
     // static_assert(!std::is_abstract_v<typename Node> && "MultiNode is abstract???");
     // static_assert(std::is_abstract_v<typename Node> && "MultiNode is abstract???");
-    static_assert(!std::is_abstract_v<MultiNode<std::pair<const Key, Type>, std::size_t>> && "MultiNode is abstract???");
+    static_assert(!std::is_abstract_v<MultiNode<std::pair<const Key, Type>, std::ptrdiff_t>> && "MultiNode is abstract???");
     // static_assert(std::is_abstract_v<MultiNode<std::pair<const Key, Type>, std::size_t>> && "MultiNode is abstract???");
     // static_assert(0 && "MultiNode is abstract???");
 
@@ -1674,7 +1674,7 @@ public:
 template <typename Key, 
           typename Type, 
           typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
-          typename Node = SingleNode<std::pair<const Key, Type>, std::size_t>>
+          typename Node = SingleNode<std::pair<const Key, Type>, std::ptrdiff_t>>
 class Map : public MapBase<std::pair<const Key, Type>, 
                            Comparator, 
                            Node> {
