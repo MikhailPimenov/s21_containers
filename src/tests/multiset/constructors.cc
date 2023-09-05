@@ -204,10 +204,10 @@ TEST(MultiMap, T0ReverseIterator)
     std::multimap<int, Item>::reverse_iterator it = multimap.rbegin();
 
     while (s21_it != s21_multimap.rend() && it != multimap.rend()) {
-        // EXPECT_EQ(*s21_it, *it);
-        std::cout << "{" << s21_it->first << ", " << s21_it->second << "}  ==  ";
-        std::cout << "{" << it->first << ", " << it->second << "},  ";
-        std::cout << '\n';
+        EXPECT_EQ(*s21_it, *it);
+        // std::cout << "{" << s21_it->first << ", " << s21_it->second << "}  ==  ";
+        // std::cout << "{" << it->first << ", " << it->second << "},  ";
+        // std::cout << '\n';
         ++s21_it;
         ++it;
     }

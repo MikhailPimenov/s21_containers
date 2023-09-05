@@ -183,8 +183,8 @@ TEST(Map, T3ReverseIteratorOperatorMinus)
     s21::Map<int, Item>::reverse_iterator s21_it = s21_map.rend();
     std::map<int, Item>::reverse_iterator it = map.rend();
 
-    for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); ++s21_it)
-        std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
+    // for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); ++s21_it)
+    //     std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
 
     --s21_it;
     --it;

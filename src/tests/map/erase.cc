@@ -702,8 +702,8 @@ TEST(Map, T0RandomExtract)
     s21::Map<int, Item>::node_type s21_it_result = s21_map.Extract(s21_it);
     std::map<int, Item>::node_type it_result = map.extract(it);
 
-    EXPECT_EQ(it_result.key(), s21_it_result.value().first);
-    EXPECT_EQ(it_result.mapped(), s21_it_result.value().second);
+    EXPECT_EQ(it_result.key(), s21_it_result.Get().first);
+    EXPECT_EQ(it_result.mapped(), s21_it_result.Get().second);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
@@ -780,8 +780,8 @@ TEST(Map, T1RandomExtract)
     s21::Map<int, Item>::node_type s21_it_result = s21_map.Extract(s21_it);
     std::map<int, Item>::node_type it_result = map.extract(it);
 
-    EXPECT_EQ(it_result.key(), s21_it_result.value().first);
-    EXPECT_EQ(it_result.mapped(), s21_it_result.value().second);
+    EXPECT_EQ(it_result.key(), s21_it_result.Get().first);
+    EXPECT_EQ(it_result.mapped(), s21_it_result.Get().second);
 
     EXPECT_EQ(s21_map, map);
     EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
