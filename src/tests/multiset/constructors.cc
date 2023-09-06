@@ -276,6 +276,70 @@ TEST(MultiMap, T1IteratorOperatorMinusPre)
 
 
 
+TEST(MultiSet, T0ReverseIterator)
+{
+    s21::MultiSet<Item> s21_multiset {
+        {Item(3, 'c', 0.3)},
+        {Item(10, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(2, 'b', 0.2)},
+        {Item(2, 'b', 0.2)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+    };
+
+    std::multiset<Item> multiset {
+        {Item(3, 'c', 0.3)},
+        {Item(10, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(2, 'b', 0.2)},
+        {Item(2, 'b', 0.2)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(3, 'c', 0.3)},
+    };
+
+    // for (auto it = multimap.rbegin(); it != multimap.rend(); ++it) {
+    //     std::cout << "{" << it->first << ", " << it->second << "},  ";
+    // }
+    // std::cout << '\n';
+
+    // EXPECT_EQ(s21_multiset, multiset);
+
+    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_multimap.rbegin();
+    std::multimap<int, Item>::reverse_iterator it = multimap.rbegin();
+
+    while (s21_it != s21_multimap.rend() && it != multimap.rend()) {
+        EXPECT_EQ(*s21_it, *it);
+        // std::cout << "{" << s21_it->first << ", " << s21_it->second << "}  ==  ";
+        // std::cout << "{" << it->first << ", " << it->second << "},  ";
+        // std::cout << '\n';
+        ++s21_it;
+        ++it;
+    }
+}
+
+
+
+
+
 }  // namespace
 
 // GCOVR_EXCL_STOP
