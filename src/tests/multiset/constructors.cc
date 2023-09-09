@@ -11,6 +11,7 @@
 #include "../item.h"
 #include "../map_helpers.h"
 #include "../multimap_helpers.h"
+#include "../multiset_helpers.h"
 
 // GCOVR_EXCL_START
 
@@ -273,12 +274,17 @@ TEST(MultiMap, T1IteratorOperatorMinusPre)
     }
 }
 
-
+// class ComparatorItem {
+// public:
+//     bool operator()(const Item& left, const Item& right) const {
+//         return (left.number() < right.number());
+//     }
+// };
 
 
 TEST(MultiSet, T0ReverseIterator)
 {
-    s21::MultiSet<Item> s21_multiset {
+    s21::MultiSet<Item, ComparatorItem> s21_multiset {
         {Item(3, 'c', 0.3)},
         {Item(10, 'c', 0.3)},
         {Item(3, 'c', 0.3)},
@@ -297,7 +303,7 @@ TEST(MultiSet, T0ReverseIterator)
         {Item(3, 'c', 0.3)},
     };
 
-    std::multiset<Item> multiset {
+    std::multiset<Item, ComparatorItem> multiset {
         {Item(3, 'c', 0.3)},
         {Item(10, 'c', 0.3)},
         {Item(3, 'c', 0.3)},
@@ -321,12 +327,12 @@ TEST(MultiSet, T0ReverseIterator)
     // }
     // std::cout << '\n';
 
-    // EXPECT_EQ(s21_multiset, multiset);
+    EXPECT_EQ(s21_multiset, multiset);
 
-    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_multimap.rbegin();
-    std::multimap<int, Item>::reverse_iterator it = multimap.rbegin();
+    s21::MultiSet<Item, ComparatorItem>::reverse_iterator s21_it = s21_multiset.rbegin();
+    std::multiset<Item, ComparatorItem>::reverse_iterator it = multiset.rbegin();
 
-    while (s21_it != s21_multimap.rend() && it != multimap.rend()) {
+    while (s21_it != s21_multiset.rend() && it != multiset.rend()) {
         EXPECT_EQ(*s21_it, *it);
         // std::cout << "{" << s21_it->first << ", " << s21_it->second << "}  ==  ";
         // std::cout << "{" << it->first << ", " << it->second << "},  ";

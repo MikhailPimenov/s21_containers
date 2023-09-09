@@ -1346,10 +1346,17 @@ protected:
 
 
 
-// template <typename Type, typename Comparator = ComparatorSet<Type>>
-// class Set : public MapBase<Type, Comparator, Adder<Type, Type>, Type, Getter<Type>> {
+template <typename Type, 
+          typename Comparator = ComparatorSet<Type>,
+          typename Node = MultiNode<Type, std::ptrdiff_t>>
+class MultiSet : public MapBase<Type, Comparator, Node> {
+public:
+    using Base = MapBase<Type, Comparator, Node>;
 
-// };
+public:
+    using Base::Base;
+
+};
 
 template <typename Key, 
           typename Type, 
