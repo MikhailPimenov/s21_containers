@@ -571,6 +571,45 @@ public:
         updateReverseEnd();
     }
 
+    Tree& operator=(const Tree& other) {
+        if (this == &other)
+            return *this;
+
+        Tree temporary(other);
+        *this = std::move(temporary);
+        return *this;
+    }
+
+    Tree& operator=(Tree&& other) noexcept {
+        if (this == &other)
+            return *this;
+
+        Clear();
+
+        root_ = other.root_;
+        size_ = other.size_;
+        
+        if (other.root_) {
+            if (other.root_->right_) {
+                other.root_->right_->root_ = root_;
+            }
+            if (other.root_->left_) {
+                other.root_->left_->root_ = root_;
+            }
+            
+            other.end_.root_->right_ = &end_;
+            end_.root_ = other.end_.root_;
+
+            other.rend_.root_->left_ = &rend_;
+            rend_.root_ = other.rend_.root_;
+        }
+
+        other.root_ = nullptr;
+        other.size_ = 0ull;
+
+        return *this;
+    }
+
 
 private:
     void deallocate(base_node_pointer* node) {
