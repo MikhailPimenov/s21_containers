@@ -118,6 +118,17 @@ TEST(Map, T0CopyConstructor)
     EXPECT_EQ(s21_copy, copy);
 }
 
+TEST(Map, T1CopyConstructorEmpty)
+{
+    const s21::Map<int, Item> s21_source;
+    const std::map<int, Item> source;
+
+    s21::Map<int, Item> s21_copy = s21_source;  // copy constructor, not operator=
+    std::map<int, Item> copy = source;
+
+    EXPECT_EQ(s21_copy, copy);
+}
+
 }  // namespace
 
 // GCOVR_EXCL_STOP

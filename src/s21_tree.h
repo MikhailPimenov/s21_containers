@@ -546,16 +546,16 @@ public:
             Insert(std::move(element));
     }
 
-    base_node_pointer copy_recursive(base_node_pointer source, base_node_pointer destination_root) {
+    base_node_pointer copy_recursive(base_node_pointer source, base_node_pointer destination_root, node_pointer rend, node_pointer end) {
         assert(source && "source should exist");
         base_node_pointer destination = create_node(destination_root, source->Get());
 
-        if (source->left_) {
-            base_node_pointer left = copy_recursive(source->left_, destination);
+        if (source->left_ && source->left_ != rend) {
+            base_node_pointer left = copy_recursive(source->left_, destination, rend, end);
             destination->left_ = left;
         }
-        if (source->right_) {
-            base_node_pointer right = copy_recursive(source->right_, destination);
+        if (source->right_ && source->right_ != end) {
+            base_node_pointer right = copy_recursive(source->right_, destination, rend, end);
             destination->right_ = right;
         }
 
@@ -565,17 +565,8 @@ public:
     Tree(const Tree& other) : Tree() {
         if (!other.root_)
             return;
-        root_ = create_node(nullptr, other.root_->Get());
-        
-        if (other.root_->left_) {
-            base_node_pointer left = copy_recursive(other.root_->left_, root_);
-            root_->left_ = left;
-        }
-        if (other.root_->right_) {
-            base_node_pointer right = copy_recursive(other.root_->right_, root_);
-            root_->right_ = right;
-        }
-
+       
+        root_ = copy_recursive(other.root_, nullptr, &(other.rend_), &(other.end_));
         updateEnd();
         updateReverseEnd();
     }
