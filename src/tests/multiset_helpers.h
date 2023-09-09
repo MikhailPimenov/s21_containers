@@ -8,7 +8,6 @@
 
 #include "../s21_map.h"
 #include "../s21_multimap.h"
-// #include "../s21_vector.h"
 #include "../s21_set.h"
 
 // GCOVR_EXCL_START
@@ -32,7 +31,7 @@ bool operator==(const s21::MultiSet<Type, Comparator>& s21_multiset, const std::
 
     return true;   
 }
-
+ 
 // template<typename Key, typename Type>
 // std::ostream& operator<<(std::ostream& out, const s21::MultiMap<Key, Type>& s21_map) {
 //     out << "MultiMap " << s21_map.Size()  << ' '  << s21_map.Height() << "\n";

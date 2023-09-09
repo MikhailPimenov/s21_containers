@@ -87,6 +87,37 @@ TEST(Map, T0ConstructorInitializer)
     EXPECT_EQ(s21_map, map);
 }
 
+
+
+
+
+TEST(Map, T0CopyConstructor)
+{
+    const s21::Map<int, Item> s21_source {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+    const std::map<int, Item> source {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+
+    s21::Map<int, Item> s21_copy = s21_source;  // copy constructor, not operator=
+    std::map<int, Item> copy = source;
+
+
+
+    EXPECT_EQ(s21_copy, copy);
+}
+
 }  // namespace
 
 // GCOVR_EXCL_STOP
