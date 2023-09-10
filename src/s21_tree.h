@@ -485,18 +485,17 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
         Base::operator++();
         return *this;
     }
-    // TODO: postfix form ++ -- + tests
 
     TreeReverseIterator operator++(int) noexcept {
         TreeReverseIterator temp = *this;
-        Base::operator++();
+        Base::operator--();
 
         return temp;
     }
 
     TreeReverseIterator operator--(int) noexcept {
         TreeReverseIterator temp = *this;
-        Base::operator--();
+        Base::operator++();
 
         return temp;
     }
@@ -675,7 +674,7 @@ public:
     // Map<int, float>::iterator azaza = m1.begin();
     // ++azaza;
     // iterators============================================================
-    iterator begin() {          // existing beginning
+    iterator begin() {                                          // existing beginning
         return size_ ? iterator(rend_.root_) : end();
     }
     reverse_iterator rbegin() {
@@ -684,7 +683,7 @@ public:
     const_reverse_iterator crbegin() const {
         return size_ ? const_reverse_iterator(end_.root_, end_.root_->Size() - 1ull) : rend();
     }
-    const_iterator begin() const {    // existing beginning
+    const_iterator begin() const {                              // existing beginning
         return cbegin();
     }
     const_reverse_iterator rbegin() const {
@@ -693,10 +692,10 @@ public:
     const_iterator cbegin() const {
         return size_ ? const_iterator(rend_.root_) : cend();
     }
-    iterator end() {        // non-existing end
+    iterator end() {                                            // non-existing end
         return iterator(&end_);
     }
-    reverse_iterator rend() {        // non-existing begin
+    reverse_iterator rend() {                                   // non-existing begin
         return reverse_iterator(&rend_);
     }
     const_iterator end() const {
@@ -711,9 +710,6 @@ public:
     const_reverse_iterator crend() const {
         return const_iterator(&rend_);
     }
-
-
-
 
 private:
     //modifiers==============================================================
@@ -748,59 +744,43 @@ private:
     bool leftLeftCase(base_node_pointer root) const noexcept {
         if (root->lHeight_ - root->rHeight_ != 2ull)
             return false;
-        if (!root->left_) {
-            // assert(0 && "left_ should exist!");
+        if (!root->left_)
             return false;
-        }
-        if (root->left_->lHeight_ - root->left_->rHeight_ != 1ull) {
-            // assert(0 && "Expected 1 difference!");
+        if (root->left_->lHeight_ - root->left_->rHeight_ != 1ull)
             return false;
-        }
         return true;
-        // return unbalanced(root) && root->left_ && root->left_->lHeight_ - root->left_->rHeight_ == 1ull;    // ? TODO: consider rHeight of root
     }
     bool rightRightCase(base_node_pointer root) const noexcept {
         if (root->rHeight_ - root->lHeight_ != 2ull)
             return false;
-        if (!root->right_) {
-            // assert(0 && "right_ should exist!");
+        if (!root->right_)
             return false;
-        }
-        if (root->right_->rHeight_ - root->right_->lHeight_ != 1ull) {
-            // assert(0 && "Expected 1 difference!");
+        if (root->right_->rHeight_ - root->right_->lHeight_ != 1ull)
             return false;
-        }
         return true;
-        // return unbalanced(root) && root->right_ && root->right_->rHeight_ - root->right_->lHeight_ == 1ull;
     }
     bool leftRightCase(base_node_pointer root) const noexcept {
         if (root->lHeight_ - root->rHeight_ != 2ull)
             return false;
         if (!root->left_)
             return false;
-        if (root->left_->rHeight_ - root->left_->lHeight_ != 1ull) {
-            // assert(0 && "Expected 1 difference!");
+        if (root->left_->rHeight_ - root->left_->lHeight_ != 1ull)
             return false;
-        }
         return true;
-        // return unbalanced(root) && root->left_ && root->left_->rHeight_ - root->left_->lHeight_ == 1ull;
     }
     bool rightLeftCase(base_node_pointer root) const noexcept {
         if (root->rHeight_ - root->lHeight_ != 2ull)
             return false;
         if (!root->right_)
             return false;
-        if (root->right_->lHeight_ - root->right_->rHeight_ != 1ull) {
-            // assert(0 && "Expected 1 difference!");
+        if (root->right_->lHeight_ - root->right_->rHeight_ != 1ull)
             return false;
-        }
+
         return true;
-        // return unbalanced(root) && root->right_ && root->right_->lHeight_ - root->right_->rHeight_ == 1ull;
     }
     void leftLeftBalance(base_node_pointer root) {
-        // assert(0 && "leftleftBalance");
-        base_node_pointer root_root = root->root_;
         assert(root->left_ && "left_ should exist!");
+        base_node_pointer root_root = root->root_;
         base_node_pointer pivot = root->left_;
         base_node_pointer b = pivot->right_;
 
@@ -825,9 +805,8 @@ private:
         updateRightHeight(pivot);       // order matters
     }
     void rightRightBalance(base_node_pointer root) {
-        // assert(0 && "rightrightBalance");
-        base_node_pointer root_root = root->root_;
         assert(root->right_ && "right_ should exist!");
+        base_node_pointer root_root = root->root_;
         base_node_pointer pivot = root->right_;
         base_node_pointer b = pivot->left_;
 
@@ -852,17 +831,8 @@ private:
         updateLeftHeight(pivot);        // order matters
     }
     void leftRightBalance(base_node_pointer root) {
-        // assert(0 && "left right balance");
-        if (!root->left_) {
-//            std::cout << *this << '\n';
-            // std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
-            assert(root->left_ && "left_ should exist!");
-        }
-        if (!root->left_->right_) {
-//            std::cout << *this << '\n';
-            // std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
-            assert(root->left_->right_ && "left_->right_ should exist!");
-        }
+        assert(root->left_ && "left_ should exist!");       
+        assert(root->left_->right_ && "left_->right_ should exist!");
 
         base_node_pointer child = root->left_;
         base_node_pointer pivot = child->right_;
@@ -884,7 +854,6 @@ private:
         leftLeftBalance(root);
     }
     void rightLeftBalance(base_node_pointer root) {
-        // assert(0 && "right left balance");
         assert(root->right_ && "right_ should exist!");
         assert(root->right_->left_ && "right_->left_ should exist!");
 
@@ -908,7 +877,6 @@ private:
         rightRightBalance(root);
     }
     void balance(base_node_pointer root) noexcept {
-        // return;
         if (leftRightCase(root))
             leftRightBalance(root);
         else if (rightLeftCase(root))
@@ -917,11 +885,8 @@ private:
             leftLeftBalance(root);
         else if (rightRightCase(root))
             rightRightBalance(root);
-        else {
-            // std::cout << *this << '\n';
-            // std::cout << '{' << root->value_.first << '-' << root->lHeight_ << '-' << root->rHeight_ << "}\n";
+        else
             assert(0 && "Unknown type of unbalanced case!");
-        }
     }
     void updateLeftHeight(base_node_pointer node) {
         assert(node && "Node should exist!");
@@ -951,9 +916,6 @@ private:
     std::pair<iterator, bool> insert_recursive(base_node_pointer root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
-        // if (value.first < root->value_.first) {
-        // if (value < root->value_) {
-        // if (comparator_(value, root->aggregator_)) {
         if (comparator_(value, root->Get())) {
             if (root->left_ && root->left_ != &rend_) {
                 const auto [_, created] = insert_recursive(root->left_, value);
@@ -969,7 +931,6 @@ private:
                 updateReverseEnd();
                 return std::make_pair(iterator(root->left_), true);
             }
-        // } else if (root->value_.first < value.first) {
         } else if (comparator_(root->Get(), value)) {
             if (root->right_ && root->right_ != &end_) {
                 const auto [_, created] = insert_recursive(root->right_, value);
@@ -987,15 +948,12 @@ private:
             }
         }
         // equal
-        // adder_(root->aggregator_, value, size_);
         size_ += root->Push_back(value);
         return std::make_pair(iterator(root), false);
     }
     std::pair<iterator, bool> insert_recursive(base_node_pointer root, value_type&& value) {
         assert(root && "Root should always exist!");
         // root always exists
-        // if (value.first < root->value_.first) {
-        // if (value < root->value_) {
         if (comparator_(value, root->Get())) {
             if (root->left_ && root->left_ != &rend_) {
                 const auto [_, created] = insert_recursive(root->left_, std::move(value));
@@ -1011,7 +969,6 @@ private:
                 updateReverseEnd();
                 return std::make_pair(iterator(root->left_), true);
             }
-        // } else if (root->value_.first < value.first) {
         } else if (comparator_(root->Get(), value)) {
             if (root->right_ && root->right_ != &end_) {
                 const auto [_, created] = insert_recursive(root->right_, std::move(value));
@@ -1029,7 +986,6 @@ private:
             }
         }
         // equal
-        // adder_(root->aggregator_, value, size_);
         size_ += root->Push_back(value);
         return std::make_pair(iterator(root), false);
     }
@@ -1055,7 +1011,6 @@ public:
             updateEnd();
             return std::make_pair(iterator(root_), true);
         }
-        // return insert_recursive(root_, value);
         const auto [_, created] = insert_recursive(root_, value);
         if (created) {
             updateLeftHeight(root_);
@@ -1072,7 +1027,6 @@ public:
             updateEnd();
             return std::make_pair(iterator(root_), true);
         }
-        // return insert_recursive(root_, value);
         const auto [_, created] = insert_recursive(root_, std::move(value));
         if (created) {
             updateLeftHeight(root_);
@@ -1246,7 +1200,6 @@ private:
 
             }
 
-
         }
 
         if (no_replace && root->root_)
@@ -1255,10 +1208,6 @@ private:
             else
                 root->root_->right_ = nullptr;
 
-        // if (remove) {
-        //     delete root;
-        //     root = nullptr;
-        // }
         --size_;
 
         if (new_node && !new_node->root_)
