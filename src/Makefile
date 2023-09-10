@@ -52,7 +52,7 @@ SOURCES+=tests/list/list.cc
 SOURCES+=tests/set/constructors.cc
 SOURCES+=tests/set/capacity.cc
 # SOURCES+=tests/set/modifiers.cc
-# SOURCES+=tests/set/erase.cc
+SOURCES+=tests/set/erase.cc
 # SOURCES+=tests/set/iterator.cc
 # SOURCES+=tests/set/lookup.cc
 
