@@ -427,6 +427,21 @@ class TreeIterator : public TreeIteratorBase<Tree,
     }
     // TODO: postfix form ++ -- + tests
 
+    TreeIterator operator++(int) noexcept {
+        TreeIterator temp = *this;
+        Base::operator++();
+
+        return temp;
+    }
+
+    TreeIterator operator--(int) noexcept {
+        TreeIterator temp = *this;
+        Base::operator--();
+
+        return temp;
+    }
+
+
     operator int() const = delete;
 
     // to enable creating iterator from const_iterator via static_cast
@@ -471,6 +486,21 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
         return *this;
     }
     // TODO: postfix form ++ -- + tests
+
+    TreeReverseIterator operator++(int) noexcept {
+        TreeReverseIterator temp = *this;
+        Base::operator++();
+
+        return temp;
+    }
+
+    TreeReverseIterator operator--(int) noexcept {
+        TreeReverseIterator temp = *this;
+        Base::operator--();
+
+        return temp;
+    }
+
 
     operator int() const = delete;
 
