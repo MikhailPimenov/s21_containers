@@ -10,15 +10,6 @@ GCOVR_LFLAGS=--coverage
 
 GTEST_LFLAGS=-lgtest -lgtest_main
 
-<<<<<<< HEAD
-=======
-GCOVR_CFLAGS=-fprofile-arcs -ftest-coverage -fPIC
-GCOVR_CFLAGS=--coverage
-GCOVR_LFLAGS=-lgcov
-GCOVR_LFLAGS=--coverage
-
-GTEST_LFLAGS=-lgtest -lgtest_main
->>>>>>> temp3
 
 REPORT_DIRECTORY=report
 VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
