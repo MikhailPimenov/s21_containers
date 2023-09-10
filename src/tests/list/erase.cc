@@ -323,8 +323,10 @@ TEST(List, T1EraseRange)
 
     EXPECT_TRUE(s21_source == source);
     EXPECT_TRUE(s21_it == s21_it2);
-    EXPECT_TRUE(it == it2);
-    EXPECT_TRUE(*s21_it == *it);
+    EXPECT_EQ(it, source.cend());
+    EXPECT_EQ(s21_it, s21_source.cend());
+    // EXPECT_TRUE(it == it2);
+    // EXPECT_TRUE(*s21_it == *it);
 }
 
 TEST(List, T2EraseRange)
