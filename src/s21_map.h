@@ -1,112 +1,22 @@
 #ifndef _S21_MAP_H_
 #define _S21_MAP_H_
 
-#include <cassert>
-#include <initializer_list>
-#include <iterator>
-#include <new>
-#include <cstring>
-#include <vector>
+// #include <cassert>
+// #include <initializer_list>
+// #include <iterator>
+// #include <new>
+// #include <cstring>
+// #include <vector>
 
-#include "s21_list.h"
-#include "s21_vector.h"
-#include "tests/vector_helpers.h"   // TODO: remove from here and add everywhere map is printed
+// #include "s21_list.h"
+// #include "s21_vector.h"
+// #include "tests/vector_helpers.h"   // TODO: remove from here and add everywhere map is printed
 
 #include "s21_tree.h"
+#include "s21_comparator.h"
 
 namespace s21
 {
-
-
-
-
-
-
-template <typename Type>
-class ComparatorSet {
-public:
-    bool operator()(const Type& left, const Type& right) const {
-        return left < right;
-    }
-
-};
-
-template <typename PairValue>
-class ComparatorMap {
-public:
-    bool operator()(const PairValue& left, const PairValue& right) const {
-        return left.first < right.first;
-    }
-    // bool operator()(const Node& left, const Value& right) const {
-    //     return left->Get() < right;
-    // }
-    // bool operator()(const Value& left, const Node& right) const {
-    //     return left < right->Get();
-    // }
-
-};
-
-
-
-
-
-
-
-
-
-
-
-
-template <typename Type, 
-          typename Comparator = ComparatorSet<Type>,
-          typename Node = Tree::MultiNode<Type, std::ptrdiff_t>>
-class MultiSet : public Tree::Tree<Type, Comparator, Node> {
-public:
-    using Base = Tree::Tree<Type, Comparator, Node>;
-
-public:
-    using Base::Base;
-
-};
-
-template <typename Key, 
-          typename Type, 
-          typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
-          typename Node = Tree::MultiNode<std::pair<const Key, Type>, std::ptrdiff_t>>
-class MultiMap : public Tree::Tree<std::pair<const Key, Type>, 
-                                   Comparator, 
-                                   Node> 
-{
-    // static_assert(!std::is_abstract_v<typename Node> && "MultiNode is abstract???");
-    // static_assert(std::is_abstract_v<typename Node> && "MultiNode is abstract???");
-    static_assert(!std::is_abstract_v<Tree::MultiNode<std::pair<const Key, Type>, std::ptrdiff_t>> && "MultiNode is abstract???");
-    // static_assert(std::is_abstract_v<MultiNode<std::pair<const Key, Type>, std::size_t>> && "MultiNode is abstract???");
-    // static_assert(0 && "MultiNode is abstract???");
-
-public:
-    using Base = Tree::Tree<std::pair<const Key, Type>, 
-                            Comparator, 
-                            Node>;
-public:
-    using value_type        = typename Base::value_type;
-    using mapped_type       = Type;
-    using key_type          = Key;
-    using size_type         = typename Base::size_type;
-    using difference_type   = typename Base::difference_type;
-    using reference         = typename Base::reference;
-    using const_reference   = typename Base::const_reference;
-    using pointer           = typename Base::pointer;
-    using const_pointer     = typename Base::const_pointer;
-
-public:
-    // using iterator                  = typename Base::iterator;
-    // using const_iterator            = typename Base::const_iterator;
-    // using reverse_iterator          = typename Base::reverse_iterator;
-    // using const_reverse_iterator    = typename Base::const_reverse_iterator;
-
-public:
-    using Base::Base;
-};
 
 template <typename Key, 
           typename Type, 
@@ -115,7 +25,6 @@ template <typename Key,
 class Map : public Tree::Tree<std::pair<const Key, Type>, 
                               Comparator, 
                               Node> {
-    static_assert(!std::is_abstract_v<Node> && "SingleNode is abstract???");
 
 public:
     using Base = Tree::Tree<std::pair<const Key, Type>, 

@@ -1,14 +1,10 @@
-
 #ifndef _TESTS_MULTISET_HELPERS_H_
 #define _TESTS_MULTISET_HELPERS_H_
 
 #include <iostream>
 #include <set>
-#include <cmath>
 
-#include "../s21_map.h"
-#include "../s21_multimap.h"
-#include "../s21_set.h"
+#include "../s21_multiset.h"
 
 // GCOVR_EXCL_START
 
@@ -40,9 +36,6 @@ bool operator==(const s21::MultiSet<Type, Comparator>& s21_multiset, const std::
 
 //     return out;
 // }
-
-
-
 
 // GCOVR_EXCL_STOP
 

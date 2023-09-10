@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <iterator>
 #include <new>
+#include <cmath>
 
 namespace s21
 {
@@ -426,7 +427,10 @@ template <typename Type> class List
 
     // Max_size()
     size_type Max_size() const noexcept {
-        return std::numeric_limits<difference_type>::max();
+        if constexpr(sizeof(void*) == 4) {
+            return std::pow(2.0, 31.0) / sizeof(Node) - 1.0;
+        }
+        return std::pow(2.0, 63.0) / sizeof(Node) - 1.0;
     }
     // Resize()
     void Resize(size_type count, const_reference value)

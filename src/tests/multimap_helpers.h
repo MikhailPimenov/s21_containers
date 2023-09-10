@@ -39,9 +39,6 @@ std::ostream& operator<<(std::ostream& out, const s21::MultiMap<Key, Type>& s21_
     return out;
 }
 
-
-
-
 // GCOVR_EXCL_STOP
 
 #endif  //  _TESTS_MULTIMAP_HELPERS_H_

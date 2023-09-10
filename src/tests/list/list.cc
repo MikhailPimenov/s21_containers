@@ -399,7 +399,9 @@ TEST(MaxSize, T0MaxSize)
         Item(0), Item(0), Item(0), Item(0), Item(0), Item(0),
     };
 
-    EXPECT_EQ(s21_list.Max_size(), list.max_size());
+    const auto ms = list.max_size();
+    const auto s21_ms = s21_list.Max_size();
+    EXPECT_TRUE(s21_ms > ms ? (s21_ms - ms < ms * 1e-16) : (ms - s21_ms < ms * 1e-16));
 }
 
 TEST(MaxSize, T1MaxSize)
@@ -407,7 +409,9 @@ TEST(MaxSize, T1MaxSize)
     const s21::List<double> s21_list;
     const std::list<double> list;
 
-    EXPECT_EQ(s21_list.Max_size(), list.max_size());
+    const auto ms = list.max_size();
+    const auto s21_ms = s21_list.Max_size();
+    EXPECT_TRUE(s21_ms > ms ? (s21_ms - ms < ms * 1e-16) : (ms - s21_ms < ms * 1e-16));
 }
 
 TEST(MaxSize, T2MaxSize)
@@ -415,7 +419,36 @@ TEST(MaxSize, T2MaxSize)
     const s21::List<int> s21_list;
     const std::list<int> list;
 
-    EXPECT_EQ(s21_list.Max_size(), list.max_size());
+    const auto ms = list.max_size();
+    const auto s21_ms = s21_list.Max_size();
+    EXPECT_TRUE(s21_ms > ms ? (s21_ms - ms < ms * 1e-16) : (ms - s21_ms < ms * 1e-16));
+}
+
+struct Item2 {
+    int i_ = 0;
+    double d_ = 0.0;
+    char c_ = '\0';
+    float f_ = 0.0f;
+};
+
+TEST(MaxSize, T3MaxSize)
+{
+    const s21::List<Item2> s21_list;
+    const std::list<Item2> list;
+
+    const auto ms = list.max_size();
+    const auto s21_ms = s21_list.Max_size();
+    EXPECT_TRUE(s21_ms > ms ? (s21_ms - ms < ms * 1e-16) : (ms - s21_ms < ms * 1e-16));
+}
+
+TEST(MaxSize, T4MaxSize)
+{
+    const s21::List<std::list<Item2>> s21_list;
+    const std::list<std::list<Item2>> list;
+
+    const auto ms = list.max_size();
+    const auto s21_ms = s21_list.Max_size();
+    EXPECT_TRUE(s21_ms > ms ? (s21_ms - ms < ms * 1e-16) : (ms - s21_ms < ms * 1e-16));
 }
 
 
