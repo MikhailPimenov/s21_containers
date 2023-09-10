@@ -173,6 +173,142 @@ TEST(Map, T1CopyAssignmentOperator)
     EXPECT_EQ(s21_copy, copy);
 }
 
+
+
+TEST(Map, T0MoveAssignmentOperator)
+{
+    s21::Map<int, Item> s21_source {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+    std::map<int, Item> source {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+
+
+
+    s21::Map<int, Item> s21_copy {
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+    };
+    s21_copy = std::move(s21_source);  
+
+    std::map<int, Item> copy {
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+    };
+    copy = std::move(source);
+
+
+    EXPECT_EQ(s21_copy, copy);
+
+    const s21::Map<int, Item> s21_empty;
+    EXPECT_EQ(s21_source, s21_empty);
+    
+    const std::map<int, Item> empty;
+    EXPECT_EQ(source, empty);
+}
+
+TEST(Map, T1MoveAssignmentOperator)
+{
+    s21::Map<int, Item> s21_source;
+    std::map<int, Item> source;
+
+
+
+    s21::Map<int, Item> s21_copy {
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+    };
+    s21_copy = std::move(s21_source);  
+
+    std::map<int, Item> copy {
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+    };
+    copy = std::move(source);
+
+
+    EXPECT_EQ(s21_copy, copy);
+
+    const s21::Map<int, Item> s21_empty;
+    EXPECT_EQ(s21_source, s21_empty);
+    
+    const std::map<int, Item> empty;
+    EXPECT_EQ(source, empty);
+}
+
+
+
+
+
+
+
+TEST(Map, T0MoveConstructor)
+{
+    s21::Map<int, Item> s21_source {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+    std::map<int, Item> source {
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {4, Item(4, 'd', 0.4)},
+        {5, Item(5, 'e', 0.5)},
+        {6, Item(6, 'f', 0.6)},
+    };
+
+
+
+    s21::Map<int, Item> s21_copy = std::move(s21_source);  
+    std::map<int, Item> copy = std::move(source);
+
+
+    EXPECT_EQ(s21_copy, copy);
+
+    const s21::Map<int, Item> s21_empty;
+    EXPECT_EQ(s21_source, s21_empty);
+    
+    const std::map<int, Item> empty;
+    EXPECT_EQ(source, empty);
+}
+
+TEST(Map, T1MoveConstructor)
+{
+    s21::Map<int, Item> s21_source;
+    std::map<int, Item> source;
+
+
+
+    s21::Map<int, Item> s21_copy = std::move(s21_source);  
+    std::map<int, Item> copy = std::move(source);
+
+
+    EXPECT_EQ(s21_copy, copy);
+
+    const s21::Map<int, Item> s21_empty;
+    EXPECT_EQ(s21_source, s21_empty);
+    
+    const std::map<int, Item> empty;
+    EXPECT_EQ(source, empty);
+}
+
+
+
 }  // namespace
 
 // GCOVR_EXCL_STOP

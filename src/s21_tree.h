@@ -534,11 +534,7 @@ private:
     using const_reverse_iterator = TreeReverseIterator<Tree<Value, Comparator, Node>, const_pointer, const_reference, const_base_node_pointer>;
 
 public:
-    Tree() : size_{0},  end_{}, rend_{}, root_{nullptr}
-    {
-        // rend_.root_ = &end_;
-        // end_.root_ = &rend_;
-    }
+    Tree() : size_{0},  end_{}, rend_{}, root_{nullptr} {}
 
     Tree(std::initializer_list<value_type> list) : Tree()
     {
@@ -546,6 +542,7 @@ public:
             Insert(std::move(element));
     }
 
+private:
     base_node_pointer copy_recursive(base_node_pointer source, base_node_pointer destination_root, node_pointer rend, node_pointer end) {
         assert(source && "source should exist");
         base_node_pointer destination = create_node(destination_root, source->Get());
@@ -562,6 +559,7 @@ public:
         return destination;
     }
 
+public:
     Tree(const Tree& other) : Tree() {
         if (!other.root_)
             return;
@@ -569,6 +567,10 @@ public:
         root_ = copy_recursive(other.root_, nullptr, &(other.rend_), &(other.end_));
         updateEnd();
         updateReverseEnd();
+    }
+
+    Tree(Tree&& other) noexcept : Tree() {  
+        *this = std::move(other);
     }
 
     Tree& operator=(const Tree& other) {

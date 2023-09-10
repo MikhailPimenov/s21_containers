@@ -187,12 +187,11 @@ bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& righ
 
 
     while(it_left != left.cend()) {
-        // assert(0 && "Azaza");
         if(*it_left != *it_right)
             return false;
 
-        it_left++;
-        it_right++;
+        ++it_left;
+        ++it_right;
 
     }
 
