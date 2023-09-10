@@ -321,9 +321,12 @@ TEST(List, T1EraseRange)
     const auto s21_it = s21_source.Erase(s21_it1, s21_it2);
     const auto it = source.erase(it1, it2);
 
-    EXPECT_EQ(s21_source, source);
-    EXPECT_EQ(s21_it, s21_it2);     // s21_it2 is cend()
-    EXPECT_EQ(it, it2);             // it2 is cend()
+    EXPECT_TRUE(s21_source == source);
+    EXPECT_TRUE(s21_it == s21_it2);
+    EXPECT_EQ(it, source.cend());
+    EXPECT_EQ(s21_it, s21_source.cend());
+    // EXPECT_TRUE(it == it2);
+    // EXPECT_TRUE(*s21_it == *it);
 }
 
 TEST(List, T2EraseRange)

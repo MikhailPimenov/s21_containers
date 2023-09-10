@@ -628,18 +628,10 @@ template <typename Type> class List
     }
     iterator Erase(const_iterator first, const_iterator last)
     {
-        // for (const_iterator it = first; it != last; ++it) {
-            // it = Erase(it);
-            // ++it;
-        // }
-        const_iterator it = first;
-        while (it != last) 
-        {
-            it = Erase(it);
-            // ++it;
-        }
+        while(first != last) 
+            first = Erase(first);
 
-        return iterator(last);
+        return last;
     }
     // Sort()
     // Unique()
