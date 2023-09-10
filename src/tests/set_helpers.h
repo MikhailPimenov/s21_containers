@@ -2,9 +2,7 @@
 #define _TESTS_MAP_HELPERS_H_
 
 #include <iostream>
-#include <map>
-#include <cmath>
-#include <cassert>
+#include <set>
 
 #include "../s21_set.h"
 // #include "../s21_vector.h"
@@ -15,9 +13,8 @@
 
 
 
-template<typename Type>
-bool operator==(const s21::Set<Type>& s21_set, const std::set<Type>& set) {
-    assert(0);
+template<typename Type, typename Comparator>
+bool operator==(const s21::Set<Type, Comparator>& s21_set, const std::set<Type, Comparator>& set) {
     if(s21_set.Size() != set.size())
         return false;
     

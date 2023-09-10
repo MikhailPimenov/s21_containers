@@ -49,7 +49,7 @@ SOURCES+=tests/list/list.cc
 # SOURCES+=tests/list/swap.cc
 # SOURCES+=tests/list/erase.cc
 
-# SOURCES+=tests/set/constructors.cc
+SOURCES+=tests/set/constructors.cc
 SOURCES+=tests/set/capacity.cc
 # SOURCES+=tests/set/modifiers.cc
 # SOURCES+=tests/set/erase.cc

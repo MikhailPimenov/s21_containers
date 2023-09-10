@@ -4,11 +4,11 @@
 #include <list>
 #include <vector>
 #include <deque>
-#include <map>
+#include <set>
 
-#include "../../s21_map.h"
+#include "../../s21_set.h"
 #include "../item.h"
-#include "../map_helpers.h"
+#include "../set_helpers.h"
 
 // GCOVR_EXCL_START
 
@@ -16,115 +16,107 @@ namespace
 {
 
 
-TEST(Map, T0DefaultConstructor)
+TEST(Set, T0DefaultConstructor)
 {
-    s21::Map<int, Item> s21_map;
-    std::map<int, Item> map;
+    s21::Set<Item, ComparatorItem> s21_set;
+    std::set<Item, ComparatorItem> set;
 
     // std::cout << s21_map << '\n';
 
     // for (auto it = map.cbegin(); it != map.cend(); ++it)
     //     std::cout << "{" << it->first << " : " << it->second << "}\n";
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T1Destructor)
+TEST(Set, T1Destructor)
 {
-    s21::Map<int, Item> s21_map;
+    s21::Set<Item, ComparatorItem> s21_set;
+    std::set<Item, ComparatorItem> set;
+
     // s21_map.Insert(std::make_pair(4, Item()));
     // s21_map.Insert(std::make_pair(3, Item()));
     // s21_map.Insert(std::make_pair(5, Item()));
 
-    // EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T2Destructor)
+TEST(Set, T2Destructor)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item()));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item());
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item()));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item());
 
 
-    EXPECT_EQ(s21_map, map);
-
-    // s21::Set<int> s21_set;
-    // s21_set.Insert(4);
-    // s21_set.Insert(1);
-    // s21_set.Insert(0);
-    // s21_set.Insert(1);
-    // s21_set.Insert(2);
-    // s21_set.Insert(4);
-
-    // std::cout << s21_set << '\n';
+    EXPECT_EQ(s21_set, set);
 }
 
 
 
 
 
-TEST(Map, T0ConstructorInitializer)
+TEST(Set, T0ConstructorInitializer)
 {
-    s21::Map<int, Item> s21_map {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    s21::Set<Item, ComparatorItem> s21_set {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
-    std::map<int, Item> map {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    std::set<Item, ComparatorItem> set {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
 
 
 
 
-TEST(Map, T0CopyConstructor)
+TEST(Set, T0CopyConstructor)
 {
-    const s21::Map<int, Item> s21_source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const s21::Set<Item, ComparatorItem> s21_source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
-    const std::map<int, Item> source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const std::set<Item, ComparatorItem> source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
-    s21::Map<int, Item> s21_copy = s21_source;  // copy constructor, not operator=
-    std::map<int, Item> copy = source;
+    s21::Set<Item, ComparatorItem> s21_copy = s21_source;  // copy constructor, not operator=
+    std::set<Item, ComparatorItem> copy = source;
 
 
 
     EXPECT_EQ(s21_copy, copy);
 }
 
-TEST(Map, T1CopyConstructorEmpty)
+TEST(Set, T1CopyConstructorEmpty)
 {
-    const s21::Map<int, Item> s21_source;
-    const std::map<int, Item> source;
+    const s21::Set<Item, ComparatorItem> s21_source;
+    const std::set<Item, ComparatorItem> source;
 
-    s21::Map<int, Item> s21_copy = s21_source;  // copy constructor, not operator=
-    std::map<int, Item> copy = source;
+    s21::Set<Item, ComparatorItem> s21_copy = s21_source;  // copy constructor, not operator=
+    std::set<Item, ComparatorItem> copy = source;
 
     EXPECT_EQ(s21_copy, copy);
 }
@@ -133,41 +125,41 @@ TEST(Map, T1CopyConstructorEmpty)
 
 
 
-TEST(Map, T0CopyAssignmentOperator)
+TEST(Set, T0CopyAssignmentOperator)
 {
-    const s21::Map<int, Item> s21_source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const s21::Set<Item, ComparatorItem> s21_source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
-    const std::map<int, Item> source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const std::set<Item, ComparatorItem> source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
-    s21::Map<int, Item> s21_copy;
+    s21::Set<Item, ComparatorItem> s21_copy;
     s21_copy = s21_source;  
-    std::map<int, Item> copy;
+    std::set<Item, ComparatorItem> copy;
     copy = source;
 
     EXPECT_EQ(s21_copy, copy);
 }
 
-TEST(Map, T1CopyAssignmentOperator)
+TEST(Set, T1CopyAssignmentOperator)
 {
-    const s21::Map<int, Item> s21_source;
-    const std::map<int, Item> source;
+    const s21::Set<Item, ComparatorItem> s21_source;
+    const std::set<Item, ComparatorItem> source;
 
-    s21::Map<int, Item> s21_copy;
+    s21::Set<Item, ComparatorItem> s21_copy;
     s21_copy = s21_source;
-    std::map<int, Item> copy;
+    std::set<Item, ComparatorItem> copy;
     copy = source;
 
     EXPECT_EQ(s21_copy, copy);
@@ -175,75 +167,75 @@ TEST(Map, T1CopyAssignmentOperator)
 
 
 
-TEST(Map, T0MoveAssignmentOperator)
+TEST(Set, T0MoveAssignmentOperator)
 {
-    s21::Map<int, Item> s21_source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    s21::Set<Item, ComparatorItem> s21_source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
-    std::map<int, Item> source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    std::set<Item, ComparatorItem> source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
 
 
-    s21::Map<int, Item> s21_copy {
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
+    s21::Set<Item, ComparatorItem> s21_copy {
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
     };
     s21_copy = std::move(s21_source);  
 
-    std::map<int, Item> copy {
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
+    std::set<Item, ComparatorItem> copy {
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
     };
     copy = std::move(source);
 
 
     EXPECT_EQ(s21_copy, copy);
 
-    const s21::Map<int, Item> s21_empty;
+    const s21::Set<Item, ComparatorItem> s21_empty;
     EXPECT_EQ(s21_source, s21_empty);
     
-    const std::map<int, Item> empty;
+    const std::set<Item, ComparatorItem> empty;
     EXPECT_EQ(source, empty);
 }
 
-TEST(Map, T1MoveAssignmentOperator)
+TEST(Set, T1MoveAssignmentOperator)
 {
-    s21::Map<int, Item> s21_source;
-    std::map<int, Item> source;
+    s21::Set<Item, ComparatorItem> s21_source;
+    std::set<Item, ComparatorItem> source;
 
 
 
-    s21::Map<int, Item> s21_copy {
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
+    s21::Set<Item, ComparatorItem> s21_copy {
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
     };
     s21_copy = std::move(s21_source);  
 
-    std::map<int, Item> copy {
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
+    std::set<Item, ComparatorItem> copy {
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
     };
     copy = std::move(source);
 
 
     EXPECT_EQ(s21_copy, copy);
 
-    const s21::Map<int, Item> s21_empty;
+    const s21::Set<Item, ComparatorItem> s21_empty;
     EXPECT_EQ(s21_source, s21_empty);
     
-    const std::map<int, Item> empty;
+    const std::set<Item, ComparatorItem> empty;
     EXPECT_EQ(source, empty);
 }
 
@@ -253,57 +245,57 @@ TEST(Map, T1MoveAssignmentOperator)
 
 
 
-TEST(Map, T0MoveConstructor)
+TEST(Set, T0MoveConstructor)
 {
-    s21::Map<int, Item> s21_source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    s21::Set<Item, ComparatorItem> s21_source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
-    std::map<int, Item> source {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    std::set<Item, ComparatorItem> source {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
 
 
-    s21::Map<int, Item> s21_copy = std::move(s21_source);  
-    std::map<int, Item> copy = std::move(source);
+    s21::Set<Item, ComparatorItem> s21_copy = std::move(s21_source);  
+    std::set<Item, ComparatorItem> copy = std::move(source);
 
 
     EXPECT_EQ(s21_copy, copy);
 
-    const s21::Map<int, Item> s21_empty;
+    const s21::Set<Item, ComparatorItem> s21_empty;
     EXPECT_EQ(s21_source, s21_empty);
     
-    const std::map<int, Item> empty;
+    const std::set<Item, ComparatorItem> empty;
     EXPECT_EQ(source, empty);
 }
 
 TEST(Map, T1MoveConstructor)
 {
-    s21::Map<int, Item> s21_source;
-    std::map<int, Item> source;
+    s21::Set<Item, ComparatorItem> s21_source;
+    std::set<Item, ComparatorItem> source;
 
 
 
-    s21::Map<int, Item> s21_copy = std::move(s21_source);  
-    std::map<int, Item> copy = std::move(source);
+    s21::Set<Item, ComparatorItem> s21_copy = std::move(s21_source);  
+    std::set<Item, ComparatorItem> copy = std::move(source);
 
 
     EXPECT_EQ(s21_copy, copy);
 
-    const s21::Map<int, Item> s21_empty;
+    const s21::Set<Item, ComparatorItem> s21_empty;
     EXPECT_EQ(s21_source, s21_empty);
     
-    const std::map<int, Item> empty;
+    const std::set<Item, ComparatorItem> empty;
     EXPECT_EQ(source, empty);
 }
 
