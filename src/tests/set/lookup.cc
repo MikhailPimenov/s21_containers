@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <map>
+#include <set>
 
-#include "../../s21_map.h"
+#include "../../s21_set.h"
 #include "../item.h"
-#include "../map_helpers.h"
+#include "../set_helpers.h"
 
 // GCOVR_EXCL_START
 
@@ -34,153 +34,153 @@ namespace
 
 
 
-TEST(Map, T0Find)
+TEST(Set, T0Find)
 {
 
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
 
 
-    auto s21_it = s21_map.Find(7);
-    auto it = map.find(7);
+    auto s21_it = s21_set.Find(Item(7));
+    auto it = set.find(Item(7));
 
 
 
     EXPECT_EQ(*s21_it, *it);
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T1Find)
+TEST(Set, T1Find)
 {
 
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
 
 
-    const auto s21_it = s21_map.Find(4);
-    const auto it = map.find(4);
+    const auto s21_it = s21_set.Find(Item(4));
+    const auto it = set.find(Item(4));
 
 
     EXPECT_EQ(*s21_it, *it);
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T2Find)
+TEST(Set, T2Find)
 {
 
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(5));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
 
 
-    const auto s21_it = s21_map.Find(1);
-    const auto it = map.find(1);
+    const auto s21_it = s21_set.Find(Item(1));
+    const auto it = set.find(Item(1));
 
 
     EXPECT_EQ(*s21_it, *it);
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T3Find)
+TEST(Set, T3Find)
 {
 
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(5));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
 
 
-    const auto s21_it = s21_map.Find(6);
-    const auto it = map.find(6);
+    const auto s21_it = s21_set.Find(Item(6));
+    const auto it = set.find(Item(6));
 
 
     EXPECT_EQ(*s21_it, *it);
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T4FindEnd)
+TEST(Set, T4FindEnd)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
-
-
-    const auto s21_it = s21_map.Find(99);
-    const auto it = map.find(99);
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(5));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
 
 
-    EXPECT_EQ(s21_it, s21_map.end());
-    EXPECT_EQ(it, map.end());
-    EXPECT_EQ(s21_map, map);
+    const auto s21_it = s21_set.Find(Item(99));
+    const auto it = set.find(Item(99));
+
+
+    EXPECT_EQ(s21_it, s21_set.end());
+    EXPECT_EQ(it, set.end());
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T5FindConst)
+TEST(Set, T5FindConst)
 {
-    const s21::Map<int, Item> s21_map {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
-    const std::map<int, Item> map {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
-    EXPECT_EQ(*s21_map.Find(3), *map.find(3));
+    EXPECT_EQ(*s21_set.Find(Item(3)), *set.find(Item(3)));
 }
 
 
@@ -192,937 +192,937 @@ TEST(Map, T5FindConst)
 
 
 
-TEST(Map, T0Contains)
+TEST(Set, T0Contains)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    EXPECT_EQ(s21_map.Contains(4), true);
+    EXPECT_EQ(s21_set.Contains(Item(4)), true);
 }
 
-TEST(Map, T1Contains)
+TEST(Set, T1Contains)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    EXPECT_EQ(s21_map.Contains(5), true);
+    EXPECT_EQ(s21_set.Contains(Item(5)), true);
 }
 
-TEST(Map, T2Contains)
+TEST(Set, T2Contains)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    EXPECT_EQ(s21_map.Contains(6), true);
+    EXPECT_EQ(s21_set.Contains(Item(6)), true);
 }
 
-TEST(Map, T3Contains)
+TEST(Set, T3Contains)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    EXPECT_EQ(s21_map.Contains(7), true);
+    EXPECT_EQ(s21_set.Contains(Item(7)), true);
 }
 
-TEST(Map, T4Contains)
+TEST(Set, T4Contains)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    EXPECT_EQ(s21_map.Contains(1), true);
-}
-
-
-TEST(Map, T5ContainsNo)
-{
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
-
-    EXPECT_EQ(s21_map.Contains(99), false);
+    EXPECT_EQ(s21_set.Contains(Item(1)), true);
 }
 
 
-TEST(Map, T6ContainsEmpty)
+TEST(Set, T5ContainsNo)
 {
-    s21::Map<int, Item> s21_map;
-    EXPECT_EQ(s21_map.Contains(99), false);
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
+
+    EXPECT_EQ(s21_set.Contains(Item(99)), false);
 }
 
-TEST(Map, T7ContainsNo)
+
+TEST(Set, T6ContainsEmpty)
 {
-    const s21::Map<int, Item> s21_map {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    s21::Set<Item, ComparatorItem> s21_set;
+    EXPECT_EQ(s21_set.Contains(Item(99)), false);
+}
+
+TEST(Set, T7ContainsNo)
+{
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
     
-    EXPECT_EQ(s21_map.Contains(99), false);
+    EXPECT_EQ(s21_set.Contains(Item(99)), false);
 }
 
-TEST(Map, T8Contains)
+TEST(Set, T8Contains)
 {
-    const s21::Map<int, Item> s21_map {
-        {1, Item(1, 'a', 0.1)},
-        {2, Item(2, 'b', 0.2)},
-        {3, Item(3, 'c', 0.3)},
-        {4, Item(4, 'd', 0.4)},
-        {5, Item(5, 'e', 0.5)},
-        {6, Item(6, 'f', 0.6)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(1, 'a', 0.1)},
+        {Item(2, 'b', 0.2)},
+        {Item(3, 'c', 0.3)},
+        {Item(4, 'd', 0.4)},
+        {Item(5, 'e', 0.5)},
+        {Item(6, 'f', 0.6)},
     };
 
-    EXPECT_EQ(s21_map.Contains(3), true);
+    EXPECT_EQ(s21_set.Contains(Item(3)), true);
 }
 
-TEST(Map, T0LowerBound)
+TEST(Set, T0LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
 
 
-    EXPECT_EQ(*s21_map.Lower_bound(5), *map.lower_bound(5));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(5)), *set.lower_bound(Item(5)));
 }
 
-TEST(Map, T1LowerBound)
+TEST(Set, T1LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
 
 
-    EXPECT_EQ(*s21_map.Lower_bound(15), *map.lower_bound(15));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(15)), *set.lower_bound(Item(15)));
 }
 
-TEST(Map, T2LowerBound)
+TEST(Set, T2LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(25), *map.lower_bound(25));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(25)), *set.lower_bound(Item(25)));
 }
 
-TEST(Map, T3LowerBound)
+TEST(Set, T3LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(35), *map.lower_bound(35));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(35)), *set.lower_bound(Item(35)));
 }
 
-TEST(Map, T4LowerBound)
+TEST(Set, T4LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(45), *map.lower_bound(45));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(45)), *set.lower_bound(Item(45)));
 }
 
-TEST(Map, T5LowerBound)
+TEST(Set, T5LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(55), *map.lower_bound(55));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(55)), *set.lower_bound(Item(55)));
 }
 
-TEST(Map, T6LowerBound)
+TEST(Set, T6LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(65), *map.lower_bound(65));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(65)), *set.lower_bound(Item(65)));
 }
 
-TEST(Map, T7LowerBound)
+TEST(Set, T7LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(75), *map.lower_bound(75));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(75)), *set.lower_bound(Item(75)));
 }
 
-TEST(Map, T8LowerBound)
+TEST(Set, T8LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(85), *map.lower_bound(85));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(85)), *set.lower_bound(Item(85)));
 }
 
-TEST(Map, T9LowerBound)
+TEST(Set, T9LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(s21_map.Lower_bound(95), s21_map.end()); 
-    EXPECT_EQ(map.lower_bound(95), map.end());
+    EXPECT_EQ(s21_set.Lower_bound(Item(95)), s21_set.end()); 
+    EXPECT_EQ(set.lower_bound(Item(95)), set.end());
 }
 
-TEST(Map, T10LowerBound)
+TEST(Set, T10LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(s21_map.Lower_bound(105), s21_map.end()); 
-    EXPECT_EQ(map.lower_bound(105), map.end());
+    EXPECT_EQ(s21_set.Lower_bound(Item(105)), s21_set.end()); 
+    EXPECT_EQ(set.lower_bound(Item(105)), set.end());
 }
 
-TEST(Map, T11LowerBound)
+TEST(Set, T11LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(10), *map.lower_bound(10));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(10)), *set.lower_bound(Item(10)));
 }
 
-TEST(Map, T12LowerBound)
+TEST(Set, T12LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(20), *map.lower_bound(20));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(20)), *set.lower_bound(Item(20)));
 }
 
-TEST(Map, T13LowerBound)
+TEST(Set, T13LowerBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Lower_bound(30), *map.lower_bound(30));
+    EXPECT_EQ(*s21_set.Lower_bound(Item(30)), *set.lower_bound(Item(30)));
 }
 
-TEST(Map, T0UpperBound)
+TEST(Set, T0UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    // std::cout << s21_map.Upper_bound(30) << '\n';
+    // std::cout << s21_set.Upper_bound(30) << '\n';
 
-    EXPECT_EQ(*s21_map.Upper_bound(30), *map.upper_bound(30));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(30)), *set.upper_bound(Item(30)));
 }
 
-TEST(Map, T1UpperBound)
+TEST(Set, T1UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    // std::cout << s21_map.Upper_bound(30) << '\n';
+    // std::cout << s21_set.Upper_bound(30) << '\n';
 
-    EXPECT_EQ(*s21_map.Upper_bound(25), *map.upper_bound(25));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(25)), *set.upper_bound(Item(25)));
 }
 
-TEST(Map, T2UpperBound)
+TEST(Set, T2UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(25), *map.upper_bound(25));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(25)), *set.upper_bound(Item(25)));
 }
 
-TEST(Map, T3UpperBound)
+TEST(Set, T3UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(35), *map.upper_bound(35));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(35)), *set.upper_bound(Item(35)));
 }
 
-TEST(Map, T4UpperBound)
+TEST(Set, T4UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(45), *map.upper_bound(45));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(45)), *set.upper_bound(Item(45)));
 }
 
-TEST(Map, T5UpperBound)
+TEST(Set, T5UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(55), *map.upper_bound(55));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(55)), *set.upper_bound(Item(55)));
 }
 
-TEST(Map, T6UpperBound)
+TEST(Set, T6UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(65), *map.upper_bound(65));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(65)), *set.upper_bound(Item(65)));
 }
 
-TEST(Map, T7UpperBound)
+TEST(Set, T7UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(75), *map.upper_bound(75));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(75)), *set.upper_bound(Item(75)));
 }
 
-TEST(Map, T8UpperBound)
+TEST(Set, T8UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(85), *map.upper_bound(85));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(85)), *set.upper_bound(Item(85)));
 }
 
-TEST(Map, T9UpperBound)
+TEST(Set, T9UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(s21_map.Upper_bound(95), s21_map.end()); 
-    EXPECT_EQ(map.upper_bound(95), map.end());
+    EXPECT_EQ(s21_set.Upper_bound(Item(95)), s21_set.end()); 
+    EXPECT_EQ(set.upper_bound(Item(95)), set.end());
 }
 
-TEST(Map, T10UpperBound)
+TEST(Set, T10UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(s21_map.Upper_bound(105), s21_map.end()); 
-    EXPECT_EQ(map.upper_bound(105), map.end());
+    EXPECT_EQ(s21_set.Upper_bound(Item(105)), s21_set.end()); 
+    EXPECT_EQ(set.upper_bound(Item(105)), set.end());
 }
 
-TEST(Map, T11UpperBound)
+TEST(Set, T11UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(10), *map.upper_bound(10));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(10)), *set.upper_bound(Item(10)));
 }
 
-TEST(Map, T12UpperBound)
+TEST(Set, T12UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(20), *map.upper_bound(20));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(20)), *set.upper_bound(Item(20)));
 }
 
-TEST(Map, T13UpperBound)
+TEST(Set, T13UpperBound)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    EXPECT_EQ(*s21_map.Upper_bound(30), *map.upper_bound(30));
+    EXPECT_EQ(*s21_set.Upper_bound(Item(30)), *set.upper_bound(Item(30)));
 }
 
 
@@ -1132,302 +1132,302 @@ TEST(Map, T13UpperBound)
 
 
 
-TEST(Map, T0EqualRangeEnd)
+TEST(Set, T0EqualRangeEnd)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(105);
-    const auto pair = map.equal_range(105);
+    const auto s21_pair = s21_set.Equal_range(Item(105));
+    const auto pair = set.equal_range(Item(105));
 
-    EXPECT_EQ(s21_pair.first, s21_map.end()); 
-    EXPECT_EQ(s21_pair.second, s21_map.end()); 
-    EXPECT_EQ(pair.first, map.end()); 
-    EXPECT_EQ(pair.second, map.end()); 
+    EXPECT_EQ(s21_pair.first, s21_set.end()); 
+    EXPECT_EQ(s21_pair.second, s21_set.end()); 
+    EXPECT_EQ(pair.first, set.end()); 
+    EXPECT_EQ(pair.second, set.end()); 
 }
 
-TEST(Map, T1EqualRangeEnd)
+TEST(Set, T1EqualRangeEnd)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(500);
-    const auto pair = map.equal_range(500);
+    const auto s21_pair = s21_set.Equal_range(Item(500));
+    const auto pair = set.equal_range(Item(500));
 
-    EXPECT_EQ(s21_pair.first, s21_map.end()); 
-    EXPECT_EQ(s21_pair.second, s21_map.end()); 
-    EXPECT_EQ(pair.first, map.end()); 
-    EXPECT_EQ(pair.second, map.end()); 
+    EXPECT_EQ(s21_pair.first, s21_set.end()); 
+    EXPECT_EQ(s21_pair.second, s21_set.end()); 
+    EXPECT_EQ(pair.first, set.end()); 
+    EXPECT_EQ(pair.second, set.end()); 
 }
 
-TEST(Map, T2EqualRange)
+TEST(Set, T2EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(10);
-    const auto pair = map.equal_range(10);
+    const auto s21_pair = s21_set.Equal_range(Item(10));
+    const auto pair = set.equal_range(Item(10));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
 }
 
-TEST(Map, T3EqualRange)
+TEST(Set, T3EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(20);
-    const auto pair = map.equal_range(20);
+    const auto s21_pair = s21_set.Equal_range(Item(20));
+    const auto pair = set.equal_range(Item(20));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
 }
 
-TEST(Map, T4EqualRange)
+TEST(Set, T4EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(30);
-    const auto pair = map.equal_range(30);
+    const auto s21_pair = s21_set.Equal_range(Item(30));
+    const auto pair = set.equal_range(Item(30));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
 }
 
-TEST(Map, T5EqualRange)
+TEST(Set, T5EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(35);
-    const auto pair = map.equal_range(35);
+    const auto s21_pair = s21_set.Equal_range(Item(35));
+    const auto pair = set.equal_range(Item(35));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
 }
 
-TEST(Map, T6EqualRange)
+TEST(Set, T6EqualRange)
 {
-    s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(40);
-    const auto pair = map.equal_range(40);
+    const auto s21_pair = s21_set.Equal_range(Item(40));
+    const auto pair = set.equal_range(Item(40));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
 }
 
-TEST(Map, T7EqualRange)
+TEST(Set, T7EqualRange)
 {
-    s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(45);
-    const auto pair = map.equal_range(45);
+    const auto s21_pair = s21_set.Equal_range(Item(45));
+    const auto pair = set.equal_range(Item(45));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 
 }
 
-TEST(Map, T8EqualRange)
+TEST(Set, T8EqualRange)
 {
-    const s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    const std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    const auto s21_pair = s21_map.Equal_range(50);
-    const auto pair = map.equal_range(50);
+    const auto s21_pair = s21_set.Equal_range(Item(50, 'e', 0.5));
+    const auto pair = set.equal_range(Item(50, 'e', 0.5));
 
     EXPECT_EQ(*(s21_pair.first), *(pair.first)); 
     EXPECT_EQ(*(s21_pair.second), *(pair.second)); 

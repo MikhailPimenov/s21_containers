@@ -1,14 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <stack>
-#include <list>
-#include <vector>
-#include <deque>
-#include <map>
+#include <set>
 
-#include "../../s21_map.h"
+#include "../../s21_set.h"
 #include "../item.h"
-#include "../map_helpers.h"
+#include "../set_helpers.h"
 
 // GCOVR_EXCL_START
 
@@ -16,156 +12,156 @@ namespace
 {
 
 
-TEST(Map, T0Insert)
+TEST(Set, T0Insert)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T1Insert)
+TEST(Set, T1Insert)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(1, Item(1)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(1));
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(1, Item(1)));
-    map.insert(std::make_pair(4, Item(4)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(1));
+    set.insert(Item(4));
+    set.insert(Item(6));
+    set.insert(Item(7));
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T2Insert)
+TEST(Set, T2Insert)
 {
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(1, Item(1)));
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(1));
 
 
-    std::map<int, Item> map;
-    map.insert(std::make_pair(1, Item(1)));
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(1));
 
-    EXPECT_EQ(s21_map, map);
-}
-
-
-TEST(Map, T3Insert)
-{
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(-4, Item(4)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(1, Item(1)));
-
-    std::map<int, Item> map;
-    map.insert(std::make_pair(-4, Item(4)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(1, Item(1)));
-
-    EXPECT_EQ(s21_map, map);
-}
-
-TEST(Map, T4Insert)
-{
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(-4, Item(4)));
-    s21_map.Insert(std::make_pair(-6, Item(6)));
-    s21_map.Insert(std::make_pair(-7, Item(7)));
-    s21_map.Insert(std::make_pair(-1, Item(1)));
-
-    std::map<int, Item> map;
-    map.insert(std::make_pair(-4, Item(4)));
-    map.insert(std::make_pair(-6, Item(6)));
-    map.insert(std::make_pair(-7, Item(7)));
-    map.insert(std::make_pair(-1, Item(1)));
-
-    EXPECT_EQ(s21_map, map);
-}
-
-TEST(Map, T5Insert)
-{
-    s21::Map<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(-4, Item(4)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(0, Item(7)));
-    s21_map.Insert(std::make_pair(-1, Item(1)));
-
-    std::map<int, Item> map;
-    map.insert(std::make_pair(-4, Item(4)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(0, Item(7)));
-    map.insert(std::make_pair(-1, Item(1)));
-
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
 
-
-
-
-
-
-
-
-
-
-
-TEST(Map, T0Clear)
+TEST(Set, T3Insert)
 {
-    s21::Map<int, Item> s21_map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(-4));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
+
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(-4));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
+
+    EXPECT_EQ(s21_set, set);
+}
+
+TEST(Set, T4Insert)
+{
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(-4));
+    s21_set.Insert(Item(-6));
+    s21_set.Insert(Item(-7));
+    s21_set.Insert(Item(-1));
+
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(-4));
+    set.insert(Item(-6));
+    set.insert(Item(-7));
+    set.insert(Item(-1));
+
+    EXPECT_EQ(s21_set, set);
+}
+
+TEST(Set, T5Insert)
+{
+    s21::Set<Item, ComparatorItem> s21_set;
+    s21_set.Insert(Item(4));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(1));
+
+    std::set<Item, ComparatorItem> set;
+    set.insert(Item(4));
+    set.insert(Item(6));
+    set.insert(Item(7));
+    set.insert(Item(1));
+
+    EXPECT_EQ(s21_set, set);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+TEST(Set, T0Clear)
+{
+    s21::Set<Item, ComparatorItem> s21_set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    std::map<int, Item> map {
-        {10, Item(10, 'a', 0.1)},
-        {20, Item(20, 'b', 0.2)},
-        {30, Item(30, 'c', 0.3)},
-        {40, Item(40, 'd', 0.4)},
-        {50, Item(50, 'e', 0.5)},
-        {60, Item(60, 'f', 0.6)},
-        {70, Item(70, 'g', 0.7)},
-        {80, Item(80, 'h', 0.8)},
-        {90, Item(90, 'i', 0.9)},
+    std::set<Item, ComparatorItem> set {
+        {Item(10, 'a', 0.1)},
+        {Item(20, 'b', 0.2)},
+        {Item(30, 'c', 0.3)},
+        {Item(40, 'd', 0.4)},
+        {Item(50, 'e', 0.5)},
+        {Item(60, 'f', 0.6)},
+        {Item(70, 'g', 0.7)},
+        {Item(80, 'h', 0.8)},
+        {Item(90, 'i', 0.9)},
     };
 
-    s21_map.Clear();
-    map.clear();
+    s21_set.Clear();
+    set.clear();
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
-TEST(Map, T1ClearEmpty)
+TEST(Set, T1ClearEmpty)
 {
-    s21::Map<int, Item> s21_map;
-    std::map<int, Item> map;
+    s21::Set<Item, ComparatorItem> s21_set;
+    std::set<Item, ComparatorItem> set;
 
-    s21_map.Clear();
-    map.clear();
+    s21_set.Clear();
+    set.clear();
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_set, set);
 }
 
 

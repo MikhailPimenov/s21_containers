@@ -15,97 +15,99 @@
 #include "s21_tree.h"
 #include "s21_comparator.h"
 
+
+
 namespace s21
 {
 
-template <typename Key, 
-          typename Type, 
-          typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
-          typename Node = Tree::SingleNode<std::pair<const Key, Type>, std::ptrdiff_t>>
-class Map : public Tree::Tree<std::pair<const Key, Type>, 
-                              Comparator, 
-                              Node> {
+// template <typename Key, 
+//           typename Type, 
+//           typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
+//           typename Node = Tree::SingleNode<std::pair<const Key, Type>, std::ptrdiff_t>>
+// class Map : public Tree::Tree<std::pair<const Key, Type>, 
+//                               Comparator, 
+//                               Node> {
 
-public:
-    using Base = Tree::Tree<std::pair<const Key, Type>, 
-                            Comparator, 
-                            Node>;
+// public:
+//     using Base = Tree::Tree<std::pair<const Key, Type>, 
+//                             Comparator, 
+//                             Node>;
 
-public:
-    using value_type        = typename Base::value_type;
-    using mapped_type       = Type;
-    using key_type          = Key;
-    using size_type         = typename Base::size_type;
-    using difference_type   = typename Base::difference_type;
-    using reference         = typename Base::reference;
-    using const_reference   = typename Base::const_reference;
-    using pointer           = typename Base::pointer;
-    using const_pointer     = typename Base::const_pointer;
+// public:
+//     using value_type        = typename Base::value_type;
+//     using mapped_type       = Type;
+//     using key_type          = Key;
+//     using size_type         = typename Base::size_type;
+//     using difference_type   = typename Base::difference_type;
+//     using reference         = typename Base::reference;
+//     using const_reference   = typename Base::const_reference;
+//     using pointer           = typename Base::pointer;
+//     using const_pointer     = typename Base::const_pointer;
 
-public:
-    using iterator                  = typename Base::iterator;
-    using const_iterator            = typename Base::const_iterator;
-    using reverse_iterator          = typename Base::reverse_iterator;
-    using const_reverse_iterator    = typename Base::const_reverse_iterator;
+// public:
+//     using iterator                  = typename Base::iterator;
+//     using const_iterator            = typename Base::const_iterator;
+//     using reverse_iterator          = typename Base::reverse_iterator;
+//     using const_reverse_iterator    = typename Base::const_reverse_iterator;
 
-public:
-    using Base::Base;
-
-
+// public:
+//     using Base::Base;
 
 
 
-    iterator Find(const key_type& key) {
-        return this->find(value_type(key, mapped_type()));
-    }
-    const_iterator Find(const key_type& key) const {
-        return this->find(value_type(key, mapped_type()));
-    }
-    bool Contains(const key_type& key) const {
-        return this->contains(value_type(key, mapped_type()));
-    }
-    iterator Lower_bound(const Key& key) {
-        return this->lower_bound(value_type(key, mapped_type()));
-    }
-    const_iterator Lower_bound(const Key& key) const {
-        return this->lower_bound(value_type(key, mapped_type()));
-    }
-    iterator Upper_bound(const Key& key) {
-        return this->upper_bound(value_type(key, mapped_type()));
-    }
-    const_iterator Upper_bound(const Key& key) const {
-        return this->upper_bound(value_type(key, mapped_type()));
-    }
-
-    std::pair<iterator, iterator> Equal_range(const Key& key) {
-        return this->equal_range(value_type(key, mapped_type()));
-    }
-    std::pair<const_iterator, const_iterator> Equal_range(const Key& key) const {
-        return this->equal_range(value_type(key, mapped_type()));
-    }
-};
 
 
-template <typename Key, typename Type>
-bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& right) {
-    if(left.Size() != right.Size())
-        return false;
+//     iterator Find(const key_type& key) {
+//         return this->find(value_type(key, mapped_type()));
+//     }
+//     const_iterator Find(const key_type& key) const {
+//         return this->find(value_type(key, mapped_type()));
+//     }
+//     bool Contains(const key_type& key) const {
+//         return this->contains(value_type(key, mapped_type()));
+//     }
+//     iterator Lower_bound(const Key& key) {
+//         return this->lower_bound(value_type(key, mapped_type()));
+//     }
+//     const_iterator Lower_bound(const Key& key) const {
+//         return this->lower_bound(value_type(key, mapped_type()));
+//     }
+//     iterator Upper_bound(const Key& key) {
+//         return this->upper_bound(value_type(key, mapped_type()));
+//     }
+//     const_iterator Upper_bound(const Key& key) const {
+//         return this->upper_bound(value_type(key, mapped_type()));
+//     }
 
-    auto it_left = left.cbegin();
-    auto it_right = right.cbegin();
+//     std::pair<iterator, iterator> Equal_range(const Key& key) {
+//         return this->equal_range(value_type(key, mapped_type()));
+//     }
+//     std::pair<const_iterator, const_iterator> Equal_range(const Key& key) const {
+//         return this->equal_range(value_type(key, mapped_type()));
+//     }
+// };
 
 
-    while(it_left != left.cend()) {
-        if(*it_left != *it_right)
-            return false;
+// template <typename Key, typename Type>
+// bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& right) {
+//     if(left.Size() != right.Size())
+//         return false;
 
-        ++it_left;
-        ++it_right;
+//     auto it_left = left.cbegin();
+//     auto it_right = right.cbegin();
 
-    }
 
-    return true;
-}
+//     while(it_left != left.cend()) {
+//         if(*it_left != *it_right)
+//             return false;
+
+//         ++it_left;
+//         ++it_right;
+
+//     }
+
+//     return true;
+// }
 
 
 

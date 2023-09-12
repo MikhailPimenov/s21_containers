@@ -1,5 +1,5 @@
-#ifndef _TESTS_MAP_HELPERS_H_
-#define _TESTS_MAP_HELPERS_H_
+#ifndef _TESTS_SET_HELPERS_H_
+#define _TESTS_SET_HELPERS_H_
 
 #include <iostream>
 #include <set>
@@ -44,4 +44,4 @@ bool operator==(const s21::Set<Type, Comparator>& s21_set, const std::set<Type, 
 
 // GCOVR_EXCL_STOP
 
-#endif //  _TESTS_MAP_HELPERS_H_
+#endif //  _TESTS_SET_HELPERS_H_

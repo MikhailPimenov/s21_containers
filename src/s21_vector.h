@@ -445,9 +445,10 @@ template <typename Type> class Vector
 
     Vector(const Vector& other) : Vector()  
     {
-        pointer new_data = new value_type[other.size_];
+        char* preallocated_buffer = new char[sizeof(value_type) * other.size_]; // no constructors were called
+        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
         for (size_type i = 0; i < other.size_; ++i)
-            new_data[i] = other.data_[i];
+            new (new_data + i) value_type(other.data_[i]);
         
         data_ = new_data;
         size_ = other.size_;
