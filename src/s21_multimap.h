@@ -9,6 +9,8 @@
 #include "s21_tree.h"
 #include "s21_comparator.h"
 
+#include <iostream>
+
 namespace s21 {
 
 template <typename TreeIterator, typename NodeIterator, typename Pointer, typename Reference>
@@ -16,22 +18,42 @@ class MultiTreeIteratorBase {
 
 private:
     TreeIterator treeIterator_;
+    TreeIterator treeBeforeBegin_;
     TreeIterator treeEnd_;
     NodeIterator nodeIterator_;
 
 public:
-    MultiTreeIteratorBase(TreeIterator treeIterator, TreeIterator treeEnd, NodeIterator nodeIterator) : treeIterator_{treeIterator}, treeEnd_{treeEnd}, nodeIterator_{nodeIterator} {}
-    MultiTreeIteratorBase(const MultiTreeIteratorBase& other) : treeIterator_{other.treeIterator_}, treeEnd_{other.treeEnd_}, nodeIterator_{other.nodeIterator_} {}
+    MultiTreeIteratorBase(TreeIterator treeIterator, 
+                          TreeIterator treeBeforeBegin, 
+                          TreeIterator treeEnd, 
+                          NodeIterator nodeIterator) : 
+                          treeIterator_{treeIterator}, 
+                          treeBeforeBegin_{treeBeforeBegin}, 
+                          treeEnd_{treeEnd}, 
+                          nodeIterator_{nodeIterator} {}
+    MultiTreeIteratorBase(const MultiTreeIteratorBase& other) : 
+                          treeIterator_{other.treeIterator_}, 
+                          treeBeforeBegin_{other.treeBeforeBegin_}, 
+                          treeEnd_{other.treeEnd_}, 
+                          nodeIterator_{other.nodeIterator_} {}
     
     MultiTreeIteratorBase& operator=(const MultiTreeIteratorBase& other) {
         treeIterator_ = other.treeIterator_;
+        treeBeforeBegin_ = other.treeBeforeBegin_;
+        treeEnd_ = other.treeEnd_;
         nodeIterator_ = other.nodeIterator_;
     }
 
     bool operator==(const MultiTreeIteratorBase& other) const noexcept {
         if (treeIterator_ == treeEnd_ && other.treeIterator_ == treeIterator_)
             return true;
-        return other.treeIterator_ == treeIterator_ && other.nodeIterator_ == nodeIterator_;
+        if (treeIterator_ == treeBeforeBegin_ && other.treeIterator_ == treeIterator_)
+            return true;
+            
+        return other.treeIterator_ == treeIterator_ && 
+               other.nodeIterator_ == nodeIterator_ &&
+               other.treeBeforeBegin_ == treeBeforeBegin_ && 
+               other.treeEnd_ == treeEnd_;
     }
 
     bool operator!=(const MultiTreeIteratorBase& other) const noexcept {
@@ -46,13 +68,6 @@ public:
     }
 
     MultiTreeIteratorBase& operator++() {
-        // if (nodeIterator_ != --(treeIterator_->second.end())) {
-        //     ++nodeIterator_;
-        //     return *this;
-        // }
-
-        // ++treeIterator_;
-        // *this;
         if (nodeIterator_ == --(treeIterator_->second.end())) {
             ++treeIterator_;
             if (treeIterator_ != treeEnd_)
@@ -63,12 +78,13 @@ public:
         return *this;
     }
     MultiTreeIteratorBase& operator--() {
-        if (nodeIterator_ != treeIterator_->second.begin()) {
-            --nodeIterator_;
+        if (nodeIterator_ == treeIterator_->second.begin()) {
+            --treeIterator_;
+            if (treeIterator_ != treeBeforeBegin_)
+                nodeIterator_ = --(treeIterator_->second.end());
             return *this;
         }
-
-        --treeIterator_;
+        --nodeIterator_;
         return *this;
     }
 };
@@ -85,6 +101,20 @@ public:
         Base::operator++();
         return *this;
     }
+    MultiTreeIterator& operator--() {
+        Base::operator--();
+        return *this;
+    }
+    MultiTreeIterator operator++(int) {
+        const MultiTreeIterator temporary(*this);
+        Base::operator++();
+        return temporary;
+    }
+    MultiTreeIterator operator--(int) {
+        const MultiTreeIterator temporary(*this);
+        Base::operator--();
+        return temporary;
+    }
 };
 template <typename TreeIterator, typename NodeIterator, typename Pointer, typename Reference>
 class MultiTreeReverseIterator : public MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer, Reference> {
@@ -96,6 +126,20 @@ public:
     MultiTreeReverseIterator& operator++() {
         Base::operator--();
         return *this;
+    }
+    MultiTreeReverseIterator& operator--() {
+        Base::operator++();
+        return *this;
+    }
+    MultiTreeReverseIterator operator++(int) {
+        const MultiTreeReverseIterator temporary(*this);
+        Base::operator--();
+        return temporary;
+    }
+    MultiTreeReverseIterator operator--(int) {
+        const MultiTreeReverseIterator temporary(*this);
+        Base::operator++();
+        return temporary;
     }
 };
 
@@ -173,8 +217,8 @@ public:
     MultiMap& operator=(MultiMap&& other) {
         if (this == &other)
             return *this;
-        tree_ = std::move(other.tree_);
         size_ = other.size_;
+        tree_ = std::move(other.tree_);
 
         other.size_ = 0ull;
         return *this;
@@ -187,12 +231,12 @@ public:
         if (it == tree_.end()) {
             aggregator_type list;
             list.push_back(value);
-            const auto&[added_it, _] = tree_.Insert(std::make_pair(value.first, list));
-            return {iterator(added_it, tree_.end(), it->second.begin()), true};
+            auto [added_it, _] = tree_.Insert(std::make_pair(value.first, list));
+            return {iterator(added_it, --(tree_.begin()), tree_.end(), added_it->second.begin()), true};
         }
 
         it->second.push_back(value);
-        return {iterator(it, tree_.end(), --(it->second.end())), true};
+        return {iterator(it, --(tree_.begin()), tree_.end(), --(it->second.end())), true};
     }
 
 
@@ -201,24 +245,15 @@ public:
         return size_;
     }
 
-    // size_type LeftHeight() const noexcept {
-    //     return tree_.LeftHeight();
-    // }
-    // size_type RightHeight() const noexcept {
-    //     return tree_.RightHeight();
-    // }
-
     iterator begin() {
         typename tree_type::iterator treeIt = tree_.begin();
         typename aggregator_type::iterator aggregatorIt = treeIt->second.begin();
-        return iterator(treeIt, tree_.end(), aggregatorIt);
-        // return iterator(tree_.begin(), tree_.begin()->second.begin());
+        return iterator(treeIt, --(tree_.begin()), tree_.end(), aggregatorIt);
     }
     const_iterator begin() const {
-        // return const_iterator(tree_.begin(), tree_.begin()->second.begin());
         typename tree_type::const_iterator treeIt = tree_.begin();
         typename aggregator_type::const_iterator aggregatorIt = treeIt->second.begin();
-        return const_iterator(treeIt, tree_.end(), aggregatorIt);
+        return const_iterator(treeIt, --(tree_.begin()), tree_.end(), aggregatorIt);
     }
     const_iterator cbegin() const {
         return begin();
@@ -226,34 +261,43 @@ public:
     iterator end() {
         typename tree_type::iterator treeIt = --(tree_.end());
         typename aggregator_type::iterator aggregatorIt = treeIt->second.end();
-        return iterator(tree_.end(), tree_.end(), aggregatorIt);
+        return iterator(tree_.end(), --(tree_.begin()), tree_.end(), aggregatorIt);
     }
     const_iterator end() const {
-        // return const_iterator(--(tree_.end()), (--(tree_.end())->second.end()));
         typename tree_type::const_iterator treeIt = --(tree_.end());
         typename aggregator_type::const_iterator aggregatorIt = treeIt->second.end();
-        return const_iterator(tree_.end(), tree_.end(), aggregatorIt);
+        return const_iterator(tree_.end(), --(tree_.begin()), tree_.end(), aggregatorIt);
     }
     const_iterator cend() const {
         return end();
     }
 
     reverse_iterator rbegin() {
-        // return reverse_iterator(--(tree_.end()), --((--(tree_.end()))->second.end()));
         typename tree_type::iterator treeIt = --(tree_.end());
         typename aggregator_type::iterator aggregatorIt = --(treeIt->second.end());
-        return reverse_iterator(treeIt, tree_.end(), aggregatorIt);
+        return reverse_iterator(treeIt, --(tree_.begin()), tree_.end(), aggregatorIt);
+    }
+    const_reverse_iterator rbegin() const {
+        typename tree_type::const_iterator treeIt = --(tree_.end());
+        typename aggregator_type::const_iterator aggregatorIt = --(treeIt->second.end());
+        return const_reverse_iterator(treeIt, --(tree_.begin()), tree_.end(), aggregatorIt);
+    }
+    const_reverse_iterator crbegin() const {
+        return rbegin();
     }
     reverse_iterator rend() {
         typename tree_type::iterator treeIt = tree_.begin();
         typename aggregator_type::iterator aggregatorIt = --(treeIt->second.begin());
-        return reverse_iterator(treeIt, tree_.end(), aggregatorIt);
+        return reverse_iterator(--treeIt, --(tree_.begin()), tree_.end(), aggregatorIt);
     }
-
-
-
-
-
+    const_reverse_iterator rend() const {
+        typename tree_type::const_iterator treeIt = tree_.begin();
+        typename aggregator_type::const_iterator aggregatorIt = --(treeIt->second.begin());
+        return const_reverse_iterator(--treeIt, --(tree_.begin()), tree_.end(), aggregatorIt);
+    }
+    const_reverse_iterator crend() const {
+        return rend();
+    }
 };
 
 
@@ -264,38 +308,6 @@ public:
 
 
 
-// template <typename Key, 
-//           typename Type, 
-//           typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
-//           typename Node = Tree::MultiNode<std::pair<const Key, Type>, std::ptrdiff_t>>
-// class MultiMap : public Tree::Tree<std::pair<const Key, Type>, 
-//                                    Comparator, 
-//                                    Node> 
-// {
-// public:
-//     using Base = Tree::Tree<std::pair<const Key, Type>, 
-//                             Comparator, 
-//                             Node>;
-// public:
-//     using value_type        = typename Base::value_type;
-//     using mapped_type       = Type;
-//     using key_type          = Key;
-//     using size_type         = typename Base::size_type;
-//     using difference_type   = typename Base::difference_type;
-//     using reference         = typename Base::reference;
-//     using const_reference   = typename Base::const_reference;
-//     using pointer           = typename Base::pointer;
-//     using const_pointer     = typename Base::const_pointer;
-
-// public:
-//     using iterator                  = typename Base::iterator;
-//     using const_iterator            = typename Base::const_iterator;
-//     using reverse_iterator          = typename Base::reverse_iterator;
-//     using const_reverse_iterator    = typename Base::const_reverse_iterator;
-
-// public:
-//     using Base::Base;
-// };
 
 template <typename Key, typename Type>
 bool operator==(const s21::MultiMap<Key, Type>& left, const s21::MultiMap<Key, Type>& right) {

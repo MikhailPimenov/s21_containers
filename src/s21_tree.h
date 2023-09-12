@@ -177,6 +177,11 @@ private:
 
         return *this;
     }
+    //                4
+    //      2                   8
+    //                       6
+    //                      5       
+    //                                         
 
     TreeIteratorBase& operator--() noexcept  // ++i
     {
@@ -185,16 +190,16 @@ private:
             while (true) {
                 // find lower root
                 if (!this->pointer_->root_) {
-                    this->pointer_ = temp->left_;       // temp->left_ may be nullptr
+                    this->pointer_ = temp->left_;       // not existing rend_
                     return *this;
                 }
                 node_pointer root = this->pointer_->root_;
-                // if we are in left subtree - root is greater
+                // // if we are in left subtree - root is greater
                 if (root->right_ && root->right_ == this->pointer_) { // root is lower
                     this->pointer_ = root;
                     return *this;
                 }
-                this->pointer_ = this->pointer_->root_;
+                this->pointer_ = root;               
             }
         }
 
@@ -514,22 +519,68 @@ public:
         size_ = other.size_;
         
         if (other.root_) {
-            if (other.root_->right_) {
-                other.root_->right_->root_ = root_;
-            }
-            if (other.root_->left_) {
+            if (other.root_->left_ != &(other.rend_)) {
                 other.root_->left_->root_ = root_;
+                root_->left_ = other.root_->left_;
             }
-            
-            other.end_.root_->right_ = &end_;
-            end_.root_ = other.end_.root_;
-
-            other.rend_.root_->left_ = &rend_;
-            rend_.root_ = other.rend_.root_;
+            if (other.root_->right_ != &(other.end_)) {
+                other.root_->right_->root_ = root_;
+                root_->right_ = other.root_->right_;
+            }
         }
 
+        if (other.rend_.root_) {
+            other.rend_.root_->left_ = &rend_;
+        }
+        rend_.root_ = other.rend_.root_;
+
+        if (other.end_.root_) {
+            other.end_.root_->right_ = &end_;
+        }
+        end_.root_ = other.end_.root_;
+
+
+        other.rend_.root_ = nullptr;
+        other.end_.root_ = nullptr;
         other.root_ = nullptr;
         other.size_ = 0ull;
+
+        // if (other.root_) {
+
+        //     if (other.root_->right_) {
+        //         other.root_->right_->root_ = root_;
+        //     }
+        //     if (other.root_->left_) {
+        //         other.root_->left_->root_ = root_;
+        //     }
+            
+        //     base_node_pointer left = other.root_;
+        //     while (left->left_ != &(other.rend_))
+        //         left = left->left_;
+        //     left->left_ = &rend_;
+        //     rend_.root_ = left->left_;
+
+        //     base_node_pointer right = other.root_;
+        //     while (right->right_ != &(other.end_))
+        //         right = right->right_;
+        //     right->right_ = &end_;
+        //     end_.root_ = right->right_;
+
+
+
+        //     // other.end_.root_->right_ = &end_;
+        //     // end_.root_ = other.end_.root_;
+
+        //     // other.rend_.root_->left_ = &rend_;
+        //     // rend_.root_ = other.rend_.root_;
+        
+        //     root_->root_ = nullptr;
+        // }
+
+        // other.root_ = nullptr;
+        // other.size_ = 0ull;
+        // other.end_.root_ = nullptr;
+        // other.rend_.root_ = nullptr;
 
         return *this;
     }
