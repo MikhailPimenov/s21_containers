@@ -466,9 +466,6 @@ TEST(MultiMap, T1MoveConstructor)
 
 
 
-}  // namespace
-
-// GCOVR_EXCL_STOP
 
 
 
@@ -640,8 +637,75 @@ TEST(MultiMap, T1IteratorOperatorMinusPrefix)
     while (s21_it != s21_multimap.begin() && it != multimap.begin()) {
         --s21_it;
         --it;
+        // std::cout << "{" << s21_it->first << ", " << s21_it->second << "}\t\t==  ";
+        // std::cout << "{" << it->first << ", " << it->second << "}\n";
         EXPECT_EQ(*s21_it, *it);
     }
+
+}
+
+
+
+TEST(MultiMap, T1ReverseIteratorOperatorMinusPrefix)
+{
+    s21::MultiMap<int, Item> s21_multimap {
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    std::multimap<int, Item> multimap{
+        {10, Item(3, 'c', 0.3)},
+        {10, Item(10, 'c', 0.3)},
+        {12, Item(3, 'c', 0.3)},
+        {13, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {1, Item(1, 'a', 0.1)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {2, Item(2, 'b', 0.2)},
+        {3, Item(3, 'c', 0.3)},
+        {3, Item(3, 'c', 0.3)},
+    };
+
+    // for (auto it = multimap.rbegin(); it != multimap.rend(); ++it) {
+    //     std::cout << "{" << it->first << ", " << it->second << "},  ";
+    // }
+    // std::cout << '\n';
+
+    EXPECT_EQ(s21_multimap, multimap);
+
+    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_multimap.rend();
+    std::multimap<int, Item>::reverse_iterator it = multimap.rend();
+
+    while (s21_it != s21_multimap.rbegin() && it != multimap.rbegin()) {
+        --s21_it;
+        --it;
+        // std::cout << "{" << s21_it->first << ", " << s21_it->second << "}\t\t==  ";
+        // std::cout << "{" << it->first << ", " << it->second << "}\n";
+        EXPECT_EQ(*s21_it, *it);
+    }
+
+}
+
 
 }  // namespace
 

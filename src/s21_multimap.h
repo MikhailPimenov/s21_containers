@@ -68,7 +68,7 @@ public:
     }
 
     MultiTreeIteratorBase& operator++() {
-        if (nodeIterator_ == --(treeIterator_->second.end())) {
+        if (treeIterator_ == treeBeforeBegin_ || nodeIterator_ == --(treeIterator_->second.end())) {
             ++treeIterator_;
             if (treeIterator_ != treeEnd_)
                 nodeIterator_ = treeIterator_->second.begin();
@@ -78,7 +78,7 @@ public:
         return *this;
     }
     MultiTreeIteratorBase& operator--() {
-        if (nodeIterator_ == treeIterator_->second.begin()) {
+        if (treeIterator_ == treeEnd_ || nodeIterator_ == treeIterator_->second.begin()) {
             --treeIterator_;
             if (treeIterator_ != treeBeforeBegin_)
                 nodeIterator_ = --(treeIterator_->second.end());
