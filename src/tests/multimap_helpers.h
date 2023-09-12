@@ -32,9 +32,9 @@ bool operator==(const s21::MultiMap<Key, Type>& s21_mmap, const std::multimap<Ke
 
 template<typename Key, typename Type>
 std::ostream& operator<<(std::ostream& out, const s21::MultiMap<Key, Type>& s21_map) {
-    out << "MultiMap " << s21_map.Size()  << ' '  << s21_map.Height() << "\n";
+    out << "MultiMap " << s21_map.Size() << "\n";
     for (typename s21::MultiMap<Key, Type>::const_iterator it = s21_map.cbegin(); it != s21_map.cend(); ++it)
-        out << "{" << (*it).first << '-' << it.LeftHeight() << '-' << it.RightHeight() <<  " : " << (*it).second << "} ";
+        out << "{" << (*it).first <<  " : " << (*it).second << "} ";
 
     return out;
 }

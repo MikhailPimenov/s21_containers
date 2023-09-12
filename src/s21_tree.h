@@ -22,10 +22,41 @@ public:
     size_type rHeight_;
 
 public:
-    Node(const Value& value = Value(), Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-        : value_{value}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {}
-    Node(Value&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr)
-        : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{0ull}, rHeight_{0ull} {}
+    Node(const Value& value = Value(), Node* root = nullptr, Node* left = nullptr, Node* right = nullptr, size_type lHeight = 0ull, size_type rHeight = 0ull)
+        : value_{value}, root_{root}, left_{left}, right_{right}, lHeight_{lHeight}, rHeight_{rHeight} {}
+    Node(Value&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr, size_type lHeight = 0ull, size_type rHeight = 0ull)
+        : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{lHeight}, rHeight_{rHeight} {}
+
+    Node(const Node& other) : Node(other.value, other.root, other.left, other.right, other.lHeight, other.rHeight) {}
+    Node(Node&& other) : Node(std::move(other.value), other.root, other.left, other.right, other.lHeight, other.rHeight) {}
+    Node& operator=(const Node& other) {
+        if (this == &other)
+            return *this;
+
+        Node temporary(other);
+        *this = std::move(other);
+
+        return *this;
+    }
+    Node& operator=(Node&& other) {
+        if (this == &other)
+            return *this;
+        
+        value_ = std::move(other.value_);
+        lHeight_ = other.lHeight_;
+        rHeight_ = other.rHeight_;
+        root_ = other.root_;
+        left_ = other.left_;
+        right_ = other.right_;
+
+        other.lHeight_ = 0ull;
+        other.rHeight_ = 0ull;
+        other.root_ = nullptr;
+        other.left_ = nullptr;
+        other.right_ = nullptr;
+
+        return *this;
+    } 
 };
 
 
@@ -439,8 +470,6 @@ public:
     using const_node_pointer = const Node<value_type, size_type>*;
     using const_base_node_pointer = const Node<value_type, size_type>*;
     using comparator = Comparator;
-
-
   private:
     size_type size_; 
 
@@ -462,7 +491,6 @@ private:
 
 public:
     Tree() : size_{0},  end_{}, rend_{}, root_{nullptr} {}
-
     Tree(std::initializer_list<value_type> list) : Tree()
     {
         for (auto&& element : list)
@@ -495,11 +523,9 @@ public:
         updateEnd();
         updateReverseEnd();
     }
-
     Tree(Tree&& other) noexcept : Tree() {  
         *this = std::move(other);
     }
-
     Tree& operator=(const Tree& other) {
         if (this == &other)
             return *this;
@@ -508,7 +534,6 @@ public:
         *this = std::move(temporary);
         return *this;
     }
-
     Tree& operator=(Tree&& other) noexcept {
         if (this == &other)
             return *this;
@@ -544,43 +569,6 @@ public:
         other.end_.root_ = nullptr;
         other.root_ = nullptr;
         other.size_ = 0ull;
-
-        // if (other.root_) {
-
-        //     if (other.root_->right_) {
-        //         other.root_->right_->root_ = root_;
-        //     }
-        //     if (other.root_->left_) {
-        //         other.root_->left_->root_ = root_;
-        //     }
-            
-        //     base_node_pointer left = other.root_;
-        //     while (left->left_ != &(other.rend_))
-        //         left = left->left_;
-        //     left->left_ = &rend_;
-        //     rend_.root_ = left->left_;
-
-        //     base_node_pointer right = other.root_;
-        //     while (right->right_ != &(other.end_))
-        //         right = right->right_;
-        //     right->right_ = &end_;
-        //     end_.root_ = right->right_;
-
-
-
-        //     // other.end_.root_->right_ = &end_;
-        //     // end_.root_ = other.end_.root_;
-
-        //     // other.rend_.root_->left_ = &rend_;
-        //     // rend_.root_ = other.rend_.root_;
-        
-        //     root_->root_ = nullptr;
-        // }
-
-        // other.root_ = nullptr;
-        // other.size_ = 0ull;
-        // other.end_.root_ = nullptr;
-        // other.rend_.root_ = nullptr;
 
         return *this;
     }
@@ -990,12 +978,12 @@ private:
     //          1.8                               5.7                             8.2        9
     //       1.7                                                                8.1
 
-    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const_iterator pos) {
+    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const key_type& key) {
         assert(root && "root should exist!");
 
-        if (comparator_(*pos, root->Get())) {  // pos < root->value_
+        if (comparator_(key, root->value_)) {  // pos < root->value_
             if ((root)->left_ && (root)->left_ != &rend_) {
-                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->left_, pos);
+                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->left_, key);
                 updateLeftHeight(root);
                 if (unbalanced(root))
                     balance(root);
@@ -1005,9 +993,9 @@ private:
                 assert(0 && "Element should exist!");
             }
 
-        } else if (comparator_(root->Get(), *pos)) {
+        } else if (comparator_(root->value_, key)) {
             if ((root)->right_ && (root)->right_ != &end_) {
-                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->right_, pos);
+                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->right_, key);
                 updateRightHeight(root);
                 if (unbalanced(root))
                     balance(root);
@@ -1019,7 +1007,7 @@ private:
         }
 
         // found
-        iterator it_result(root, root->Size() - 1ull);
+        iterator it_result(root);
         ++it_result;
         base_node_pointer result = root;
 
@@ -1166,21 +1154,37 @@ private:
     }
 
 public:
-    iterator Erase(const_iterator pos) {
+    // iterator Erase(const_iterator pos) {
+    //     if (!root_)
+    //         assert(0 && "Trying to erase from empty tree!");
+
+    //     std::pair<iterator, base_node_pointer> result = extract_recursive(root_, pos);
+    //     delete result.second;
+    //     result.second = nullptr;
+
+    //     return result.first;
+    // }
+    iterator Erase(const key_type& key) {
         if (!root_)
             assert(0 && "Trying to erase from empty tree!");
 
-        std::pair<iterator, base_node_pointer> result = extract_recursive(root_, pos);
+        std::pair<iterator, base_node_pointer> result = extract_recursive(root_, key);
         delete result.second;
         result.second = nullptr;
 
         return result.first;
     }
-    node_type Extract(const_iterator pos) {
+    base_node_pointer Extract(const_iterator pos) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
         const auto& [_, node] = extract_recursive(root_, pos);
-        return *dynamic_cast<node_type*>(node);
+        return node;
+    }
+    base_node_pointer Extract(const key_type& key) {
+        if (!root_)
+            assert(0 && "Trying to extract from empty tree!");
+        const auto& [_, node] = extract_recursive(root_, key);
+        return node;
     }
 
     // node_type Extract(const_iterator position );

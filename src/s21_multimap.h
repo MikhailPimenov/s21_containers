@@ -143,6 +143,35 @@ public:
     }
 };
 
+template <typename Node>
+class NodeHandle {
+public:
+    Node node_;
+public:
+    NodeHandle(const Node& node) : node_{node} {}
+    NodeHandle(Node&& node) : node_{std::move(node)} {}
+
+    NodeHandle(const NodeHandle& other) = delete;
+    NodeHandle& operator=(const NodeHandle& other) = delete;
+
+    NodeHandle(NodeHandle&& other) : node_{std::move(other.node_)} {}
+    NodeHandle& operator=(NodeHandle&& other) {
+        if (this == &other)
+            return *this;
+
+        node_ = std::move(other.node_);
+        return *this;
+    }
+    const Node& Get() const noexcept {
+        return node_;
+    }
+    Node& Get() noexcept {
+        return node_;
+    }
+
+};
+
+
 template <typename Key, 
           typename Type, 
           typename Comparator = Less<const Key>>
@@ -180,11 +209,24 @@ private:
         bool operator()(const std::pair<const Key, aggregator_type>& left, const std::pair<const Key, aggregator_type>& right) const {
             return comparator_(left.first, right.first);
         }
+        // bool operator()(const key_type& left, const aggregator_type& right) const {
+        //     return comparator_(left, right.begin()->first);
+        // }
+        // bool operator()(const aggregator_type& left, const key_type& right) const {
+        //     return comparator_(left.begin()->first, right);
+        // }
+        // bool operator()(const aggregator_type& left, const aggregator_type& right) const {
+        //     return comparator_(left.begin()->first, right.begin()->first);
+        // }
     };
 
 
 private:
     using tree_type         = Tree::Tree<const Key, std::pair<const Key, aggregator_type>, TreeComparator<Comparator>>;
+    // using tree_type         = Tree::Tree<const Key, aggregator_type, TreeComparator<Comparator>>;
+
+public:
+    using node_type         = NodeHandle<value_type>;
 
 public:
     using iterator                  = MultiTreeIterator<typename tree_type::iterator, typename aggregator_type::iterator, pointer, reference>;
@@ -239,10 +281,38 @@ public:
         return {iterator(it, --(tree_.begin()), tree_.end(), --(it->second.end())), true};
     }
 
+    iterator Erase(const_iterator pos) {
+        typename tree_type::iterator it = tree_.find(pos->first);
+        assert(it != tree_.end() && "Tried to erase not existing element!");
+        --size_;
+        if (it->second.size() > 1ull) {
+            typename aggregator_type::iterator next_it = it->second.erase(it->second.begin());
+            return iterator(it, --(tree_.begin()), tree_.end(), next_it);
+
+        }
+        typename tree_type::iterator next_it = tree_.Erase(pos->first);
+        return iterator(next_it, --(tree_.begin()), tree_.end(), next_it->second.begin());
+    }
+
+    // node_type Extract(const_iterator pos) {
+    //     typename tree_type::iterator it = tree_.find(pos->first);
+    //     if (it->second.size() > 1ull) {
+    //         aggregator_type& aggregator = it->second;
+    //         node_type result(aggregator.extract(aggregator.begin()));
+    //         return result;
+    //     }
+
+    //     typename tree_type::node_pointer node = tree_.Extract(pos->first);
+    //     node_type result(*(node->value_.second.begin()));
+    //     return result;
+    // }
 
 
     size_type Size() const noexcept {
         return size_;
+    }
+    size_type Height() const noexcept {
+        return tree_.Height();
     }
 
     iterator begin() {
