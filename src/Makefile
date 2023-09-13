@@ -31,9 +31,9 @@ SOURCES=tests/item.cc
 
 SOURCES+=tests/map/constructors.cc
 SOURCES+=tests/map/capacity.cc
-# SOURCES+=tests/map/modifiers.cc
+SOURCES+=tests/map/modifiers.cc
 SOURCES+=tests/map/erase.cc
-# SOURCES+=tests/map/iterator.cc
+SOURCES+=tests/map/iterator.cc
 SOURCES+=tests/map/balance.cc
 SOURCES+=tests/map/lookup.cc
 

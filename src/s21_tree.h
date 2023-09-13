@@ -613,10 +613,10 @@ public:
         return size_ ? iterator(rend_.root_) : end();
     }
     reverse_iterator rbegin() {
-        return size_ ? reverse_iterator(end_.root_, end_.root_->Size() - 1ull) : rend();
+        return size_ ? reverse_iterator(end_.root_) : rend();
     }
     const_reverse_iterator crbegin() const {
-        return size_ ? const_reverse_iterator(end_.root_, end_.root_->Size() - 1ull) : rend();
+        return size_ ? const_reverse_iterator(end_.root_) : rend();
     }
     const_iterator begin() const {                              // existing beginning
         return cbegin();

@@ -47,7 +47,6 @@ class Map : public Tree::Tree<Key,
 
 public:
     using Base::Base;
-
 };
 
 
