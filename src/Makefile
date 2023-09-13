@@ -29,19 +29,19 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/vector/iterator.cc
 # SOURCES+=tests/vector/other.cc
 
-SOURCES+=tests/map/constructors.cc
-SOURCES+=tests/map/capacity.cc
-SOURCES+=tests/map/modifiers.cc
-SOURCES+=tests/map/erase.cc
+# SOURCES+=tests/map/constructors.cc
+# SOURCES+=tests/map/capacity.cc
+# SOURCES+=tests/map/modifiers.cc
+# SOURCES+=tests/map/erase.cc
 SOURCES+=tests/map/iterator.cc
-SOURCES+=tests/map/balance.cc
-SOURCES+=tests/map/lookup.cc
+# SOURCES+=tests/map/balance.cc
+# SOURCES+=tests/map/lookup.cc
 
 SOURCES+=tests/multiset/constructors.cc
 
 SOURCES+=tests/multimap/constructors.cc
-SOURCES+=tests/multimap/capacity.cc
-SOURCES+=tests/multimap/erase.cc
+# SOURCES+=tests/multimap/capacity.cc
+# SOURCES+=tests/multimap/erase.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
@@ -53,12 +53,12 @@ SOURCES+=tests/multimap/erase.cc
 # SOURCES+=tests/list/swap.cc
 # SOURCES+=tests/list/erase.cc
 
-# SOURCES+=tests/set/constructors.cc
-# SOURCES+=tests/set/capacity.cc
-# SOURCES+=tests/set/modifiers.cc
-# SOURCES+=tests/set/erase.cc
-# SOURCES+=tests/set/iterator.cc
-# SOURCES+=tests/set/lookup.cc
+SOURCES+=tests/set/constructors.cc
+SOURCES+=tests/set/capacity.cc
+SOURCES+=tests/set/modifiers.cc
+SOURCES+=tests/set/erase.cc
+SOURCES+=tests/set/iterator.cc
+SOURCES+=tests/set/lookup.cc
 
 
 # SOURCES=*/*.cc
