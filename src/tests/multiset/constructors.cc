@@ -155,24 +155,24 @@ TEST(MultiSet, T0ConstructorInitializer)
 TEST(MultiSet, T1Destructor)
 {
     s21::MultiSet<Item, ComparatorItem> s21_multiset;
-    s21_multiset.Insert(std::make_pair(4, Item()));
-    s21_multiset.Insert(std::make_pair(3, Item()));
-    s21_multiset.Insert(std::make_pair(5, Item()));
+    s21_multiset.Insert(Item(4));
+    s21_multiset.Insert(Item(3));
+    s21_multiset.Insert(Item(5));
 }
 
 TEST(MultiSet, T2Destructor)
 {
     s21::MultiSet<Item, ComparatorItem> s21_multiset;
-    s21_multiset.Insert(std::make_pair(4, Item()));
-    s21_multiset.Insert(std::make_pair(4, Item()));
-    s21_multiset.Insert(std::make_pair(4, Item()));
-    s21_multiset.Insert(std::make_pair(4, Item()));
+    s21_multiset.Insert(Item(4));
+    s21_multiset.Insert(Item(4));
+    s21_multiset.Insert(Item(4));
+    s21_multiset.Insert(Item(4));
 
     std::multiset<Item, ComparatorItem> multimap;
-    multimap.insert(std::make_pair(4, Item()));
-    multimap.insert(std::make_pair(4, Item()));
-    multimap.insert(std::make_pair(4, Item()));
-    multimap.insert(std::make_pair(4, Item()));
+    multimap.insert(Item(4));
+    multimap.insert(Item(4));
+    multimap.insert(Item(4));
+    multimap.insert(Item(4));
 
 
     EXPECT_EQ(s21_multiset, multimap);
@@ -501,10 +501,10 @@ TEST(MultiSet, T0ReverseIterator)
 
     const auto start = s21_multiset.rbegin();
     const auto finish = s21_multiset.rend();
-    for (auto it = s21_multiset.rbegin(); it != s21_multiset.rend(); ++it) {
-        std::cout << "{" << it->first << ", " << it->second << "},\n";
-    }
-    std::cout << '\n';
+    // for (auto it = s21_multiset.rbegin(); it != s21_multiset.rend(); ++it) {
+    //     std::cout << "{" << it->first << ", " << it->second << "},\n";
+    // }
+    // std::cout << '\n';
 
     EXPECT_EQ(s21_multiset, multimap);
 
@@ -561,10 +561,10 @@ TEST(MultiSet, T1ReverseIterator)
         {Item(3, 'c', 0.3)},
     };
 
-    for (auto it = multimap.rbegin(); it != multimap.rend(); ++it) {
-        std::cout << "{" << it->first << ", " << it->second << "},  ";
-    }
-    std::cout << '\n';
+    // for (auto it = multimap.rbegin(); it != multimap.rend(); ++it) {
+    //     std::cout << "{" << it->first << ", " << it->second << "},  ";
+    // }
+    // std::cout << '\n';
 
     EXPECT_EQ(s21_multiset, multimap);
 

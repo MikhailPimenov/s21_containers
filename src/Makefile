@@ -37,7 +37,7 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/map/balance.cc
 # SOURCES+=tests/map/lookup.cc
 
-# SOURCES+=tests/multiset/constructors.cc
+SOURCES+=tests/multiset/constructors.cc
 
 SOURCES+=tests/multimap/constructors.cc
 # SOURCES+=tests/multimap/capacity.cc

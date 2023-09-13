@@ -12,16 +12,16 @@
 
 namespace s21 {
 
-template<typename Pair, typename ComparatorKey>
-class ComparatorMap 
-{
-private:
-    ComparatorKey comparator_;
-public:
-    bool operator()(const Pair& left, const Pair& right) const noexcept {
-        return comparator_(left.first, right.first);
-    }
-};
+// template<typename Pair, typename ComparatorKey>
+// class ComparatorMap 
+// {
+// private:
+//     ComparatorKey comparator_;
+// public:
+//     bool operator()(const Pair& left, const Pair& right) const noexcept {
+//         return comparator_(left.first, right.first);
+//     }
+// };
 
 template<typename Key, typename Pair>
 class KeyGetterMap {
@@ -31,20 +31,13 @@ public:
     }
 };
 
-template<typename Key>
-class KeyGetterSet {
-public:
-    const Key& operator()(const Key& value) const {
-        return value;
-    }
-};
+
 
 template <typename Key, 
           typename Value, 
           typename Comparator = Less<const Key>>
 class MultiMap : public MultiTree<Key,
                                   std::pair<const Key, Value>, 
-                                //   ComparatorMap<std::pair<const Key, Value>, Comparator>,
                                   Comparator,
                                   KeyGetterMap<Key, std::pair<const Key, Value>>>
 {
