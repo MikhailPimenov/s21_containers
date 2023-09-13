@@ -1,18 +1,17 @@
 #ifndef _S21_MULTISET_H_
 #define _S21_MULTISET_H_
 
-#include "s21_tree.h"
+#include "s21_multitree.h"
 #include "s21_comparator.h"
 
 namespace s21
 {
 
 template <typename Type, 
-          typename Comparator = ComparatorSet<Type>,
-          typename Node = Tree::MultiNode<Type, std::ptrdiff_t>>
-class MultiSet : public Tree::Tree<Type, Comparator, Node> {
+          typename Comparator = Less<Type>>
+class MultiSet : public MultiTree<Type, Type, Comparator> {
 public:
-    using Base = Tree::Tree<Type, Comparator, Node>;
+    using Base = MultiTree<Type, Type, Comparator>;
 
 public:
     using Base::Base;

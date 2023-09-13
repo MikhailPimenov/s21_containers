@@ -15,8 +15,6 @@
 #include "s21_tree.h"
 #include "s21_comparator.h"
 
-
-
 namespace s21
 {
 

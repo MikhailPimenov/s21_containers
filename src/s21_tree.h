@@ -448,14 +448,17 @@ private:
 
 
 template <typename Key,
-          typename Type, 
+          typename Value, 
           typename Comparator> 
+
+// template <typename Value, 
+//           typename Comparator> 
 class Tree
 {
 
 public:
     using key_type = Key;
-    using value_type = Type;
+    using value_type = Value;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using reference = value_type &;
@@ -484,10 +487,10 @@ private:
     comparator comparator_;
 
   public:
-    using iterator = TreeIterator<Tree<Key, Type, Comparator> >;
-    using const_iterator = TreeIterator<Tree<Key, Type, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
-    using reverse_iterator = TreeReverseIterator<Tree<Key, Type, Comparator> >;
-    using const_reverse_iterator = TreeReverseIterator<Tree<Key, Type, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
+    using iterator = TreeIterator<Tree<Key, Value, Comparator> >;
+    using const_iterator = TreeIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
+    using reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator> >;
+    using const_reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
 
 public:
     Tree() : size_{0},  end_{}, rend_{}, root_{nullptr} {}
@@ -848,7 +851,7 @@ private:
     std::pair<iterator, bool> insert_recursive(base_node_pointer root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
-        if (comparator_(value, root->Get())) {
+        if (comparator_(value, root->value_)) {
             if (root->left_ && root->left_ != &rend_) {
                 const auto [_, created] = insert_recursive(root->left_, value);
                 if (created) {
@@ -863,7 +866,7 @@ private:
                 updateReverseEnd();
                 return std::make_pair(iterator(root->left_), true);
             }
-        } else if (comparator_(root->Get(), value)) {
+        } else if (comparator_(root->value_, value)) {
             if (root->right_ && root->right_ != &end_) {
                 const auto [_, created] = insert_recursive(root->right_, value);
                 if (created) {
@@ -880,7 +883,7 @@ private:
             }
         }
         // equal
-        size_ += root->Push_back(value);
+        // size_ += root->Push_back(value);
         return std::make_pair(iterator(root), false);
     }
     std::pair<iterator, bool> insert_recursive(base_node_pointer root, value_type&& value) {
@@ -978,7 +981,8 @@ private:
     //          1.8                               5.7                             8.2        9
     //       1.7                                                                8.1
 
-    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const key_type& key) {
+    // std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const key_type& key) {
+    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const_reference key) {
         assert(root && "root should exist!");
 
         if (comparator_(key, root->value_)) {  // pos < root->value_
@@ -1164,7 +1168,8 @@ public:
 
     //     return result.first;
     // }
-    iterator Erase(const key_type& key) {
+    // iterator Erase(const key_type& key) {
+    iterator Erase(const_reference key) {
         if (!root_)
             assert(0 && "Trying to erase from empty tree!");
 
@@ -1180,7 +1185,8 @@ public:
         const auto& [_, node] = extract_recursive(root_, pos);
         return node;
     }
-    base_node_pointer Extract(const key_type& key) {
+    // base_node_pointer Extract(const key_type& key) {
+    base_node_pointer Extract(const_reference key) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
         const auto& [_, node] = extract_recursive(root_, key);
@@ -1195,6 +1201,7 @@ public:
 
 protected:
     const_iterator find_recursive(base_node_pointer root, const key_type& key, bool lowerBound = false, bool upperBound = false, base_node_pointer bound = nullptr) const {
+    // const_iterator find_recursive(base_node_pointer root, const_reference key, bool lowerBound = false, bool upperBound = false, base_node_pointer bound = nullptr) const {
         assert(root && "root should exist!");
 
         if (comparator_(key, root->value_)) {  // key < root->value_
@@ -1234,6 +1241,7 @@ public:
     //     return static_cast<iterator>(find_recursive(root_, value));
     // }
     iterator find(const key_type& key) {
+    // iterator find(const_reference key) {
         if (!root_)
             return end();
         return static_cast<iterator>(find_recursive(root_, key));

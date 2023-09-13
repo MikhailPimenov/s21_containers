@@ -356,9 +356,14 @@ template <typename Type> class List
         return ++reverse_iterator(&end_);
     }
 
-    const_iterator cbegin() const
+    const_iterator begin() const
     {
         return ++const_iterator(&rend_);
+    }
+
+    const_iterator cbegin() const
+    {
+        return begin();
     }
 
     const_reverse_iterator crbegin() const
@@ -376,9 +381,14 @@ template <typename Type> class List
         return reverse_iterator(&rend_);
     }
 
-    const_iterator cend() const
+    const_iterator end() const
     {
         return const_iterator(&end_);
+    }
+
+    const_iterator cend() const
+    {
+        return end();
     }
 
     const_reverse_iterator crend() const
@@ -386,12 +396,18 @@ template <typename Type> class List
         return const_reverse_iterator(&rend_);
     }
 
+    Node* create_node(const_reference data) {
+        char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
+        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
+        new (new_data) value_type(data);
+        return reinterpret_cast<Node*>(new_data);
+    }
+
     void Push_back(const_reference data)
     {
         Node *old_last = previousOf(&end_);
 
-        Node *new_last = new Node;
-        new_last->data_ = data;
+        Node* new_last = create_node(data);
 
         connect(old_last, new_last);
         connect(new_last, &end_);
