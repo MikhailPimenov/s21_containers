@@ -74,7 +74,7 @@ test: run_tests gcov_report
 tests/tests_main.exe: $(BINARIES)
 		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS) -g
 
-%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h tests/vector_helpers.h s21_vector.h tests/map_helpers.h s21_map.h s21_tree.h s21_set.h s21_multimap.h s21_multiset.h tests/set_helpers.h tests/multiset_helpers.h tests/multimap_helpers.h
+%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h tests/vector_helpers.h s21_vector.h tests/map_helpers.h s21_map.h s21_tree.h s21_set.h s21_multimap.h s21_multiset.h tests/set_helpers.h tests/multiset_helpers.h tests/multimap_helpers.h s21_multitree.h
 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS) -g
 
 run_tests: tests/tests_main.exe

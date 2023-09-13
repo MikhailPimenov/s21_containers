@@ -208,7 +208,7 @@ private:
             return comparator_(keyGetter_(*(left.begin())), right);
         }
         bool operator()(const aggregator_type& left, const aggregator_type& right) const {
-            return comparator_(keyGetter_(*(left.begin())), keyGetter_(*(left.begin())));
+            return comparator_(keyGetter_(*(left.begin())), keyGetter_(*(right.begin())));
         }
     };
 

@@ -17,6 +17,14 @@ TEST(MultiMap, T0DefaultConstructor)
     s21::MultiMap<int, Item> s21_multimap;
     std::multimap<int, Item> multimap;
     
+    EXPECT_EQ(s21_multimap, multimap);
+}
+
+TEST(MultiMap, T0Insert)
+{
+    s21::MultiMap<int, Item> s21_multimap;
+    std::multimap<int, Item> multimap;
+    
     s21_multimap.Insert(std::make_pair(3, Item(3, 'c', 0.3)));
     s21_multimap.Insert(std::make_pair(1, Item(10, 'a', 0.1)));
     s21_multimap.Insert(std::make_pair(1, Item(100, 'b', 0.1)));
@@ -39,8 +47,7 @@ TEST(MultiMap, T0DefaultConstructor)
 }
 
 
-
-TEST(MultiMap, T0Insert)
+TEST(MultiMap, T1Insert)
 {
     s21::MultiMap<int, Item> s21_multimap;
     s21_multimap.Insert(std::make_pair(10, Item(3, 'c', 0.3)));
