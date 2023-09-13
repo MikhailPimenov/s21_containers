@@ -315,6 +315,11 @@ public:
         return tree_.Empty();
     }
 
+    void Clear() noexcept {
+        tree_.Clear();
+        size_ = 0ull;
+    }
+
     iterator begin() {
         typename tree_type::iterator treeIt = tree_.begin();
         typename aggregator_type::iterator aggregatorIt = treeIt->begin();

@@ -28,14 +28,14 @@ bool operator==(const s21::MultiSet<Type, Comparator>& s21_multiset, const std::
     return true;   
 }
  
-// template<typename Key, typename Type>
-// std::ostream& operator<<(std::ostream& out, const s21::MultiMap<Key, Type>& s21_map) {
-//     out << "MultiMap " << s21_map.Size()  << ' '  << s21_map.Height() << "\n";
-//     for (typename s21::MultiMap<Key, Type>::const_iterator it = s21_map.cbegin(); it != s21_map.cend(); ++it)
-//         out << "{" << (*it).first << '-' << it.LeftHeight() << '-' << it.RightHeight() <<  " : " << (*it).second << "} ";
+template<typename Type, typename Comparator>
+std::ostream& operator<<(std::ostream& out, const s21::MultiSet<Type, Comparator>& s21_map) {
+    out << "MultiSet " << s21_map.Size()  << ' '  << s21_map.Height() << "\n";
+    for (typename s21::MultiSet<Type, Comparator>::const_iterator it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+        out << "{" << (*it) << "} ";
 
-//     return out;
-// }
+    return out;
+}
 
 // GCOVR_EXCL_STOP
 

@@ -841,7 +841,7 @@ private:
             node->rHeight_ = 0ull;
             return;
         }
-        if (node->right_)
+        if (node->right_) 
             if (node->right_->lHeight_ > node->right_->rHeight_)
                 node->rHeight_ = 1ull + node->right_->lHeight_;
             else
