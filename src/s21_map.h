@@ -18,6 +18,35 @@
 namespace s21
 {
 
+template <typename Pair, typename ComparatorKey>
+class ComparatorMap {
+private:
+    ComparatorKey comparator_;
+public:
+    bool operator()(const Pair& left, const Pair& right) const {
+        return comparator_(left.first, right.first);
+    }
+};
+
+template <typename Key, 
+          typename Value, 
+          typename Comparator = Less<const Key>>
+class Map : public Tree::Tree<Key,
+                              std::pair<const Key, Value>, 
+                              ComparatorMap<std::pair<const Key, Value>, Comparator>>
+{
+    using Base = Tree::Tree<Key,
+                            std::pair<const Key, Value>, 
+                            ComparatorMap<std::pair<const Key, Value>, Comparator>>;
+
+public:
+    using Base::Base;
+
+};
+
+
+
+
 // template <typename Key, 
 //           typename Type, 
 //           typename Comparator = ComparatorMap<std::pair<const Key, Type>>,
@@ -86,26 +115,26 @@ namespace s21
 // };
 
 
-// template <typename Key, typename Type>
-// bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& right) {
-//     if(left.Size() != right.Size())
-//         return false;
+template <typename Key, typename Type>
+bool operator==(const s21::Map<Key, Type>& left, const s21::Map<Key, Type>& right) {
+    if(left.Size() != right.Size())
+        return false;
 
-//     auto it_left = left.cbegin();
-//     auto it_right = right.cbegin();
+    auto it_left = left.cbegin();
+    auto it_right = right.cbegin();
 
 
-//     while(it_left != left.cend()) {
-//         if(*it_left != *it_right)
-//             return false;
+    while(it_left != left.cend()) {
+        if(*it_left != *it_right)
+            return false;
 
-//         ++it_left;
-//         ++it_right;
+        ++it_left;
+        ++it_right;
 
-//     }
+    }
 
-//     return true;
-// }
+    return true;
+}
 
 
 

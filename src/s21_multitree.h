@@ -310,6 +310,11 @@ public:
         return tree_.Height();
     }
 
+    bool Empty() const noexcept {
+        assert((tree_.Empty() && !size_) || (!tree_.Empty() && size_) && "Size should be 0 when and only when tree is empty");
+        return tree_.Empty();
+    }
+
     iterator begin() {
         typename tree_type::iterator treeIt = tree_.begin();
         typename aggregator_type::iterator aggregatorIt = treeIt->begin();

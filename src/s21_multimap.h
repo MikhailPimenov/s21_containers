@@ -23,13 +23,7 @@ namespace s21 {
 //     }
 // };
 
-template<typename Key, typename Pair>
-class KeyGetterMap {
-public:
-    const Key& operator()(const Pair& pair) const {
-        return pair.first;
-    }
-};
+
 
 
 

@@ -28,6 +28,25 @@ public:
     };
 };
 
+
+template<typename Key>
+class KeyGetterSet {
+public:
+    const Key& operator()(const Key& value) const {
+        return value;
+    }
+};
+
+template<typename Key, typename Pair>
+class KeyGetterMap {
+public:
+    const Key& operator()(const Pair& pair) const {
+        return pair.first;
+    }
+};
+
+
+
 };  //  namespace s21
 
 #endif  //  _S21_COMPARATOR_H_

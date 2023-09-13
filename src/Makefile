@@ -29,7 +29,7 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/vector/iterator.cc
 # SOURCES+=tests/vector/other.cc
 
-# SOURCES+=tests/map/constructors.cc
+SOURCES+=tests/map/constructors.cc
 # SOURCES+=tests/map/capacity.cc
 # SOURCES+=tests/map/modifiers.cc
 # SOURCES+=tests/map/erase.cc
@@ -40,7 +40,7 @@ SOURCES=tests/item.cc
 SOURCES+=tests/multiset/constructors.cc
 
 SOURCES+=tests/multimap/constructors.cc
-# SOURCES+=tests/multimap/capacity.cc
+SOURCES+=tests/multimap/capacity.cc
 SOURCES+=tests/multimap/erase.cc
 
 # SOURCES+=tests/list/list.cc 

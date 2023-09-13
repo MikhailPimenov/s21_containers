@@ -8,13 +8,7 @@
 namespace s21
 {
 
-template<typename Key>
-class KeyGetterSet {
-public:
-    const Key& operator()(const Key& value) const {
-        return value;
-    }
-};
+
 
 template <typename Value, 
           typename Comparator = Less<Value>>
