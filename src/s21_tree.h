@@ -982,12 +982,12 @@ private:
     //       1.7                                                                8.1
 
     // std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const key_type& key) {
-    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const_reference key) {
+    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const_reference value) {
         assert(root && "root should exist!");
 
-        if (comparator_(key, root->value_)) {  // pos < root->value_
+        if (comparator_(value, root->value_)) {  // pos < root->value_
             if ((root)->left_ && (root)->left_ != &rend_) {
-                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->left_, key);
+                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->left_, value);
                 updateLeftHeight(root);
                 if (unbalanced(root))
                     balance(root);
@@ -997,9 +997,9 @@ private:
                 assert(0 && "Element should exist!");
             }
 
-        } else if (comparator_(root->value_, key)) {
+        } else if (comparator_(root->value_, value)) {
             if ((root)->right_ && (root)->right_ != &end_) {
-                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->right_, key);
+                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->right_, value);
                 updateRightHeight(root);
                 if (unbalanced(root))
                     balance(root);
@@ -1158,22 +1158,17 @@ private:
     }
 
 public:
-    // iterator Erase(const_iterator pos) {
-    //     if (!root_)
-    //         assert(0 && "Trying to erase from empty tree!");
-
-    //     std::pair<iterator, base_node_pointer> result = extract_recursive(root_, pos);
-    //     delete result.second;
-    //     result.second = nullptr;
-
-    //     return result.first;
-    // }
-    // iterator Erase(const key_type& key) {
-    iterator Erase(const_reference key) {
+    iterator Erase(iterator pos) {
+        return Erase(static_cast<const_iterator>(pos));
+    }
+    iterator Erase(const_iterator pos) {
+        return Erase(*pos); 
+    }
+    iterator Erase(const_reference value) {
         if (!root_)
             assert(0 && "Trying to erase from empty tree!");
 
-        std::pair<iterator, base_node_pointer> result = extract_recursive(root_, key);
+        std::pair<iterator, base_node_pointer> result = extract_recursive(root_, value);
         delete result.second;
         result.second = nullptr;
 

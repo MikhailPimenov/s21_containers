@@ -267,7 +267,7 @@ public:
 
         if (it == tree_.end()) {
             aggregator_type list;
-            list.Push_back(value);
+            list.Push_back(std::move(value));
             auto [added_it, _] = tree_.Insert(list);
             return {iterator(added_it, --(tree_.begin()), tree_.end(), added_it->begin()), true};
         }
@@ -276,18 +276,18 @@ public:
         return {iterator(it, --(tree_.begin()), tree_.end(), --(it->end())), true};
     }
 
-    // iterator Erase(const_iterator pos) {
-    //     typename tree_type::iterator it = tree_.find(pos->first);
-    //     assert(it != tree_.end() && "Tried to erase not existing element!");
-    //     --size_;
-    //     if (it->second.Size() > 1ull) {
-    //         typename aggregator_type::iterator next_it = it->second.Erase(it->second.begin());
-    //         return iterator(it, --(tree_.begin()), tree_.end(), next_it);
+    iterator Erase(const_iterator pos) {
+        typename tree_type::iterator it = tree_.find(keyGetter_(*pos));
+        assert(it != tree_.end() && "Tried to erase not existing element!");
+        --size_;
+        if (it->Size() > 1ull) {
+            typename aggregator_type::iterator next_it = it->Erase(it->begin());
+            return iterator(it, --(tree_.begin()), tree_.end(), next_it);
 
-    //     }
-    //     typename tree_type::iterator next_it = tree_.Erase(pos->first);
-    //     return iterator(next_it, --(tree_.begin()), tree_.end(), next_it->second.begin());
-    // }
+        }
+        typename tree_type::iterator next_it = tree_.Erase(it);
+        return iterator(next_it, --(tree_.begin()), tree_.end(), next_it->begin());
+    }
 
     // node_type Extract(const_iterator pos) {
     //     typename tree_type::iterator it = tree_.find(pos->first);
