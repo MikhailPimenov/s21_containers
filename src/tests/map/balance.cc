@@ -9,6 +9,7 @@
 #include "../../s21_map.h"
 #include "../item.h"
 #include "../map_helpers.h"
+#include "../tree_helpers.h"
 
 // GCOVR_EXCL_START
 

@@ -1235,60 +1235,59 @@ public:
     //         return end();
     //     return static_cast<iterator>(find_recursive(root_, value));
     // }
-    iterator find(const key_type& key) {
-    // iterator find(const_reference key) {
+    iterator Find(const key_type& key) {
         if (!root_)
             return end();
         return static_cast<iterator>(find_recursive(root_, key));
     }
-    // const_iterator find(const Key& value) const {
-    //     if (!root_)
-    //         return end();
-    //     return find_recursive(root_, value);
-    // }
+    const_iterator Find(const key_type& key) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, key);
+    }
 
     // template< class K > iterator find( const K& x );
     // template< class K > const_iterator find( const K& x ) const;
 
-    bool contains(const_reference value) const {
-        return find(value) != end();
+    bool Contains(const key_type& key) const {
+        return Find(key) != end();
     }
-    iterator lower_bound(const_reference value) {
+    iterator Lower_bound(const key_type& key) {
         if (!root_)
             return end();
-        return static_cast<iterator>(find_recursive(root_, value, true, false, &end_));
+        return static_cast<iterator>(find_recursive(root_, key, true, false, &end_));
     }
-    const_iterator lower_bound(const_reference value) const {
+    const_iterator Lower_bound(const key_type& key) const {
         if (!root_)
             return end();
-        return find_recursive(root_, value, true, false, &end_);
+        return find_recursive(root_, key, true, false, &end_);
     }
-    iterator upper_bound(const_reference value) {
+    iterator Upper_bound(const key_type& key) {
         if (!root_)
             return end();
-        return static_cast<iterator>(find_recursive(root_, value, false, true, &end_));
+        return static_cast<iterator>(find_recursive(root_, key, false, true, &end_));
     }
-    const_iterator upper_bound(const_reference value) const {
+    const_iterator Upper_bound(const key_type& key) const {
         if (!root_)
             return end();
-        return find_recursive(root_, value, false, true, &end_);
+        return find_recursive(root_, key, false, true, &end_);
     }
 
     // template< class K > bool contains( const K& x ) const;
-    std::pair<iterator, iterator> equal_range(const_reference value) {
+    std::pair<iterator, iterator> Equal_range(const key_type& key) {
         if (!root_)
             return std::make_pair(end(), end());
 
-        iterator lower = lower_bound(value);
-        iterator upper = upper_bound(value);
+        iterator lower = Lower_bound(key);
+        iterator upper = Upper_bound(key);
         return std::make_pair(lower, upper);
     }
-    std::pair<const_iterator, const_iterator> equal_range(const_reference value) const {
+    std::pair<const_iterator, const_iterator> Equal_range(const key_type& key) const {
         if (!root_)
             return std::make_pair(end(), end());
 
-        const_iterator lower = static_cast<const_iterator>(lower_bound(value));
-        const_iterator upper = static_cast<const_iterator>(upper_bound(value));
+        const_iterator lower = static_cast<const_iterator>(Lower_bound(key));
+        const_iterator upper = static_cast<const_iterator>(Upper_bound(key));
         return std::make_pair(lower, upper);
     }
     //template< class K >

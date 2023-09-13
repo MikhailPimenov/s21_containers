@@ -262,7 +262,7 @@ public:
     }
 
     std::pair<iterator, bool> Insert(const_reference value) {
-        typename tree_type::iterator it = tree_.find(keyGetter_(value));
+        typename tree_type::iterator it = tree_.Find(keyGetter_(value));
         ++size_;
 
         if (it == tree_.end()) {
@@ -277,7 +277,7 @@ public:
     }
 
     iterator Erase(const_iterator pos) {
-        typename tree_type::iterator it = tree_.find(keyGetter_(*pos));
+        typename tree_type::iterator it = tree_.Find(keyGetter_(*pos));
         assert(it != tree_.end() && "Tried to erase not existing element!");
         --size_;
         if (it->Size() > 1ull) {

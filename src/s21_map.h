@@ -18,13 +18,19 @@
 namespace s21
 {
 
-template <typename Pair, typename ComparatorKey>
+template <typename Key, typename Pair, typename ComparatorKey>
 class ComparatorMap {
 private:
     ComparatorKey comparator_;
 public:
     bool operator()(const Pair& left, const Pair& right) const {
         return comparator_(left.first, right.first);
+    }
+    bool operator()(const Key& left, const Pair& right) const {
+        return comparator_(left, right.first);
+    }
+    bool operator()(const Pair& left, const Key& right) const {
+        return comparator_(left.first, right);
     }
 };
 
@@ -33,11 +39,11 @@ template <typename Key,
           typename Comparator = Less<const Key>>
 class Map : public Tree::Tree<Key,
                               std::pair<const Key, Value>, 
-                              ComparatorMap<std::pair<const Key, Value>, Comparator>>
+                              ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>
 {
     using Base = Tree::Tree<Key,
                             std::pair<const Key, Value>, 
-                            ComparatorMap<std::pair<const Key, Value>, Comparator>>;
+                            ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>;
 
 public:
     using Base::Base;
