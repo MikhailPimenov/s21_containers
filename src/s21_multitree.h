@@ -273,7 +273,10 @@ public:
         typename tree_type::iterator it = tree_.Find(keyGetter_(*pos));
         --size_;
         if(it->Size() > 1ull) {
-            return it->Extract(it->begin());
+            for(auto nodeIt = it->begin(); nodeIt != it->end(); ++nodeIt) {
+                if(*nodeIt == *pos)
+                    return it->Extract(nodeIt);
+            }
         }
 
         node_type result = it->Extract(it->begin());

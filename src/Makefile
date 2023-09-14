@@ -38,7 +38,7 @@ SOURCES+=tests/map/erase.cc
 # SOURCES+=tests/map/lookup.cc
 
 # SOURCES+=tests/multiset/constructors.cc
-# SOURCES+=tests/multiset/erase.cc
+SOURCES+=tests/multiset/erase.cc
 # SOURCES+=tests/multiset/capacity.cc
 # SOURCES+=tests/multiset/modifiers.cc
 # SOURCES+=tests/multiset/iterator.cc
