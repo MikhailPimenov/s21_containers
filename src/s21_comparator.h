@@ -92,6 +92,6 @@ public:
 
 
 
-};  //  namespace s21
+}   //  namespace s21
 
 #endif  //  _S21_COMPARATOR_H_
