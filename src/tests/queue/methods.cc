@@ -67,7 +67,7 @@ TEST(QueueMethods, T4Size)
     const std::queue<Item, std::list<Item>> queue(list);
 
     EXPECT_TRUE(s21_queue.Size() == queue.size());
-    EXPECT_EQ(s21_queue.Size(), 3);
+    EXPECT_EQ(s21_queue.Size(), 3ull);
 }
 
 TEST(QueueMethods, T5Empty)
@@ -76,7 +76,7 @@ TEST(QueueMethods, T5Empty)
     std::queue<Item, std::list<Item>> queue;
 
     EXPECT_TRUE(s21_queue.Size() == queue.size());
-    EXPECT_EQ(s21_queue.Size(), 0);
+    EXPECT_EQ(s21_queue.Size(), 0ull);
 }
 
 TEST(QueueMethods, T6Push)

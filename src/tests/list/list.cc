@@ -200,7 +200,8 @@ TEST(RuleOf5, T1CopyAssignmentOperatorSelf)
 {
     s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
     const s21::List<Item> s21_list_copy(s21_list1);
-    s21_list1 = s21_list1;
+    auto &a = s21_list1;
+    s21_list1 = a;
 
     EXPECT_TRUE(s21_list1 == s21_list_copy);
 }
@@ -220,8 +221,9 @@ TEST(RuleOf5, T0MoveAssignmentOperator)
 TEST(RuleOf5, T1MoveAssignmentOperatorSelf)
 {
     s21::List<Item> s21_list1 = {Item(11), Item(22), Item(33), Item(44), Item(55)};
+    auto &&a = s21_list1;
     const s21::List<Item> s21_list_copy(s21_list1);
-    s21_list1 = std::move(s21_list1);
+    s21_list1 = std::move(a);
 
     EXPECT_TRUE(s21_list1 == s21_list_copy);
 }

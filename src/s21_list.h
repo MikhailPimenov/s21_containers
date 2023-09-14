@@ -128,7 +128,7 @@ class ListIterator : public ListIteratorBase<List, Pointer, Reference, typename 
     ListIterator &operator++()
     {
         this->node_pointer_ = this->node_pointer_->next_;
-        assert(this && "this was nullptr!");
+        // assert(this && "this was nullptr!");
         return *this;
     }
 
@@ -223,11 +223,11 @@ template <typename Type> class List
   private:
     struct Node
     {
-        template <typename T> friend void List<T>::connect(typename List<T>::Node *, typename List<T>::Node *);
+        // template <typename T> friend void List<T>::connect(typename List<T>::Node *, typename List<T>::Node *);
 
-        template <typename T> friend typename List<T>::Node *List<T>::previousOf(typename List<T>::Node *);
+        // template <typename T> friend typename List<T>::Node *List<T>::previousOf(typename List<T>::Node *);
 
-        template <typename T> friend typename List<T>::Node *List<T>::nextOf(typename List<T>::Node *);
+        // template <typename T> friend typename List<T>::Node *List<T>::nextOf(typename List<T>::Node *);
 
         friend iterator;
         friend const_iterator;

@@ -67,7 +67,7 @@ TEST(StackMethods, T4Size)
     const std::stack<Item, std::list<Item>> stack(list);
 
     EXPECT_TRUE(s21_stack.Size() == stack.size());
-    EXPECT_EQ(s21_stack.Size(), 3);
+    EXPECT_EQ(s21_stack.Size(), 3ull);
 }
 
 TEST(StackMethods, T5Empty)
@@ -76,7 +76,7 @@ TEST(StackMethods, T5Empty)
     std::stack<Item, std::list<Item>> stack;
 
     EXPECT_TRUE(s21_stack.Size() == stack.size());
-    EXPECT_EQ(s21_stack.Size(), 0);
+    EXPECT_EQ(s21_stack.Size(), 0ull);
 }
 
 TEST(StackMethods, T6Push)

@@ -35,7 +35,7 @@ TEST(Vector, T1Capacity)
 TEST(Vector, T2Size)
 {
     s21::Vector<Item> s21_vector { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
-    EXPECT_EQ(s21_vector.Size(), 3);
+    EXPECT_EQ(s21_vector.Size(), 3ull);
 }
 
 
