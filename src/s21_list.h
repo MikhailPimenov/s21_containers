@@ -7,6 +7,8 @@
 #include <new>
 #include <cmath>
 
+#include "s21_comparator.h"
+
 namespace s21
 {
 
@@ -70,12 +72,12 @@ class ListIteratorBase
 
     reference operator*() const
     {
-        return node_pointer_->data_;
+        return node_pointer_->value_;
     }
 
     pointer operator->() const
     {
-        return &(node_pointer_->data_);
+        return &(node_pointer_->value_);
     }
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
@@ -204,6 +206,8 @@ template <typename Type> class List
     using const_pointer = const value_type *;
     using node_pointer = Node *;
 
+    using node_type = Handler<node_pointer, reference>;
+
   public:
     friend class ListIterator<List<Type>>;
     friend class ListIterator<List<Type>, const_pointer, const_reference>;
@@ -231,14 +235,14 @@ template <typename Type> class List
         friend const_reverse_iterator;
 
       public:
-        value_type data_;
+        value_type value_;
 
     //   private:
         Node *next_;
         Node *previous_;
 
       public:
-        Node() : data_{value_type()}, next_{nullptr}, previous_{nullptr} {}
+        Node() : value_{value_type()}, next_{nullptr}, previous_{nullptr} {}
     };
 
     mutable Node end_;
@@ -420,7 +424,7 @@ template <typename Type> class List
         Node *old_last = previousOf(&end_);
 
         Node *new_last = new Node;
-        new_last->data_ = std::move(data);
+        new_last->value_ = std::move(data);
 
         connect(old_last, new_last);
         connect(new_last, &end_);
@@ -472,7 +476,7 @@ template <typename Type> class List
     iterator Insert(const_iterator pos, const_reference value)
     {
         Node *new_node = new Node;
-        new_node->data_ = value;
+        new_node->value_ = value;
 
         Node *next = pos.get();
         Node *previous = previousOf(next);
@@ -546,7 +550,7 @@ template <typename Type> class List
         Node *old_first = nextOf(&rend_);
 
         Node *new_first = new Node;
-        new_first->data_ = data;
+        new_first->value_ = data;
 
         connect(&rend_, new_first);
         connect(new_first, old_first);
@@ -559,7 +563,7 @@ template <typename Type> class List
         Node *old_first = nextOf(&rend_);
 
         Node *new_first = new Node;
-        new_first->data_ = std::move(data);
+        new_first->value_ = std::move(data);
 
         connect(&rend_, new_first);
         connect(new_first, old_first);
@@ -649,6 +653,16 @@ template <typename Type> class List
 
         return last;
     }
+
+    node_type Extract(const_iterator pos) {
+        Node* previous = previousOf(pos.get());
+        Node* next = nextOf(pos.get());
+
+        connect(previous, next);
+        --size_;
+        return node_type(pos.get());
+
+    }
     // Sort()
     // Unique()
     // Splice()
@@ -656,7 +670,7 @@ template <typename Type> class List
     template <class... Args> iterator Emplace(const_iterator pos, Args &&...args)
     {
         Node *new_node = new Node;
-        new_node->data_ = value_type(std::forward<Args>(args)...);
+        new_node->value_ = value_type(std::forward<Args>(args)...);
 
         Node *next = pos.get();
         Node *previous = previousOf(next);
@@ -672,7 +686,7 @@ template <typename Type> class List
     template <class... Args> reference Emplace_back(Args &&...args)
     {
         Node *new_last = new Node;
-        new_last->data_ = value_type(std::forward<Args>(args)...);
+        new_last->value_ = value_type(std::forward<Args>(args)...);
 
         Node *old_last = previousOf(&end_);
 
@@ -680,13 +694,13 @@ template <typename Type> class List
         connect(new_last, &end_);
         ++size_;
 
-        return new_last->data_;
+        return new_last->value_;
     }
     // Emplace_front()
     template <class... Args> reference Emplace_front(Args &&...args)
     {
         Node *new_first = new Node;
-        new_first->data_ = value_type(std::forward<Args>(args)...);
+        new_first->value_ = value_type(std::forward<Args>(args)...);
 
         Node *old_first = nextOf(&rend_);
 
@@ -694,7 +708,7 @@ template <typename Type> class List
         connect(new_first, old_first);
         ++size_;
 
-        return new_first->data_;
+        return new_first->value_;
     }
 
   private:

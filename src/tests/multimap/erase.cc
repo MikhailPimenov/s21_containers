@@ -705,11 +705,11 @@ TEST(MultiMap, T0RandomExtract)
         ++it;
     }
 
-    // s21::MultiMap<int, Item>::node_type s21_it_result = s21_multimap.Extract(s21_it);
-    // std::multimap<int, Item>::node_type it_result = multimap.extract(it);
+    s21::MultiMap<int, Item>::node_type s21_it_result = s21_multimap.Extract(s21_it);
+    std::multimap<int, Item>::node_type it_result = multimap.extract(it);
 
-    // EXPECT_EQ(it_result.key(), s21_it_result.Get().first);
-    // EXPECT_EQ(it_result.mapped(), s21_it_result.Get().second);
+    EXPECT_EQ(it_result.key(), s21_it_result.Get().first);
+    EXPECT_EQ(it_result.mapped(), s21_it_result.Get().second);
 
     EXPECT_EQ(s21_multimap, multimap);
     EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    

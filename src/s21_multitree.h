@@ -147,34 +147,6 @@ public:
     }
 };
 
-template <typename Node>
-class NodeHandle {
-public:
-    Node node_;
-public:
-    NodeHandle(const Node& node) : node_{node} {}
-    NodeHandle(Node&& node) : node_{std::move(node)} {}
-
-    NodeHandle(const NodeHandle& other) = delete;
-    NodeHandle& operator=(const NodeHandle& other) = delete;
-
-    NodeHandle(NodeHandle&& other) : node_{std::move(other.node_)} {}
-    NodeHandle& operator=(NodeHandle&& other) {
-        if (this == &other)
-            return *this;
-
-        node_ = std::move(other.node_);
-        return *this;
-    }
-    const Node& Get() const noexcept {
-        return node_;
-    }
-    Node& Get() noexcept {
-        return node_;
-    }
-
-};
-
 
 template <typename Key, 
           typename Value, 
@@ -224,7 +196,7 @@ private:
     using tree_type         = Tree::Tree<const Key, aggregator_type, ComparatorTree>;
 
 public:
-    using node_type         = NodeHandle<value_type>;
+    using node_type         = Handler<typename aggregator_type::node_pointer, reference>;
 
 public:
     using iterator                  = MultiTreeIterator<typename tree_type::iterator, typename aggregator_type::iterator, pointer, reference>;
@@ -295,18 +267,19 @@ public:
         return iterator(next_it, --(tree_.begin()), tree_.end(), next_it->begin());
     }
 
-    // node_type Extract(const_iterator pos) {
-    //     typename tree_type::iterator it = tree_.find(pos->first);
-    //     if (it->second.size() > 1ull) {
-    //         aggregator_type& aggregator = it->second;
-    //         node_type result(aggregator.extract(aggregator.begin()));
-    //         return result;
-    //     }
 
-    //     typename tree_type::node_pointer node = tree_.Extract(pos->first);
-    //     node_type result(*(node->value_.second.begin()));
-    //     return result;
-    // }
+
+    node_type Extract(const_iterator pos) {
+        typename tree_type::iterator it = tree_.Find(keyGetter_(*pos));
+        --size_;
+        if(it->Size() > 1ull) {
+            return it->Extract(it->begin());
+        }
+
+        node_type result = it->Extract(it->begin());
+        tree_.Extract(it); 
+        return result;
+    }
 
 
     size_type Size() const noexcept {

@@ -1180,6 +1180,9 @@ public:
         const auto& [_, node] = extract_recursive(root_, *pos);
         return node;
     }
+    base_node_pointer Extract(iterator pos) {
+        return Extract(static_cast<const_iterator>(pos));
+    }
     // base_node_pointer Extract(const key_type& key) {
     base_node_pointer Extract(const_reference key) {
         if (!root_)

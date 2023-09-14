@@ -48,57 +48,11 @@ class Map : public Tree::Tree<Key,
 public:
     using Base::Base;
 
-    class Handler;
+    using node_type = Handler<typename Base::base_node_pointer, typename Base::reference>;
 
-    using node_type = Handler;
-
-    class Handler {
-    private:
-        typename Base::base_node_pointer pointer_;
-    
-    public:
-        Handler(typename Base::base_node_pointer pointer) : pointer_{pointer} {}
-
-        Handler(const Handler& other) = delete; // запретили создавать копированием
-
-        Handler& operator=(const Handler& other) = delete; // запретили копировать 
-
-        Handler(Handler&& other) noexcept : pointer_{other.pointer_} {
-            other.pointer_ = nullptr;
-        }
-
-        typename Base::base_node_pointer operator->() {
-            return pointer_;
-        }
-        typename Base::base_node_pointer operator->() const {
-            return pointer_;
-        }
-
-        typename Base::reference Get() {
-            return pointer_->value_;
-        }
-        typename Base::const_reference Get() const {
-            return pointer_->value_;
-        }
-
-        Handler& operator=(Handler&& other) noexcept {
-            if(this == &other)
-                return *this;
-
-            this->~Handler();
-            pointer_ = other.pointer_;
-            other.pointer_ = nullptr;
-            return *this;
-        }
-
-        ~Handler() {
-            delete pointer_;
-        }
-    }; /// smart ass
-
-    Handler Extract(typename Base::const_iterator pos) {
+    node_type Extract(typename Base::const_iterator pos) {
         typename Base::base_node_pointer node = Base::Extract(pos);
-        Handler result(node);
+        node_type result(node);
         return result;
     } 
 };

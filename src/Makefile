@@ -46,7 +46,7 @@ SOURCES+=tests/map/erase.cc
 
 # SOURCES+=tests/multimap/constructors.cc
 # SOURCES+=tests/multimap/capacity.cc
-# SOURCES+=tests/multimap/erase.cc
+SOURCES+=tests/multimap/erase.cc
 # SOURCES+=tests/multimap/modifiers.cc
 # SOURCES+=tests/multimap/lookup.cc
 # SOURCES+=tests/multimap/iterator.cc

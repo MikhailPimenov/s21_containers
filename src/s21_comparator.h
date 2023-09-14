@@ -3,6 +3,51 @@
 
 namespace s21 {
 
+    template <typename NodePointer, typename ValueReference>
+    class Handler {
+    private:
+        NodePointer pointer_;
+    
+    public:
+        Handler(NodePointer pointer) : pointer_{pointer} {}
+
+        Handler(const Handler& other) = delete; // запретили создавать копированием
+
+        Handler& operator=(const Handler& other) = delete; // запретили копировать 
+
+        Handler(Handler&& other) noexcept : pointer_{other.pointer_} {
+            other.pointer_ = nullptr;
+        }
+
+        NodePointer operator->() {
+            return pointer_;
+        }
+        NodePointer operator->() const {
+            return pointer_;
+        }
+
+        ValueReference Get() {
+            return pointer_->value_;
+        }
+        const ValueReference Get() const {
+            return pointer_->value_;
+        }
+
+        Handler& operator=(Handler&& other) noexcept {
+            if(this == &other)
+                return *this;
+
+            this->~Handler();
+            pointer_ = other.pointer_;
+            other.pointer_ = nullptr;
+            return *this;
+        }
+
+        ~Handler() {
+            delete pointer_;
+        }
+    }; /// smart ass
+
 // template <typename Type>
 // class ComparatorSet {
 // public:
