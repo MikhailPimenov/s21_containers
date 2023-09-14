@@ -493,9 +493,10 @@ private:
     using const_reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
 
 public:
-    Tree() : size_{0}, root_{nullptr}, end_{}, rend_{}  {}
-    Tree(std::initializer_list<value_type> list) : Tree()
-    {
+    Tree() : size_{0ull}, root_{nullptr}, end_{}, rend_{}  {
+
+    }
+    Tree(std::initializer_list<value_type> list) : Tree() {
         for (auto&& element : list)
             Insert(std::move(element));
     }
@@ -939,7 +940,10 @@ public:
     void Clear() noexcept {
         if(root_)
             deallocate(&root_);
-        size_ = 0;
+        size_ = 0ull;
+
+        updateEnd();
+        updateReverseEnd();
     }
 
     std::pair<iterator, bool> Insert(const_reference value) {
