@@ -941,9 +941,6 @@ public:
         if(root_)
             deallocate(&root_);
         size_ = 0ull;
-
-        updateEnd();
-        updateReverseEnd();
     }
 
     std::pair<iterator, bool> Insert(const_reference value) {
