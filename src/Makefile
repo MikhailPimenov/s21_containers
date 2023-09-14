@@ -1,6 +1,6 @@
 CC=g++
-# STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -Werror
-STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g
+STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g -Werror
+# STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g
 
 
 GCOVR_CFLAGS=-fprofile-arcs -ftest-coverage -fPIC
@@ -16,57 +16,57 @@ VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
 SOURCES=tests/item.cc 
 
-# SOURCES+=tests/stack/constructors.cc
-# SOURCES+=tests/stack/methods.cc
+SOURCES+=tests/stack/constructors.cc
+SOURCES+=tests/stack/methods.cc
 
-# SOURCES+=tests/queue/constructors.cc
-# SOURCES+=tests/queue/methods.cc
+SOURCES+=tests/queue/constructors.cc
+SOURCES+=tests/queue/methods.cc
 
-# SOURCES+=tests/vector/constructors.cc
-# SOURCES+=tests/vector/modifiers.cc
-# SOURCES+=tests/vector/access.cc
-# SOURCES+=tests/vector/capacity.cc
-# SOURCES+=tests/vector/iterator.cc
-# SOURCES+=tests/vector/other.cc
+SOURCES+=tests/vector/constructors.cc
+SOURCES+=tests/vector/modifiers.cc
+SOURCES+=tests/vector/access.cc
+SOURCES+=tests/vector/capacity.cc
+SOURCES+=tests/vector/iterator.cc
+SOURCES+=tests/vector/other.cc
 
-# SOURCES+=tests/map/constructors.cc
-# SOURCES+=tests/map/capacity.cc
-# SOURCES+=tests/map/modifiers.cc
+SOURCES+=tests/map/constructors.cc
+SOURCES+=tests/map/capacity.cc
+SOURCES+=tests/map/modifiers.cc
 SOURCES+=tests/map/erase.cc
-# SOURCES+=tests/map/iterator.cc
-# SOURCES+=tests/map/balance.cc
-# SOURCES+=tests/map/lookup.cc
+SOURCES+=tests/map/iterator.cc
+SOURCES+=tests/map/balance.cc
+SOURCES+=tests/map/lookup.cc
 
-# SOURCES+=tests/multiset/constructors.cc
+SOURCES+=tests/multiset/constructors.cc
 SOURCES+=tests/multiset/erase.cc
-# SOURCES+=tests/multiset/capacity.cc
-# SOURCES+=tests/multiset/modifiers.cc
-# SOURCES+=tests/multiset/iterator.cc
-# SOURCES+=tests/multiset/lookup.cc
+SOURCES+=tests/multiset/capacity.cc
+SOURCES+=tests/multiset/modifiers.cc
+SOURCES+=tests/multiset/iterator.cc
+SOURCES+=tests/multiset/lookup.cc
 
-# SOURCES+=tests/multimap/constructors.cc
-# SOURCES+=tests/multimap/capacity.cc
+SOURCES+=tests/multimap/constructors.cc
+SOURCES+=tests/multimap/capacity.cc
 SOURCES+=tests/multimap/erase.cc
-# SOURCES+=tests/multimap/modifiers.cc
-# SOURCES+=tests/multimap/lookup.cc
-# SOURCES+=tests/multimap/iterator.cc
+SOURCES+=tests/multimap/modifiers.cc
+SOURCES+=tests/multimap/lookup.cc
+SOURCES+=tests/multimap/iterator.cc
 
-# SOURCES+=tests/list/list.cc 
-# SOURCES+=tests/list/push_back.cc 
-# SOURCES+=tests/list/push_front.cc
-# SOURCES+=tests/list/access.cc 
-# SOURCES+=tests/list/assign.cc
-# SOURCES+=tests/list/insert.cc
-# SOURCES+=tests/list/emplace.cc
-# SOURCES+=tests/list/swap.cc
-# SOURCES+=tests/list/erase.cc
+SOURCES+=tests/list/list.cc 
+SOURCES+=tests/list/push_back.cc 
+SOURCES+=tests/list/push_front.cc
+SOURCES+=tests/list/access.cc 
+SOURCES+=tests/list/assign.cc
+SOURCES+=tests/list/insert.cc
+SOURCES+=tests/list/emplace.cc
+SOURCES+=tests/list/swap.cc
+SOURCES+=tests/list/erase.cc
 
-# SOURCES+=tests/set/constructors.cc
-# SOURCES+=tests/set/capacity.cc
-# SOURCES+=tests/set/modifiers.cc
-# SOURCES+=tests/set/erase.cc
-# SOURCES+=tests/set/iterator.cc
-# SOURCES+=tests/set/lookup.cc
+SOURCES+=tests/set/constructors.cc
+SOURCES+=tests/set/capacity.cc
+SOURCES+=tests/set/modifiers.cc
+SOURCES+=tests/set/erase.cc
+SOURCES+=tests/set/iterator.cc
+SOURCES+=tests/set/lookup.cc
 
 
 # SOURCES=*/*.cc
@@ -83,7 +83,7 @@ tests/tests_main.exe: $(BINARIES)
 		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS) -g
 
 %.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h tests/vector_helpers.h s21_vector.h tests/map_helpers.h s21_map.h s21_tree.h s21_set.h s21_multimap.h s21_multiset.h tests/set_helpers.h tests/multiset_helpers.h tests/multimap_helpers.h s21_multitree.h
-		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS) -g
+		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS)
 
 run_tests: tests/tests_main.exe
 		./tests/tests_main.exe
@@ -100,7 +100,7 @@ gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
 # open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
-# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 

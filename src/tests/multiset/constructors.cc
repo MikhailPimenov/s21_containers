@@ -499,8 +499,6 @@ TEST(MultiSet, T0ReverseIterator)
         {Item(7, 'c', 0.3)},
     };
 
-    const auto start = s21_multiset.rbegin();
-    const auto finish = s21_multiset.rend();
     // for (auto it = s21_multiset.rbegin(); it != s21_multiset.rend(); ++it) {
     //     std::cout << "{" << it->first << ", " << it->second << "},\n";
     // }

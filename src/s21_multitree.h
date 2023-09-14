@@ -15,7 +15,7 @@ namespace s21 {
 template <typename TreeIterator, typename NodeIterator, typename Pointer, typename Reference>
 class MultiTreeIteratorBase {
 
-private:
+protected:
     TreeIterator treeIterator_;
     TreeIterator treeBeforeBegin_;
     TreeIterator treeEnd_;
@@ -119,6 +119,14 @@ public:
         Base::operator--();
         return temporary;
     }
+
+    template <typename OtherTreeIterator, typename OtherNodeIterator, typename OtherPointer, typename OtherReference>
+    explicit operator MultiTreeIterator<OtherTreeIterator, OtherNodeIterator, OtherPointer, OtherReference>() {
+        return MultiTreeIterator<OtherTreeIterator, OtherNodeIterator, OtherPointer, OtherReference>(static_cast<OtherTreeIterator>(this->treeIterator_),
+                                                                                                     static_cast<OtherTreeIterator>(this->treeBeforeBegin_),
+                                                                                                     static_cast<OtherTreeIterator>(this->treeEnd_),
+                                                                                                     static_cast<OtherNodeIterator>(this->nodeIterator_));
+    }
 };
 template <typename TreeIterator, typename NodeIterator, typename Pointer, typename Reference>
 class MultiTreeReverseIterator : public MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer, Reference> {
@@ -145,6 +153,16 @@ public:
         Base::operator++();
         return temporary;
     }
+
+
+    template <typename OtherTreeIterator, typename OtherNodeIterator, typename OtherPointer, typename OtherReference>
+    explicit operator MultiTreeReverseIterator<OtherTreeIterator, OtherNodeIterator, OtherPointer, OtherReference>() {
+        return MultiTreeReverseIterator<OtherTreeIterator, OtherNodeIterator, OtherPointer, OtherReference>(static_cast<OtherTreeIterator>(this->treeIterator_),
+                                                                                                            static_cast<OtherTreeIterator>(this->treeBeforeBegin_),
+                                                                                                            static_cast<OtherTreeIterator>(this->treeEnd_),
+                                                                                                            static_cast<OtherNodeIterator>(this->nodeIterator_));
+    }
+
 };
 
 
@@ -158,7 +176,6 @@ class MultiTree
 
 
 public:
-    // using value_type        = std::pair<const Key, Type>;
     using value_type        = Value;
     using mapped_type       = value_type;
     using key_type          = Key;
@@ -267,8 +284,6 @@ public:
         return iterator(next_it, --(tree_.begin()), tree_.end(), next_it->begin());
     }
 
-
-
     node_type Extract(const_iterator pos) {
         typename tree_type::iterator it = tree_.Find(keyGetter_(*pos));
         --size_;
@@ -279,9 +294,14 @@ public:
             }
         }
 
-        node_type result = it->Extract(it->begin());
-        tree_.Extract(it); 
+        typename tree_type::node_pointer node = tree_.Extract(it); 
+        node_type result(node->value_.Extract(node->value_.begin()));
         return result;
+    }
+
+    node_type Extract(iterator pos) {
+        auto it = static_cast<const_iterator>(pos);
+        return Extract(it);
     }
 
 
@@ -334,7 +354,7 @@ public:
     }
 
     bool Empty() const noexcept {
-        assert((tree_.Empty() && !size_) || (!tree_.Empty() && size_) && "Size should be 0 when and only when tree is empty");
+        assert(((tree_.Empty() && !size_) || (!tree_.Empty() && size_)) && "Size should be 0 when and only when tree is empty");
         return tree_.Empty();
     }
 

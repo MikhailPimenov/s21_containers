@@ -524,13 +524,13 @@ template <typename Type> class Vector
     
     constexpr reference At(size_type pos)
     {
-        if (pos >= size_ || pos < 0)
+        if (pos >= size_)
             throw std::out_of_range("Index is out of range!");
         return operator[](pos);
     }
     constexpr const_reference At(size_type pos) const
     {
-        if (pos >= size_ || pos < 0)
+        if (pos >= size_)
             throw std::out_of_range("Index is out of range!");
         return operator[](pos);
     }

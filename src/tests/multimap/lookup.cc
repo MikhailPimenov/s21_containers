@@ -8,24 +8,8 @@
 
 // GCOVR_EXCL_START
 
-// class Item2 {
-// private:
-//     int a_;
-// public:
-
-
-//     friend std::ostream& operator<<(std::ostream& out, const Item2& object) {
-//         out << "Item2(" << object.a_ << ')';
-//         return out;
-//     }
-
-// };
-
-
 namespace
 {
-
-
 
 TEST(Map, T0Find)
 {

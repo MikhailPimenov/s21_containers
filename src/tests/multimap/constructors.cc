@@ -506,8 +506,6 @@ TEST(MultiMap, T0ReverseIterator)
         {7, Item(3, 'c', 0.3)},
     };
 
-    const auto start = s21_multimap.rbegin();
-    const auto finish = s21_multimap.rend();
     for (auto it = s21_multimap.rbegin(); it != s21_multimap.rend(); ++it) {
         std::cout << "{" << it->first << ", " << it->second << "},\n";
     }

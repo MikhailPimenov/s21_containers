@@ -374,7 +374,7 @@ class TreeIterator : public TreeIteratorBase<Tree,
     operator int() const = delete;
 
     // to enable creating iterator from const_iterator via static_cast
-private:
+// private:
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
     explicit operator TreeIterator<Tree, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
     {
@@ -432,7 +432,7 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
 
     operator int() const = delete;
 
-private:
+// private:
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
     explicit operator TreeReverseIterator<Tree, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
     {
@@ -493,7 +493,7 @@ private:
     using const_reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
 
 public:
-    Tree() : size_{0},  end_{}, rend_{}, root_{nullptr} {}
+    Tree() : size_{0}, root_{nullptr}, end_{}, rend_{}  {}
     Tree(std::initializer_list<value_type> list) : Tree()
     {
         for (auto&& element : list)
@@ -830,10 +830,12 @@ private:
             return;
         }
 
-        if (node->left_->lHeight_ > node->left_->rHeight_)
-            node->lHeight_ = 1ull + node->left_->lHeight_;
-        else
-            node->lHeight_ = 1ull + node->left_->rHeight_;
+        if (node->left_) {
+            if (node->left_->lHeight_ > node->left_->rHeight_)
+                node->lHeight_ = 1ull + node->left_->lHeight_;
+            else
+                node->lHeight_ = 1ull + node->left_->rHeight_;
+        }
     }
     void updateRightHeight(base_node_pointer node) {
         assert(node && "Node should exist!");
@@ -841,11 +843,12 @@ private:
             node->rHeight_ = 0ull;
             return;
         }
-        if (node->right_) 
+        if (node->right_) {
             if (node->right_->lHeight_ > node->right_->rHeight_)
                 node->rHeight_ = 1ull + node->right_->lHeight_;
             else
                 node->rHeight_ = 1ull + node->right_->rHeight_;
+        }
     }
 
     std::pair<iterator, bool> insert_recursive(base_node_pointer root, const_reference value) {
@@ -1030,11 +1033,12 @@ private:
                     (root)->right_->root_ = new_node;
                 updateRightHeight(new_node);
 
-                if ((root)->root_)
+                if ((root)->root_) {
                     if ((root)->root_->right_ == (root))
                         (root)->root_->right_ = new_node;
                     else
                         (root)->root_->left_ = new_node;
+                }
                 new_node->root_ = (root)->root_;
 
                 if (unbalanced(new_node))
@@ -1064,11 +1068,12 @@ private:
                 (root)->left_->root_ = new_node;
                 updateLeftHeight(new_node);
 
-                if ((root)->root_)
+                if ((root)->root_) {
                     if ((root)->root_->right_ == (root))
                         (root)->root_->right_ = new_node;
                     else
                         (root)->root_->left_ = new_node;
+                }
                 new_node->root_ = (root)->root_;
 
                 if (unbalanced(new_node))
@@ -1090,11 +1095,12 @@ private:
                 updateLeftHeight(new_node);
 
 
-                if ((root)->root_)
+                if ((root)->root_) {
                     if ((root)->root_->left_ == (root))
                         (root)->root_->left_ = new_node;
                     else
                         (root)->root_->right_ = new_node;
+                }
                 new_node->root_ = (root)->root_;
 
                 if (unbalanced(new_node))
@@ -1124,11 +1130,12 @@ private:
                 (root)->right_->root_ = new_node;
                 updateRightHeight(new_node);
 
-                if ((root)->root_)
+                if ((root)->root_) {
                     if ((root)->root_->left_ == (root))
                         (root)->root_->left_ = new_node;
                     else
                         (root)->root_->right_ = new_node;
+                }
                 new_node->root_ = (root)->root_;
 
                 if (unbalanced(new_node))
@@ -1138,11 +1145,12 @@ private:
 
         }
 
-        if (no_replace && root->root_)
+        if (no_replace && root->root_) {
             if (root->root_->left_ == root)
                 root->root_->left_ = nullptr;
             else
                 root->root_->right_ = nullptr;
+        }
 
         --size_;
 

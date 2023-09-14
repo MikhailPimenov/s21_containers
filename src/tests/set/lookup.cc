@@ -8,27 +8,6 @@
 
 // GCOVR_EXCL_START
 
-class Item2 {
-private:
-    int a_;
-public:
-
-
-    friend std::ostream& operator<<(std::ostream& out, const Item2& object) {
-        out << "Item2(" << object.a_ << ')';
-        return out;
-    }
-
-};
-
-bool operator==(const Item2& left, const Item2& right) {
-    return false;
-}
-
-bool operator!=(const Item2& left, const Item2& right) {
-    return false;
-}
-
 namespace
 {
 

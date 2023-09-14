@@ -628,149 +628,147 @@ TEST(Set, T9RandomErase)
 
 
 
-// TEST(Set, T0RandomExtract)   // TODO: enable it later
-// {
-//     // return;
-//     s21::Set<Item, ComparatorItem> s21_set;
+TEST(Set, T0RandomExtract)   // TODO: enable it later
+{
+    s21::Set<Item, ComparatorItem> s21_set;
 
-//     s21_set.Insert(Item(3));
-//     s21_set.Insert(Item(5));
-//     s21_set.Insert(Item(5));
-//     s21_set.Insert(Item(4));
+    s21_set.Insert(Item(3));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(4));
 
-//     s21_set.Insert(Item(14));
-//     s21_set.Insert(Item(11));
-//     s21_set.Insert(Item(7));
-//     s21_set.Insert(Item(8));
-//     s21_set.Insert(Item(-8));
-//     s21_set.Insert(Item(7));
-//     s21_set.Insert(Item(-18));
-//     s21_set.Insert(Item(6));
-//     s21_set.Insert(Item(3));
-//     s21_set.Insert(Item(29));
-//     s21_set.Insert(Item(30));
-//     s21_set.Insert(Item(31));
-//     s21_set.Insert(Item(34));
-//     s21_set.Insert(Item(37));
-
-
-//     std::set<Item, ComparatorItem> set;
-
-//     set.insert(Item(3));
-//     set.insert(Item(5));
-//     set.insert(Item(5));
-//     set.insert(Item(4));
-
-//     set.insert(Item(14));
-//     set.insert(Item(11));
-//     set.insert(Item(7));
-//     set.insert(Item(8));
-//     set.insert(Item(-8));
-//     set.insert(Item(7));
-//     set.insert(Item(-18));
-//     set.insert(Item(6));
-//     set.insert(Item(3));
-//     set.insert(Item(29));
-//     set.insert(Item(30));
-//     set.insert(Item(31));
-//     set.insert(Item(34));
-//     set.insert(Item(37));
+    s21_set.Insert(Item(14));
+    s21_set.Insert(Item(11));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(8));
+    s21_set.Insert(Item(-8));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(-18));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(3));
+    s21_set.Insert(Item(29));
+    s21_set.Insert(Item(30));
+    s21_set.Insert(Item(31));
+    s21_set.Insert(Item(34));
+    s21_set.Insert(Item(37));
 
 
+    std::set<Item, ComparatorItem> set;
 
-//     // std::cout << s21_set << "\n\n";
-//     s21::Set<Item, ComparatorItem>::const_iterator s21_it = s21_set.cbegin();
-//     std::set<Item, ComparatorItem>::const_iterator it = set.cbegin();
-//     for (int i = 0; i < 8; ++i) {
-//         ++s21_it;
-//         ++it;
-//     }
+    set.insert(Item(3));
+    set.insert(Item(5));
+    set.insert(Item(5));
+    set.insert(Item(4));
 
-//     s21::Set<Item, ComparatorItem>::node_type s21_it_result = s21_set.Extract(s21_it);
-//     std::set<Item, ComparatorItem>::node_type it_result = set.extract(it);
+    set.insert(Item(14));
+    set.insert(Item(11));
+    set.insert(Item(7));
+    set.insert(Item(8));
+    set.insert(Item(-8));
+    set.insert(Item(7));
+    set.insert(Item(-18));
+    set.insert(Item(6));
+    set.insert(Item(3));
+    set.insert(Item(29));
+    set.insert(Item(30));
+    set.insert(Item(31));
+    set.insert(Item(34));
+    set.insert(Item(37));
 
-//     EXPECT_EQ(it_result.value(), s21_it_result.Get());
 
-//     EXPECT_EQ(s21_set, set);
-//     EXPECT_TRUE(minimalHeightAVL(s21_set.Size(), s21_set.Height()));    
 
-// // TODO: leaks?
-// //    delete &s21_it_result;
-// //    delete &it_result;
+    // std::cout << s21_set << "\n\n";
+    s21::Set<Item, ComparatorItem>::const_iterator s21_it = s21_set.cbegin();
+    std::set<Item, ComparatorItem>::const_iterator it = set.cbegin();
+    for (int i = 0; i < 8; ++i) {
+        ++s21_it;
+        ++it;
+    }
 
-// }
+    s21::Set<Item, ComparatorItem>::node_type s21_it_result = s21_set.Extract(s21_it);
+    std::set<Item, ComparatorItem>::node_type it_result = set.extract(it);
 
+    EXPECT_EQ(it_result.value(), s21_it_result.Get());
+
+    EXPECT_EQ(s21_set, set);
+    EXPECT_TRUE(minimalHeightAVL(s21_set.Size(), s21_set.Height()));    
+
+// TODO: leaks?
+//    delete &s21_it_result;
+//    delete &it_result;
+
+}
 
 
 
 
 
-// TEST(Set, T1RandomExtract)
-// {
-//     // return;
-//     s21::Set<Item, ComparatorItem> s21_set;
 
-//     s21_set.Insert(Item(3));
-//     s21_set.Insert(Item(5));
-//     s21_set.Insert(Item(5));
-//     s21_set.Insert(Item(4));
+TEST(Set, T1RandomExtract)
+{
+    s21::Set<Item, ComparatorItem> s21_set;
 
-//     s21_set.Insert(Item(14));
-//     s21_set.Insert(Item(11));
-//     s21_set.Insert(Item(7));
-//     s21_set.Insert(Item(8));
-//     s21_set.Insert(Item(-8));
-//     s21_set.Insert(Item(7));
-//     s21_set.Insert(Item(-18));
-//     s21_set.Insert(Item(6));
-//     s21_set.Insert(Item(3));
-//     s21_set.Insert(Item(29));
-//     s21_set.Insert(Item(30));
-//     s21_set.Insert(Item(31));
-//     s21_set.Insert(Item(34));
-//     s21_set.Insert(Item(37));
+    s21_set.Insert(Item(3));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(5));
+    s21_set.Insert(Item(4));
 
-
-//     std::set<Item, ComparatorItem> set;
-
-//     set.insert(Item(3));
-//     set.insert(Item(5));
-//     set.insert(Item(5));
-//     set.insert(Item(4));
-
-//     set.insert(Item(14));
-//     set.insert(Item(11));
-//     set.insert(Item(7));
-//     set.insert(Item(8));
-//     set.insert(Item(-8));
-//     set.insert(Item(7));
-//     set.insert(Item(-18));
-//     set.insert(Item(6));
-//     set.insert(Item(3));
-//     set.insert(Item(29));
-//     set.insert(Item(30));
-//     set.insert(Item(31));
-//     set.insert(Item(34));
-//     set.insert(Item(37));
+    s21_set.Insert(Item(14));
+    s21_set.Insert(Item(11));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(8));
+    s21_set.Insert(Item(-8));
+    s21_set.Insert(Item(7));
+    s21_set.Insert(Item(-18));
+    s21_set.Insert(Item(6));
+    s21_set.Insert(Item(3));
+    s21_set.Insert(Item(29));
+    s21_set.Insert(Item(30));
+    s21_set.Insert(Item(31));
+    s21_set.Insert(Item(34));
+    s21_set.Insert(Item(37));
 
 
+    std::set<Item, ComparatorItem> set;
 
-//     // std::cout << s21_set << "\n\n";
-//     s21::Set<Item, ComparatorItem>::const_iterator s21_it = s21_set.cbegin();
-//     std::set<Item, ComparatorItem>::const_iterator it = set.cbegin();
-//     for (int i = 0; i < 4; ++i) {
-//         ++s21_it;
-//         ++it;
-//     }
+    set.insert(Item(3));
+    set.insert(Item(5));
+    set.insert(Item(5));
+    set.insert(Item(4));
 
-//     s21::Set<Item, ComparatorItem>::node_type s21_it_result = s21_set.Extract(s21_it);
-//     std::set<Item, ComparatorItem>::node_type it_result = set.extract(it);
+    set.insert(Item(14));
+    set.insert(Item(11));
+    set.insert(Item(7));
+    set.insert(Item(8));
+    set.insert(Item(-8));
+    set.insert(Item(7));
+    set.insert(Item(-18));
+    set.insert(Item(6));
+    set.insert(Item(3));
+    set.insert(Item(29));
+    set.insert(Item(30));
+    set.insert(Item(31));
+    set.insert(Item(34));
+    set.insert(Item(37));
 
-//     EXPECT_EQ(it_result.value(), s21_it_result.Get());
 
-//     EXPECT_EQ(s21_set, set);
-//     EXPECT_TRUE(minimalHeightAVL(s21_set.Size(), s21_set.Height()));    
-// }
+
+    // std::cout << s21_set << "\n\n";
+    s21::Set<Item, ComparatorItem>::const_iterator s21_it = s21_set.cbegin();
+    std::set<Item, ComparatorItem>::const_iterator it = set.cbegin();
+    for (int i = 0; i < 4; ++i) {
+        ++s21_it;
+        ++it;
+    }
+
+    s21::Set<Item, ComparatorItem>::node_type s21_it_result = s21_set.Extract(s21_it);
+    std::set<Item, ComparatorItem>::node_type it_result = set.extract(it);
+
+    EXPECT_EQ(it_result.value(), s21_it_result.Get());
+
+    EXPECT_EQ(s21_set, set);
+    EXPECT_TRUE(minimalHeightAVL(s21_set.Size(), s21_set.Height()));    
+}
 
 
 }  // namespace
