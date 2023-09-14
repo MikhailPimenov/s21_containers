@@ -1177,7 +1177,7 @@ public:
     base_node_pointer Extract(const_iterator pos) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
-        const auto& [_, node] = extract_recursive(root_, pos);
+        const auto& [_, node] = extract_recursive(root_, *pos);
         return node;
     }
     // base_node_pointer Extract(const key_type& key) {

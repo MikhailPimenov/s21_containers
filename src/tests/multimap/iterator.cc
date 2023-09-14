@@ -52,17 +52,6 @@ TEST(Map, T0IteratorOperatorPlus)
     }
 }
 
-// class Azaza {
-//     int _a;
-// public:
-//     Azaza(int a = 0) : _a{a} {}
-
-// public:
-//     // bool operator<(const Azaza& other) const {
-//     //     return _a < other._a;
-//     // }
-// };
-
 TEST(Map, T1IteratorOperatorMinus)
 {
     s21::MultiMap<int, Item> s21_multimap;
