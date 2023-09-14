@@ -85,7 +85,7 @@ public:
             if(this == &other)
                 return *this;
 
-            Handler::~Handler();
+            this->~Handler();
             pointer_ = other.pointer_;
             other.pointer_ = nullptr;
             return *this;
