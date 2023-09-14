@@ -62,7 +62,13 @@ public:
     Pointer operator->() {
         return nodeIterator_.operator->();
     }
+    Pointer operator->() const {
+        return nodeIterator_.operator->();
+    }
     Reference operator*() {
+        return nodeIterator_.operator*();
+    }
+    Reference operator*() const {
         return nodeIterator_.operator*();
     }
 
@@ -308,6 +314,47 @@ public:
     }
     size_type Height() const noexcept {
         return tree_.Height();
+    }
+
+    iterator Find(const key_type& key) {
+        typename tree_type::iterator it =  tree_.Find(key);
+        return iterator(it, --(tree_.begin()), tree_.end(), it->begin());
+    }
+    const_iterator Find(const key_type& key) const {
+        typename tree_type::const_iterator it =  tree_.Find(key);
+        return const_iterator(it, --(tree_.begin()), tree_.end(), it->begin());
+    }
+
+    bool Contains(const key_type& key) const {
+        return tree_.Contains(key);
+    }
+
+    iterator Lower_bound(const key_type& key) {
+        typename tree_type::iterator it =  tree_.Lower_bound(key);
+        return iterator(it, --(tree_.begin()), tree_.end(), it->begin());
+    }
+
+    const_iterator Lower_bound(const key_type& key) const {
+        typename tree_type::const_iterator it =  tree_.Lower_bound(key);
+        return const_iterator(it, --(tree_.begin()), tree_.end(), it->begin());
+    }
+
+    iterator Upper_bound(const key_type& key) {
+        typename tree_type::iterator it =  tree_.Upper_bound(key);
+        return iterator(it, --(tree_.begin()), tree_.end(), it->begin());
+    }
+    const_iterator Upper_bound(const key_type& key) const {
+        typename tree_type::const_iterator it =  tree_.Upper_bound(key);
+        return const_iterator(it, --(tree_.begin()), tree_.end(), it->begin());
+    }
+
+    std::pair<iterator, iterator> Equal_range(const key_type& key) {
+        std::pair<typename tree_type::iterator, typename tree_type::iterator> pair = tree_.Equal_range(key);
+        return std::make_pair(iterator(pair.first, --(tree_.begin()), tree_.end(), pair.first->begin()), iterator(pair.second, --(tree_.begin()), tree_.end(), pair.second->begin()));
+    }
+    std::pair<const_iterator, const_iterator> Equal_range(const key_type& key) const {
+        std::pair<typename tree_type::const_iterator, typename tree_type::const_iterator> pair = tree_.Equal_range(key);
+        return std::make_pair(const_iterator(pair.first, --(tree_.begin()), tree_.end(), pair.first->begin()), const_iterator(pair.second, --(tree_.begin()), tree_.end(), pair.second->begin()));
     }
 
     bool Empty() const noexcept {
