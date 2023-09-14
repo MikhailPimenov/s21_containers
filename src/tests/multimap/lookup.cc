@@ -21,13 +21,6 @@
 
 // };
 
-// bool operator==(const Item2& left, const Item2& right) {
-//     return false;
-// }
-
-// bool operator!=(const Item2& left, const Item2& right) {
-//     return false;
-// }
 
 namespace
 {

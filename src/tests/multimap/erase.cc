@@ -13,341 +13,341 @@ namespace
 {
 
 
-TEST(Map, T0EraseBegin)
+TEST(MultiMap, T0EraseBegin)
 {
-    s21::MultiMap<int, Item> s21_map;
-    std::multimap<int, Item> map;
+    s21::MultiMap<int, Item> s21_multimap;
+    std::multimap<int, Item> multimap;
 
-    s21_map.Insert(std::make_pair(4, Item()));
-    s21_map.Insert(std::make_pair(3, Item()));
-    s21_map.Insert(std::make_pair(7, Item()));
+    s21_multimap.Insert(std::make_pair(4, Item()));
+    s21_multimap.Insert(std::make_pair(3, Item()));
+    s21_multimap.Insert(std::make_pair(7, Item()));
 
-    std::cout << s21_map << '\n';
+    std::cout << s21_multimap << '\n';
 
-    map.insert(std::make_pair(4, Item()));
-    map.insert(std::make_pair(3, Item()));
-    map.insert(std::make_pair(7, Item()));
+    multimap.insert(std::make_pair(4, Item()));
+    multimap.insert(std::make_pair(3, Item()));
+    multimap.insert(std::make_pair(7, Item()));
     std::cout << "Before erase: \n";
-    for (auto it = map.cbegin(); it != map.cend(); ++it)
+    for (auto it = multimap.cbegin(); it != multimap.cend(); ++it)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_map.cbegin());
-    std::multimap<int, Item>::iterator it_result = map.erase(map.cbegin());
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_multimap.cbegin());
+    std::multimap<int, Item>::iterator it_result = multimap.erase(multimap.cbegin());
 
     EXPECT_EQ(*s21_it_result, *it_result);
     std::cout << "After erase: \n";
 
-    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+    for (auto it = s21_multimap.cbegin(); it != s21_multimap.cend(); ++it)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));
     
-    s21_map.Insert(std::make_pair(3, Item()));
-    map.insert(std::make_pair(3, Item()));
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));
+    s21_multimap.Insert(std::make_pair(3, Item()));
+    multimap.insert(std::make_pair(3, Item()));
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));
 }
 
-TEST(Map, T1EraseRBegin)
+TEST(MultiMap, T1EraseRBegin)
 {
-    s21::MultiMap<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item()));
-    s21_map.Insert(std::make_pair(3, Item()));
-    s21_map.Insert(std::make_pair(7, Item()));
+    s21::MultiMap<int, Item> s21_multimap;
+    s21_multimap.Insert(std::make_pair(4, Item()));
+    s21_multimap.Insert(std::make_pair(3, Item()));
+    s21_multimap.Insert(std::make_pair(7, Item()));
 
-    std::multimap<int, Item> map;
-    map.insert(std::make_pair(4, Item()));
-    map.insert(std::make_pair(3, Item()));
-    map.insert(std::make_pair(7, Item()));
+    std::multimap<int, Item> multimap;
+    multimap.insert(std::make_pair(4, Item()));
+    multimap.insert(std::make_pair(3, Item()));
+    multimap.insert(std::make_pair(7, Item()));
 
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for(int i = 0; i < 2; i++) {
         ++s21_it;
         ++it;
     }
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
-    EXPECT_EQ(s21_it_result, s21_map.end());
-    EXPECT_EQ(it_result, map.end());
+    EXPECT_EQ(s21_it_result, s21_multimap.end());
+    EXPECT_EQ(it_result, multimap.end());
 
     std::cout << "After erase: \n";
 
-    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+    for (auto it = s21_multimap.cbegin(); it != s21_multimap.cend(); ++it)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_multimap, multimap);
 }
 
-TEST(Map, T2EraseRoot)
+TEST(MultiMap, T2EraseRoot)
 {
-    s21::MultiMap<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(4, Item()));
-    s21_map.Insert(std::make_pair(3, Item()));
-    s21_map.Insert(std::make_pair(7, Item()));
+    s21::MultiMap<int, Item> s21_multimap;
+    s21_multimap.Insert(std::make_pair(4, Item()));
+    s21_multimap.Insert(std::make_pair(3, Item()));
+    s21_multimap.Insert(std::make_pair(7, Item()));
 
-    std::multimap<int, Item> map;
-    map.insert(std::make_pair(4, Item()));
-    map.insert(std::make_pair(3, Item()));
-    map.insert(std::make_pair(7, Item()));
+    std::multimap<int, Item> multimap;
+    multimap.insert(std::make_pair(4, Item()));
+    multimap.insert(std::make_pair(3, Item()));
+    multimap.insert(std::make_pair(7, Item()));
 
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for(int i = 0; i < 1; i++) {
         ++s21_it;                    //SEGMENTATION FAULT!!!!!
         ++it;
     }
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
     std::cout << "After erase: \n";
 
-    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+    for (auto it = s21_multimap.cbegin(); it != s21_multimap.cend(); ++it)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
 
-    EXPECT_EQ(s21_map, map);   
+    EXPECT_EQ(s21_multimap, multimap);   
 }
 
-TEST(Map, T2_1EraseRoot)
+TEST(MultiMap, T2_1EraseRoot)
 {
-    s21::MultiMap<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(3, Item()));
-    s21_map.Insert(std::make_pair(4, Item()));
+    s21::MultiMap<int, Item> s21_multimap;
+    s21_multimap.Insert(std::make_pair(3, Item()));
+    s21_multimap.Insert(std::make_pair(4, Item()));
 
-    std::multimap<int, Item> map;
-    map.insert(std::make_pair(3, Item()));
-    map.insert(std::make_pair(4, Item()));
+    std::multimap<int, Item> multimap;
+    multimap.insert(std::make_pair(3, Item()));
+    multimap.insert(std::make_pair(4, Item()));
 
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for(int i = 0; i < 1; i++) {
         ++s21_it;                    //SEGMENTATION FAULT!!!!!
         ++it;
     }
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
-    EXPECT_EQ(s21_it_result, s21_map.end());
-    EXPECT_EQ(it_result, map.end());
+    EXPECT_EQ(s21_it_result, s21_multimap.end());
+    EXPECT_EQ(it_result, multimap.end());
 
     std::cout << "After erase: \n";
 
-    for (auto it = s21_map.cbegin(); it != s21_map.cend(); ++it)
+    for (auto it = s21_multimap.cbegin(); it != s21_multimap.cend(); ++it)
         std::cout << "{" << it->first << " : " << it->second << "}\n";
 
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_multimap, multimap);
 }
 
-TEST(Map, T3RandomErase)
+TEST(MultiMap, T3RandomErase)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 7; ++i) {
         ++s21_it;
         ++it;
     }
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
 
-TEST(Map, T4RandomErase)
+TEST(MultiMap, T4RandomErase)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 11; ++i) {
         ++s21_it;
         ++it;
     }
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
-TEST(Map, T5RandomErase)    // seems like std::multimap erases not the first element in the node
+TEST(MultiMap, T5RandomErase)    // seems like std::multimap erases not the first element in the node
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(333)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(333)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(333)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(333)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 3; ++i) {
         ++s21_it;
         ++it;
     }
 
-    // s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    // std::multimap<int, Item>::iterator it_result = map.erase(it);
+    // s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    // std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
-    auto s21_it2 = s21_map.cbegin();
-    auto it2     = map.cbegin();
-    while (s21_it2 != s21_map.cend() && it2 != map.cend()) {
+    auto s21_it2 = s21_multimap.cbegin();
+    auto it2     = multimap.cbegin();
+    while (s21_it2 != s21_multimap.cend() && it2 != multimap.cend()) {
         std::cout << "{" << it2->first << " : " << it2->second << "}\t == ";
         std::cout << "{" << s21_it2->first << " : " << s21_it2->second << "}\n";
         ++s21_it2;
@@ -356,272 +356,272 @@ TEST(Map, T5RandomErase)    // seems like std::multimap erases not the first ele
 
     // EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
-TEST(Map, T6RandomErase)
+TEST(MultiMap, T6RandomErase)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 5; ++i) {
         ++s21_it;
         ++it;
     }
 
-    EXPECT_EQ(s21_map, map);
+    EXPECT_EQ(s21_multimap, multimap);
     
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
-TEST(Map, T7RandomEraseRoot)
+TEST(MultiMap, T7RandomEraseRoot)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    EXPECT_EQ(s21_map, map);
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    EXPECT_EQ(s21_multimap, multimap);
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 10; ++i) {
         ++s21_it;
         ++it;
     }
 
     std::cout << "Erase: " << s21_it->first << '\n';
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
-TEST(Map, T8RandomEraseRoot)
+TEST(MultiMap, T8RandomEraseRoot)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
-    s21_map.Insert(std::make_pair(60, Item(6)));
-    s21_map.Insert(std::make_pair(50, Item(5)));
-    s21_map.Insert(std::make_pair(70, Item(7)));
-    s21_map.Insert(std::make_pair(45, Item(45)));
-    s21_map.Insert(std::make_pair(55, Item(55)));
-    s21_map.Insert(std::make_pair(65, Item(65)));
-    s21_map.Insert(std::make_pair(80, Item(80)));
-    s21_map.Insert(std::make_pair(41, Item(41)));
-    s21_map.Insert(std::make_pair(54, Item(54)));
-    s21_map.Insert(std::make_pair(58, Item(58)));
-    s21_map.Insert(std::make_pair(61, Item(61)));
-    s21_map.Insert(std::make_pair(75, Item(75)));
-    s21_map.Insert(std::make_pair(85, Item(85)));
-    s21_map.Insert(std::make_pair(57, Item(57)));
-    s21_map.Insert(std::make_pair(88, Item(88)));
-    s21_map.Insert(std::make_pair(90, Item(90))); 
+    s21::MultiMap<int, Item> s21_multimap;
+    s21_multimap.Insert(std::make_pair(60, Item(6)));
+    s21_multimap.Insert(std::make_pair(50, Item(5)));
+    s21_multimap.Insert(std::make_pair(70, Item(7)));
+    s21_multimap.Insert(std::make_pair(45, Item(45)));
+    s21_multimap.Insert(std::make_pair(55, Item(55)));
+    s21_multimap.Insert(std::make_pair(65, Item(65)));
+    s21_multimap.Insert(std::make_pair(80, Item(80)));
+    s21_multimap.Insert(std::make_pair(41, Item(41)));
+    s21_multimap.Insert(std::make_pair(54, Item(54)));
+    s21_multimap.Insert(std::make_pair(58, Item(58)));
+    s21_multimap.Insert(std::make_pair(61, Item(61)));
+    s21_multimap.Insert(std::make_pair(75, Item(75)));
+    s21_multimap.Insert(std::make_pair(85, Item(85)));
+    s21_multimap.Insert(std::make_pair(57, Item(57)));
+    s21_multimap.Insert(std::make_pair(88, Item(88)));
+    s21_multimap.Insert(std::make_pair(90, Item(90))); 
    
-    std::multimap<int, Item> map;
-    map.insert(std::make_pair(60, Item(6)));
-    map.insert(std::make_pair(50, Item(5)));
-    map.insert(std::make_pair(70, Item(7)));
-    map.insert(std::make_pair(45, Item(45)));
-    map.insert(std::make_pair(55, Item(55)));
-    map.insert(std::make_pair(65, Item(65)));
-    map.insert(std::make_pair(80, Item(80)));
-    map.insert(std::make_pair(41, Item(41)));
-    map.insert(std::make_pair(54, Item(54)));
-    map.insert(std::make_pair(58, Item(58)));
-    map.insert(std::make_pair(61, Item(61)));
-    map.insert(std::make_pair(75, Item(75)));
-    map.insert(std::make_pair(85, Item(85)));
-    map.insert(std::make_pair(57, Item(57)));
-    map.insert(std::make_pair(88, Item(88)));
-    map.insert(std::make_pair(90, Item(90)));
+    std::multimap<int, Item> multimap;
+    multimap.insert(std::make_pair(60, Item(6)));
+    multimap.insert(std::make_pair(50, Item(5)));
+    multimap.insert(std::make_pair(70, Item(7)));
+    multimap.insert(std::make_pair(45, Item(45)));
+    multimap.insert(std::make_pair(55, Item(55)));
+    multimap.insert(std::make_pair(65, Item(65)));
+    multimap.insert(std::make_pair(80, Item(80)));
+    multimap.insert(std::make_pair(41, Item(41)));
+    multimap.insert(std::make_pair(54, Item(54)));
+    multimap.insert(std::make_pair(58, Item(58)));
+    multimap.insert(std::make_pair(61, Item(61)));
+    multimap.insert(std::make_pair(75, Item(75)));
+    multimap.insert(std::make_pair(85, Item(85)));
+    multimap.insert(std::make_pair(57, Item(57)));
+    multimap.insert(std::make_pair(88, Item(88)));
+    multimap.insert(std::make_pair(90, Item(90)));
 
 
-    EXPECT_EQ(s21_map, map);
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    EXPECT_EQ(s21_multimap, multimap);
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 7; ++i) {
         ++s21_it;
         ++it;
     }
 
     std::cout << "Erase: " << s21_it->first << '\n';
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
-TEST(Map, T9RandomErase)
+TEST(MultiMap, T9RandomErase)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 8; ++i) {
         ++s21_it;
         ++it;
     }
 
-    s21::MultiMap<int, Item>::iterator s21_it_result = s21_map.Erase(s21_it);
-    std::multimap<int, Item>::iterator it_result = map.erase(it);
+    s21::MultiMap<int, Item>::iterator s21_it_result = s21_multimap.Erase(s21_it);
+    std::multimap<int, Item>::iterator it_result = multimap.erase(it);
 
     EXPECT_EQ(*s21_it_result, *it_result);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
 
@@ -647,72 +647,72 @@ TEST(Map, T9RandomErase)
 
 
 
-TEST(Map, T0RandomExtract)
+TEST(MultiMap, T0RandomExtract)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 8; ++i) {
         ++s21_it;
         ++it;
     }
 
-    // s21::MultiMap<int, Item>::node_type s21_it_result = s21_map.Extract(s21_it);
-    // std::multimap<int, Item>::node_type it_result = map.extract(it);
+    // s21::MultiMap<int, Item>::node_type s21_it_result = s21_multimap.Extract(s21_it);
+    // std::multimap<int, Item>::node_type it_result = multimap.extract(it);
 
     // EXPECT_EQ(it_result.key(), s21_it_result.Get().first);
     // EXPECT_EQ(it_result.mapped(), s21_it_result.Get().second);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 
 // TODO: leaks?
 //    delete &s21_it_result;
@@ -725,72 +725,72 @@ TEST(Map, T0RandomExtract)
 
 
 
-TEST(Map, T1RandomExtract)
+TEST(MultiMap, T1RandomExtract)
 {
     // return;
-    s21::MultiMap<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_multimap;
 
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(5, Item(5)));
-    s21_map.Insert(std::make_pair(4, Item(4)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(5, Item(5)));
+    s21_multimap.Insert(std::make_pair(4, Item(4)));
 
-    s21_map.Insert(std::make_pair(14, Item(14)));
-    s21_map.Insert(std::make_pair(11, Item(11)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(8, Item(8)));
-    s21_map.Insert(std::make_pair(-8, Item(-8)));
-    s21_map.Insert(std::make_pair(7, Item(7)));
-    s21_map.Insert(std::make_pair(-18, Item(-18)));
-    s21_map.Insert(std::make_pair(6, Item(6)));
-    s21_map.Insert(std::make_pair(3, Item(3)));
-    s21_map.Insert(std::make_pair(29, Item(29)));
-    s21_map.Insert(std::make_pair(30, Item(30)));
-    s21_map.Insert(std::make_pair(31, Item(31)));
-    s21_map.Insert(std::make_pair(34, Item(34)));
-    s21_map.Insert(std::make_pair(37, Item(37)));
-
-
-    std::multimap<int, Item> map;
-
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(5, Item(5)));
-    map.insert(std::make_pair(4, Item(4)));
-
-    map.insert(std::make_pair(14, Item(14)));
-    map.insert(std::make_pair(11, Item(11)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(8, Item(8)));
-    map.insert(std::make_pair(-8, Item(-8)));
-    map.insert(std::make_pair(7, Item(7)));
-    map.insert(std::make_pair(-18, Item(-18)));
-    map.insert(std::make_pair(6, Item(6)));
-    map.insert(std::make_pair(3, Item(3)));
-    map.insert(std::make_pair(29, Item(29)));
-    map.insert(std::make_pair(30, Item(30)));
-    map.insert(std::make_pair(31, Item(31)));
-    map.insert(std::make_pair(34, Item(34)));
-    map.insert(std::make_pair(37, Item(37)));
+    s21_multimap.Insert(std::make_pair(14, Item(14)));
+    s21_multimap.Insert(std::make_pair(11, Item(11)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(8, Item(8)));
+    s21_multimap.Insert(std::make_pair(-8, Item(-8)));
+    s21_multimap.Insert(std::make_pair(7, Item(7)));
+    s21_multimap.Insert(std::make_pair(-18, Item(-18)));
+    s21_multimap.Insert(std::make_pair(6, Item(6)));
+    s21_multimap.Insert(std::make_pair(3, Item(3)));
+    s21_multimap.Insert(std::make_pair(29, Item(29)));
+    s21_multimap.Insert(std::make_pair(30, Item(30)));
+    s21_multimap.Insert(std::make_pair(31, Item(31)));
+    s21_multimap.Insert(std::make_pair(34, Item(34)));
+    s21_multimap.Insert(std::make_pair(37, Item(37)));
 
 
+    std::multimap<int, Item> multimap;
 
-    // std::cout << s21_map << "\n\n";
-    s21::MultiMap<int, Item>::const_iterator s21_it = s21_map.cbegin();
-    std::multimap<int, Item>::const_iterator it = map.cbegin();
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(5, Item(5)));
+    multimap.insert(std::make_pair(4, Item(4)));
+
+    multimap.insert(std::make_pair(14, Item(14)));
+    multimap.insert(std::make_pair(11, Item(11)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(8, Item(8)));
+    multimap.insert(std::make_pair(-8, Item(-8)));
+    multimap.insert(std::make_pair(7, Item(7)));
+    multimap.insert(std::make_pair(-18, Item(-18)));
+    multimap.insert(std::make_pair(6, Item(6)));
+    multimap.insert(std::make_pair(3, Item(3)));
+    multimap.insert(std::make_pair(29, Item(29)));
+    multimap.insert(std::make_pair(30, Item(30)));
+    multimap.insert(std::make_pair(31, Item(31)));
+    multimap.insert(std::make_pair(34, Item(34)));
+    multimap.insert(std::make_pair(37, Item(37)));
+
+
+
+    // std::cout << s21_multimap << "\n\n";
+    s21::MultiMap<int, Item>::const_iterator s21_it = s21_multimap.cbegin();
+    std::multimap<int, Item>::const_iterator it = multimap.cbegin();
     for (int i = 0; i < 4; ++i) {
         ++s21_it;
         ++it;
     }
 
-    // s21::MultiMap<int, Item>::node_type s21_it_result = s21_map.Extract(s21_it);
-    // std::multimap<int, Item>::node_type it_result = map.extract(it);
+    // s21::MultiMap<int, Item>::node_type s21_it_result = s21_multimap.Extract(s21_it);
+    // std::multimap<int, Item>::node_type it_result = multimap.extract(it);
 
     // EXPECT_EQ(it_result.key(), s21_it_result.Get().first);
     // EXPECT_EQ(it_result.mapped(), s21_it_result.Get().second);
 
-    EXPECT_EQ(s21_map, map);
-    EXPECT_TRUE(minimalHeightAVL(s21_map.Size(), s21_map.Height()));    
+    EXPECT_EQ(s21_multimap, multimap);
+    EXPECT_TRUE(minimalHeightAVL(s21_multimap.Size(), s21_multimap.Height()));    
 }
 
 

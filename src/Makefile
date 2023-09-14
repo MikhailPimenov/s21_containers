@@ -37,18 +37,19 @@ SOURCES+=tests/map/constructors.cc
 # SOURCES+=tests/map/balance.cc
 # SOURCES+=tests/map/lookup.cc
 
-SOURCES+=tests/multiset/constructors.cc
-SOURCES+=tests/multiset/erase.cc
-SOURCES+=tests/multiset/capacity.cc
-SOURCES+=tests/multiset/modifiers.cc
-SOURCES+=tests/multiset/iterator.cc
-SOURCES+=tests/multiset/lookup.cc
+# SOURCES+=tests/multiset/constructors.cc
+# SOURCES+=tests/multiset/erase.cc
+# SOURCES+=tests/multiset/capacity.cc
+# SOURCES+=tests/multiset/modifiers.cc
+# SOURCES+=tests/multiset/iterator.cc
+# SOURCES+=tests/multiset/lookup.cc
 
 SOURCES+=tests/multimap/constructors.cc
-# SOURCES+=tests/multimap/capacity.cc
-# SOURCES+=tests/multimap/erase.cc
+SOURCES+=tests/multimap/capacity.cc
+SOURCES+=tests/multimap/erase.cc
 SOURCES+=tests/multimap/modifiers.cc
 SOURCES+=tests/multimap/lookup.cc
+SOURCES+=tests/multimap/iterator.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
