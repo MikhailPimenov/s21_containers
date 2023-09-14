@@ -6,9 +6,9 @@
 #include <deque>
 #include <map>
 
-#include "../../s21_map.h"
+#include "../../s21_multimap.h"
 #include "../item.h"
-#include "../map_helpers.h"
+#include "../multimap_helpers.h"
 
 // GCOVR_EXCL_START
 
@@ -18,7 +18,7 @@ namespace
 
 TEST(Map, T0IteratorOperatorPlus)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -31,7 +31,7 @@ TEST(Map, T0IteratorOperatorPlus)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -42,8 +42,8 @@ TEST(Map, T0IteratorOperatorPlus)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::iterator s21_it = s21_map.begin();
-    std::map<int, Item>::iterator it = map.begin();
+    s21::MultiMap<int, Item>::iterator s21_it = s21_map.begin();
+    std::multimap<int, Item>::iterator it = map.begin();
 
     while (s21_it != s21_map.end() || it != map.end()) {
         EXPECT_EQ(*s21_it, *it);
@@ -65,7 +65,7 @@ TEST(Map, T0IteratorOperatorPlus)
 
 TEST(Map, T1IteratorOperatorMinus)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -78,7 +78,7 @@ TEST(Map, T1IteratorOperatorMinus)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -89,8 +89,8 @@ TEST(Map, T1IteratorOperatorMinus)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::iterator s21_it = s21_map.end();
-    std::map<int, Item>::iterator it = map.end();
+    s21::MultiMap<int, Item>::iterator s21_it = s21_map.end();
+    std::multimap<int, Item>::iterator it = map.end();
 
     // for (auto s21_it = --s21_map.end(); s21_it != s21_map.begin(); --s21_it)
         // std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
@@ -120,7 +120,7 @@ TEST(Map, T1IteratorOperatorMinus)
 
 TEST(Map, T2ReverseIteratorOperatorPlus)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -133,7 +133,7 @@ TEST(Map, T2ReverseIteratorOperatorPlus)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -144,8 +144,8 @@ TEST(Map, T2ReverseIteratorOperatorPlus)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::reverse_iterator s21_it = s21_map.rbegin();
-    std::map<int, Item>::reverse_iterator it = map.rbegin();
+    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_map.rbegin();
+    std::multimap<int, Item>::reverse_iterator it = map.rbegin();
 
     while (s21_it != s21_map.rend() || it != map.rend()) {
         EXPECT_EQ(*s21_it, *it);
@@ -156,7 +156,7 @@ TEST(Map, T2ReverseIteratorOperatorPlus)
 
 TEST(Map, T3ReverseIteratorOperatorMinus)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -169,7 +169,7 @@ TEST(Map, T3ReverseIteratorOperatorMinus)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -180,8 +180,8 @@ TEST(Map, T3ReverseIteratorOperatorMinus)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::reverse_iterator s21_it = s21_map.rend();
-    std::map<int, Item>::reverse_iterator it = map.rend();
+    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_map.rend();
+    std::multimap<int, Item>::reverse_iterator it = map.rend();
 
     // for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); ++s21_it)
     //     std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
@@ -198,7 +198,7 @@ TEST(Map, T3ReverseIteratorOperatorMinus)
 
 TEST(Map, T0IteratorOperatorMinusPost)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -211,7 +211,7 @@ TEST(Map, T0IteratorOperatorMinusPost)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -222,8 +222,8 @@ TEST(Map, T0IteratorOperatorMinusPost)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::iterator s21_it = s21_map.end();
-    std::map<int, Item>::iterator it = map.end();
+    s21::MultiMap<int, Item>::iterator s21_it = s21_map.end();
+    std::multimap<int, Item>::iterator it = map.end();
 
     // for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); ++s21_it)
     //     std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
@@ -238,7 +238,7 @@ TEST(Map, T0IteratorOperatorMinusPost)
 
 TEST(Map, T0IteratorOperatorPlusPost)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -251,7 +251,7 @@ TEST(Map, T0IteratorOperatorPlusPost)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -262,8 +262,8 @@ TEST(Map, T0IteratorOperatorPlusPost)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::iterator s21_it = s21_map.begin();
-    std::map<int, Item>::iterator it = map.begin();
+    s21::MultiMap<int, Item>::iterator s21_it = s21_map.begin();
+    std::multimap<int, Item>::iterator it = map.begin();
 
     // for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); ++s21_it)
     //     std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
@@ -278,7 +278,7 @@ TEST(Map, T0IteratorOperatorPlusPost)
 
 // TEST(Map, T0ReverseIteratorOperatorMinusPost)
 // {
-//     s21::Map<int, Item> s21_map;
+//     s21::MultiMap<int, Item> s21_map;
 //     s21_map.Insert(std::make_pair(4, Item(4)));
 //     s21_map.Insert(std::make_pair(6, Item(6)));
 //     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -291,7 +291,7 @@ TEST(Map, T0IteratorOperatorPlusPost)
 
 //     // std::cout << s21_map << '\n';
 
-//     std::map<int, Item> map;
+//     std::multimap<int, Item> map;
 //     map.insert(std::make_pair(4, Item(4)));
 //     map.insert(std::make_pair(6, Item(6)));
 //     map.insert(std::make_pair(7, Item(7)));
@@ -302,8 +302,8 @@ TEST(Map, T0IteratorOperatorPlusPost)
 //     map.insert(std::make_pair(1, Item(1)));
 //     map.insert(std::make_pair(5, Item(5)));
     
-//     s21::Map<int, Item>::reverse_iterator s21_it = s21_map.rend();
-//     std::map<int, Item>::reverse_iterator it = map.rend();
+//     s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_map.rend();
+//     std::multimap<int, Item>::reverse_iterator it = map.rend();
 
 //     // for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); ++s21_it)
 //     //     std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
@@ -318,7 +318,7 @@ TEST(Map, T0IteratorOperatorPlusPost)
 
 TEST(Map, T0ReverseIteratorOperatorPlusPost)
 {
-    s21::Map<int, Item> s21_map;
+    s21::MultiMap<int, Item> s21_map;
     s21_map.Insert(std::make_pair(4, Item(4)));
     s21_map.Insert(std::make_pair(6, Item(6)));
     s21_map.Insert(std::make_pair(7, Item(7)));
@@ -331,7 +331,7 @@ TEST(Map, T0ReverseIteratorOperatorPlusPost)
 
     // std::cout << s21_map << '\n';
 
-    std::map<int, Item> map;
+    std::multimap<int, Item> map;
     map.insert(std::make_pair(4, Item(4)));
     map.insert(std::make_pair(6, Item(6)));
     map.insert(std::make_pair(7, Item(7)));
@@ -342,8 +342,8 @@ TEST(Map, T0ReverseIteratorOperatorPlusPost)
     map.insert(std::make_pair(1, Item(1)));
     map.insert(std::make_pair(5, Item(5)));
     
-    s21::Map<int, Item>::reverse_iterator s21_it = s21_map.rbegin();
-    std::map<int, Item>::reverse_iterator it = map.rbegin();
+    s21::MultiMap<int, Item>::reverse_iterator s21_it = s21_map.rbegin();
+    std::multimap<int, Item>::reverse_iterator it = map.rbegin();
 
     for (auto s21_it = s21_map.rbegin(); s21_it != s21_map.rend(); s21_it++)
         std::cout << (*s21_it).first << " : " << (*s21_it).second << "\n";
