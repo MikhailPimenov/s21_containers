@@ -1355,8 +1355,8 @@ public:
 
 };
 
-};  // namespace Tree
+}  // namespace Tree
 
-};  // namespace s21
+}  // namespace s21
 
 #endif //  _TESTS_S21_TREE_H_
