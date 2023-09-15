@@ -47,6 +47,7 @@ namespace s21 {
             // pointer_->~NodePointer();
             // delete reinterpret_cast<char*>(pointer_);
             delete pointer_;
+            pointer_ = nullptr;
         }
     }; /// smart ass
 

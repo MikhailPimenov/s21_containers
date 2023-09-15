@@ -213,7 +213,7 @@ private:
     using tree_type         = Tree::Tree<const Key, aggregator_type, ComparatorTree>;
 
 public:
-    using node_type         = typename aggregator_type::node_type;  // handler
+    using node_type         = typename aggregator_type::node_type;  // handler which forbids copying and is responsible for destruction 
 
 public:
     using iterator                  = MultiTreeIterator<typename tree_type::iterator, typename aggregator_type::iterator, pointer, reference>;
@@ -296,6 +296,8 @@ public:
 
         typename tree_type::node_pointer node = tree_.Extract(it); 
         node_type result(node->value_.Extract(node->value_.begin()));
+        delete node;
+        node = nullptr;
         return result;
     }
 
