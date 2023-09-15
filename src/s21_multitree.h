@@ -213,7 +213,7 @@ private:
     using tree_type         = Tree::Tree<const Key, aggregator_type, ComparatorTree>;
 
 public:
-    using node_type         = Handler<typename aggregator_type::node_pointer, reference>;
+    using node_type         = typename aggregator_type::node_type;  // handler
 
 public:
     using iterator                  = MultiTreeIterator<typename tree_type::iterator, typename aggregator_type::iterator, pointer, reference>;

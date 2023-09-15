@@ -494,7 +494,8 @@ private:
 
 public:
     Tree() : size_{0ull}, root_{nullptr}, end_{}, rend_{}  {
-
+        end_.left_ = &rend_;
+        rend_.root_ = &end_;
     }
     Tree(std::initializer_list<value_type> list) : Tree() {
         for (auto&& element : list)
@@ -568,11 +569,22 @@ public:
         }
         end_.root_ = other.end_.root_;
 
+        if (other.root_) {
+            end_.right_ = nullptr;
+            end_.left_ = nullptr;
+            rend_.right_ = nullptr;
+            rend_.left_ = nullptr;
+        }
 
-        other.rend_.root_ = nullptr;
-        other.end_.root_ = nullptr;
+
+        // other.end_.root_ = nullptr;
+        // other.end_.left_ = &(other.rend_);
+        // other.rend_.root_ = &(other.end_);
         other.root_ = nullptr;
+        other.updateEnd();
+        other.updateReverseEnd();
         other.size_ = 0ull;
+
 
         return *this;
     }
@@ -653,23 +665,53 @@ private:
         base_node_pointer new_node = new Node(std::move(value), root);
         ++size_;
         return new_node;
+
+
+        // char* preallocated_buffer = new char[sizeof(node_type)]; // no constructors were called
+        // pointer new_value = reinterpret_cast<pointer>(preallocated_buffer);
+        // new (new_value) value_type(std::move(value));
+        // base_node_pointer new_node = reinterpret_cast<node_pointer>(new_value);
+        // new_node->root_ = root;
+        // ++size_;
+        // return new_node;
     }
     base_node_pointer create_node(base_node_pointer root, const_reference value) {
         base_node_pointer new_node = new Node(value, root);
         ++size_;
         return new_node;
+
+
+        // char* preallocated_buffer = new char[sizeof(node_type)]; // no constructors were called
+        // pointer new_value = reinterpret_cast<pointer>(preallocated_buffer);
+        // new (new_value) value_type(value);
+        // base_node_pointer new_node = reinterpret_cast<node_pointer>(new_value);
+        // new_node->root_ = root;
+        // ++size_;
+        // return new_node;
     }
     void updateEnd() {
-        assert(root_ && "Root should always exist!");
+        // assert(root_ && "Root should always exist!");
+        if (!root_) {
+            end_.left_ = &rend_;
+            rend_.root_ = &end_;
+            return;
+        }
         base_node_pointer new_end = root_;
         while (new_end->right_ != nullptr && new_end->right_ != &end_) {
             new_end = new_end->right_;
         }
         end_.root_ = new_end;
         new_end->right_ = &end_;     // otherwise it will not stop when if (new_end->right_)
+
+        end_.left_ = nullptr;
     }
     void updateReverseEnd() {
-        assert(root_ && "Root should always exist!");
+        // assert(root_ && "Root should always exist!");
+        if (!root_) {
+            end_.left_ = &rend_;
+            rend_.root_ = &end_;
+            return;
+        }
         base_node_pointer new_end = root_;
         while (new_end->left_ && new_end->left_ != &rend_) {
             new_end = new_end->left_;
@@ -941,6 +983,9 @@ public:
         if(root_)
             deallocate(&root_);
         size_ = 0ull;
+
+        end_.left_ = &rend_;
+        rend_.root_ = &end_;
     }
 
     std::pair<iterator, bool> Insert(const_reference value) {

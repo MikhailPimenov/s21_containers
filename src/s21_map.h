@@ -48,7 +48,7 @@ class Map : public Tree::Tree<Key,
 public:
     using Base::Base;
 
-    using node_type = Handler<typename Base::base_node_pointer, typename Base::reference>;
+    using node_type = Handler<typename Base::node_pointer, typename Base::reference>;
 
     node_type Extract(typename Base::const_iterator pos) {
         typename Base::base_node_pointer node = Base::Extract(pos);

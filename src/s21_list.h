@@ -243,6 +243,11 @@ template <typename Type> class List
 
       public:
         Node() : value_{value_type()}, next_{nullptr}, previous_{nullptr} {}
+        Node(const_reference value, Node* next = nullptr, Node* previous = nullptr) : value_{value}, next_{next}, previous_{previous} {}
+        Node(value_type&& value, Node* next = nullptr, Node* previous = nullptr) : value_{std::move(value)}, next_{next}, previous_{previous} {}
+        
+        template <class... Args>
+        Node(Args&&... args) : value_{std::forward<Args>(args)...}, next_{nullptr}, previous_{nullptr} {}
     };
 
     mutable Node end_;
@@ -402,24 +407,27 @@ template <typename Type> class List
 
 private:
     Node* create_node(const_reference data) {
-        char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
-        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-        new (new_data) value_type(data);
-        return reinterpret_cast<Node*>(new_data);
+        // char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
+        // pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
+        // new (new_data) value_type(data);
+        // return reinterpret_cast<Node*>(new_data);
+        return new Node(data);
     }
 
     Node* create_node(value_type&& data) {
-        char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
-        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-        new (new_data) value_type(std::move(data));
-        return reinterpret_cast<Node*>(new_data);
+        // char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
+        // pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
+        // new (new_data) value_type(std::move(data));
+        // return reinterpret_cast<Node*>(new_data);
+        return new Node(std::move(data));
     }
     template <class... Args>
     Node* create_node(Args&&... args) {
-        char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
-        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-        new (new_data) value_type(std::forward<Args>(args)...);
-        return reinterpret_cast<Node*>(new_data);
+        // char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
+        // pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
+        // new (new_data) value_type(std::forward<Args>(args)...);
+        // return reinterpret_cast<Node*>(new_data);
+        return new Node(std::forward<Args>(args)...);
     }
 
 public:
@@ -452,8 +460,9 @@ public:
         Node *old_last = previousOf(&end_);
         Node *new_last = previousOf(old_last);
         
-        old_last->~Node();
-        delete[] reinterpret_cast<char*>(old_last);
+        // old_last->~Node();
+        // delete[] reinterpret_cast<char*>(old_last);
+        delete old_last;
 
         connect(new_last, &end_);
 
@@ -590,8 +599,9 @@ public:
         Node *old_first = nextOf(&rend_);
         Node *new_first = nextOf(old_first);
 
-        old_first->~Node();
-        delete[] reinterpret_cast<char*>(old_first);
+        // old_first->~Node();
+        // delete[] reinterpret_cast<char*>(old_first);
+        delete old_first;
 
         connect(&rend_, new_first);
 
@@ -653,8 +663,9 @@ public:
         Node* previous = previousOf(pos.get());
         Node* next = nextOf(pos.get());
 
-        pos.get()->~Node();
-        delete[] reinterpret_cast<char*>(pos.get());
+        // pos.get()->~Node();
+        // delete[] reinterpret_cast<char*>(pos.get());
+        delete pos.get();
         --size_;
 
         connect(previous, next);

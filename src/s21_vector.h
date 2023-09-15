@@ -383,12 +383,10 @@ template <typename Type> class Vector
         }
         void reallocate(size_type exact_count)
         {
-            // pointer new_data = new Type[exact_count];
             char* preallocated_buffer = new char[sizeof(value_type) * exact_count]; // no constructors were called
             size_type new_size = size_;
             pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
             for (size_type i = 0; i < size_; ++i)
-                // new_data[i] = data_[i];
                 new (new_data + i) value_type(data_[i]);
             
             deallocate();
