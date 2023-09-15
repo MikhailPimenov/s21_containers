@@ -30,7 +30,7 @@ TEST(Queue, T1InsertManyEmpty)
 {
     s21::List<Item> s21_queue;
 
-    s21::List<Item> s21_queue_expected= {
+    s21::List<Item> s21_queue_expected {
         Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777),
     };
 

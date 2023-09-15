@@ -29,6 +29,7 @@ SOURCES+=tests/queue/insert_many.cc
 # SOURCES+=tests/vector/capacity.cc
 # SOURCES+=tests/vector/iterator.cc
 # SOURCES+=tests/vector/other.cc
+SOURCES+=tests/vector/insert_many.cc
 
 # SOURCES+=tests/map/constructors.cc
 # SOURCES+=tests/map/capacity.cc

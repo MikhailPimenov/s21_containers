@@ -550,12 +550,12 @@ public:
 
     template <typename Last>
     void insert_many_back(Last last) {
-        Push_back(last);
+        Push_back(std::forward<Last>(last));
     }
 
     template <typename First, class... Args>
     void insert_many_back(First first, Args&&... args) {
-        Push_back(first);
+        Push_back(std::forward<First>(first));
         insert_many_back(std::forward<Args>(args)...);
     }
 

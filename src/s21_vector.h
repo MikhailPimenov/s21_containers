@@ -716,6 +716,20 @@ public:
         return it_result;
     }
 
+    template <typename Last>
+    void insert_many_back(Last last) {
+        Push_back(std::forward<Last>(last));
+    }
+    template <typename First, class... Args>
+    void insert_many_back(First first, Args&&... args) {
+        Push_back(std::forward<First>(first));
+        insert_many_back(std::forward<Args>(args)...);
+    }
+    template <class... Args>
+    void Insert_many_back(Args&&... args) {
+        return insert_many_back(std::forward<Args>(args)...);
+    }
+
     private:
     template<class InputIt>
     static size_type getDistance(InputIt first, InputIt last) noexcept
