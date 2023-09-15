@@ -448,5 +448,6 @@ bool operator==(const s21::MultiTree<Key, Type, Comparator, GetKey>& left, const
     return true;
 }
 
-}
+}   // namespace s21
+
 #endif  //  _S21_MULTITREE_H_
