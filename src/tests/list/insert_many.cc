@@ -10,7 +10,7 @@
 
 namespace
 {
-TEST(List, T0InsertMany)
+TEST(List, T0InsertManyBack)
 {
     s21::List<Item> s21_list = {
         Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
@@ -27,7 +27,7 @@ TEST(List, T0InsertMany)
     EXPECT_EQ(s21_list, s21_list_expected);
 }
 
-TEST(List, T1InsertManyEmpty)
+TEST(List, T1InsertManyEmptyBack)
 {
     s21::List<Item> s21_list;
 
@@ -70,6 +70,23 @@ TEST(List, T1InsertManyEmptyFront)
 
     
     s21_list.Insert_many_front(Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777));
+
+
+    EXPECT_EQ(s21_list, s21_list_expected);
+}
+
+TEST(List, T1InsertMany)
+{
+    s21::List<Item> s21_list;
+
+    s21::List<Item> s21_list_expected {
+       Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777),
+    };
+
+
+
+    
+    s21_list.Insert_many(s21_list.end(), Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777));
 
 
     EXPECT_EQ(s21_list, s21_list_expected);

@@ -579,6 +579,20 @@ public:
         return insert_many_front(std::forward<Args>(args)...);
     }
 
+    template <typename Last>
+    iterator insert_many(const_iterator pos, Last last) {
+        return Insert(pos, last);
+    }
+    template <typename First, class... Args>
+    iterator insert_many(const_iterator pos, First first, Args&&... args) {
+        iterator it = insert_many(pos, std::forward<Args>(args)...);
+        return Insert(it, first);
+    }
+    template <typename... Args>
+    iterator Insert_many(const_iterator pos, Args&&... args) {
+        return insert_many(pos, std::forward<Args>(args)...);
+    }
+
     void Assign(size_type count, const_reference value)
     {
         List temporary(count, value);
