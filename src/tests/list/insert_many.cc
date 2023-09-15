@@ -75,7 +75,7 @@ TEST(List, T1InsertManyEmptyFront)
     EXPECT_EQ(s21_list, s21_list_expected);
 }
 
-TEST(List, T1InsertMany)
+TEST(List, T0InsertMany)
 {
     s21::List<Item> s21_list;
 
@@ -88,6 +88,75 @@ TEST(List, T1InsertMany)
     
     s21_list.Insert_many(s21_list.end(), Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777));
 
+
+    EXPECT_EQ(s21_list, s21_list_expected);
+}
+
+TEST(List, T1InsertMany)
+{
+    s21::List<Item> s21_list { Item(999, 'h', 0.777), Item(888, 'i', 0.666), Item(999, 'q', 0.777), };
+
+    s21::List<Item> s21_list_expected {
+       Item(999, 'h', 0.777), Item(888, 'i', 0.666), Item(999, 'q', 0.777), Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777),
+    };
+    
+    s21_list.Insert_many(s21_list.end(), Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777));
+
+
+    EXPECT_EQ(s21_list, s21_list_expected);
+}
+
+TEST(List, T2InsertMany)
+{
+    s21::List<Item> s21_list { Item(999, 'h', 0.777), Item(888, 'i', 0.666), Item(999, 'q', 0.777), };
+
+    s21::List<Item> s21_list_expected {
+       Item(999, 'h', 0.777), Item(888, 'i', 0.666), Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777), Item(999, 'q', 0.777),
+    };
+    
+    s21_list.Insert_many(--s21_list.end(), Item(11), Item(22), Item(33), Item(44), Item(55), Item(66), Item(666), Item(777));
+
+
+    EXPECT_EQ(s21_list, s21_list_expected);
+}
+
+TEST(List, T3InsertMany)
+{
+    s21::List<Item> s21_list { 
+        Item(999, 'h', 0.777), 
+        Item(888, 'i', 0.666), 
+        Item(999, 'q', 0.777), 
+        Item(555, 'j', 0.555), 
+        Item(444, 'k', 0.333), 
+    };
+
+    s21::List<Item> s21_list_expected {
+        Item(999, 'h', 0.777), 
+        Item(888, 'i', 0.666), 
+        Item(999, 'q', 0.777),
+        Item(11), 
+        Item(22), 
+        Item(33), 
+        Item(44), 
+        Item(55), 
+        Item(66), 
+        Item(666), 
+        Item(777), 
+        Item(555, 'j', 0.555), 
+        Item(444, 'k', 0.333), 
+    };
+    
+    s21_list.Insert_many(
+        --(--s21_list.end()), 
+        Item(11), 
+        Item(22), 
+        Item(33), 
+        Item(44), 
+        Item(55), 
+        Item(66), 
+        Item(666), 
+        Item(777)
+    );
 
     EXPECT_EQ(s21_list, s21_list_expected);
 }
