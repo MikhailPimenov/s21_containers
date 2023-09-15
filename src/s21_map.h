@@ -44,17 +44,11 @@ class Map : public Tree::Tree<Key,
     using Base = Tree::Tree<Key,
                             std::pair<const Key, Value>, 
                             ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>;
+    
 
 public:
+    using node_type = typename Base::node_handler;
     using Base::Base;
-
-    using node_type = Handler<typename Base::node_pointer, typename Base::reference>;
-
-    node_type Extract(typename Base::const_iterator pos) {
-        typename Base::base_node_pointer node = Base::Extract(pos);
-        node_type result(node);
-        return result;
-    } 
 };
 
 template <typename Key, typename Type>

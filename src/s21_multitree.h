@@ -294,11 +294,9 @@ public:
             }
         }
 
-        typename tree_type::node_pointer node = tree_.Extract(it); 
-        node_type result(node->value_.Extract(node->value_.begin()));
-        delete node;
-        node = nullptr;
-        return result;
+        typename tree_type::node_handler treeNode = tree_.Extract(it); 
+        node_type listNode(treeNode->value_.Extract(treeNode->value_.begin()));
+        return listNode;
     }
 
     node_type Extract(iterator pos) {

@@ -2,8 +2,7 @@
 #define _TESTS_S21_TREE_H_
 
 #include <cassert>
-
-#include "s21_vector.h"
+#include "s21_comparator.h"
 
 namespace s21 {
 
@@ -473,6 +472,8 @@ public:
     using const_node_pointer = const Node<value_type, size_type>*;
     using const_base_node_pointer = const Node<value_type, size_type>*;
     using comparator = Comparator;
+
+    using node_handler = Handler<node_pointer, reference>;
   private:
     size_type size_; 
 
@@ -1228,21 +1229,21 @@ public:
 
         return result.first;
     }
-    base_node_pointer Extract(const_iterator pos) {
+    node_handler Extract(const_iterator pos) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
         const auto& [_, node] = extract_recursive(root_, *pos);
-        return node;
+        return node_handler(node);
     }
-    base_node_pointer Extract(iterator pos) {
+    node_handler Extract(iterator pos) {
         return Extract(static_cast<const_iterator>(pos));
     }
     // base_node_pointer Extract(const key_type& key) {
-    base_node_pointer Extract(const_reference key) {
+    node_handler Extract(const_reference key) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
         const auto& [_, node] = extract_recursive(root_, key);
-        return node;
+        return node_handler(node);
     }
 
     // node_type Extract(const_iterator position );
