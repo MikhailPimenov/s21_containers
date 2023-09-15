@@ -70,6 +70,10 @@ public:
     {
         return stack_.Emplace_back(std::forward<Args>(args)...);
     }
+    template <class... Args>
+    void Insert_many_front(Args&&... args) {
+        return stack_.Insert_many_back(std::forward<Args>(args)...);
+    }
     void Pop() noexcept 
     {
         stack_.Pop_back();
