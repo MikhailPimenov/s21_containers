@@ -65,6 +65,10 @@ public:
     {
         return queue_.Emplace_back(std::forward<Args>(args)...);
     }
+    template <class... Args>
+    void Insert_many_back(Args&&... args) {
+        return queue_.Insert_many_back(std::forward<Args>(args)...);
+    }
     void Pop() noexcept 
     {
         queue_.Pop_front();
