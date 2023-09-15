@@ -1423,6 +1423,6 @@ TEST(Set, T8EqualRange)
 
 
 
-}; // namespace
+} // namespace
 
 // GCOVR_EXCL_STOP

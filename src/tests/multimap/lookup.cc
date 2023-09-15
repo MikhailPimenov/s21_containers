@@ -1421,6 +1421,6 @@ TEST(Map, T8EqualRange)
 
 
 
-}; // namespace
+} // namespace
 
 // GCOVR_EXCL_STOP
