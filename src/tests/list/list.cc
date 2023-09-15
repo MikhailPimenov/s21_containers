@@ -451,6 +451,7 @@ TEST(MaxSize, T4MaxSize)
     const auto ms = list.max_size();
     const auto s21_ms = s21_list.Max_size();
     EXPECT_TRUE(s21_ms > ms ? (s21_ms - ms < ms * 1e-16) : (ms - s21_ms < ms * 1e-16));
+    EXPECT_EQ(ms, s21_ms);
 }
 
 

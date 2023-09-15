@@ -548,6 +548,23 @@ public:
         return result;
     }
 
+    template <typename Last>
+    void insert_many_back(Last last) {
+        Push_back(last);
+    }
+
+    template <typename First, class... Args>
+    void insert_many_back(First first, Args&&... args) {
+        Push_back(first);
+        insert_many_back(std::forward<Args>(args)...);
+    }
+
+    template <class... Args>
+    void Insert_many_back(Args&&... args) {
+        // constexpr auto size = sizeof...(Args);
+        return insert_many_back(std::forward<Args>(args)...);
+    }
+
     void Assign(size_type count, const_reference value)
     {
         List temporary(count, value);
