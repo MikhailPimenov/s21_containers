@@ -400,6 +400,7 @@ template <typename Type> class List
         return const_reverse_iterator(&rend_);
     }
 
+private:
     Node* create_node(const_reference data) {
         char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
         pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
@@ -407,10 +408,24 @@ template <typename Type> class List
         return reinterpret_cast<Node*>(new_data);
     }
 
+    Node* create_node(value_type&& data) {
+        char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
+        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
+        new (new_data) value_type(std::move(data));
+        return reinterpret_cast<Node*>(new_data);
+    }
+    template <class... Args>
+    Node* create_node(Args&&... args) {
+        char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
+        pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
+        new (new_data) value_type(std::forward<Args>(args)...);
+        return reinterpret_cast<Node*>(new_data);
+    }
+
+public:
     void Push_back(const_reference data)
     {
         Node *old_last = previousOf(&end_);
-
         Node* new_last = create_node(data);
 
         connect(old_last, new_last);
@@ -422,9 +437,7 @@ template <typename Type> class List
     void Push_back(value_type&& data)
     {
         Node *old_last = previousOf(&end_);
-
-        Node *new_last = new Node;
-        new_last->value_ = std::move(data);
+        Node* new_last = create_node(std::move(data));
 
         connect(old_last, new_last);
         connect(new_last, &end_);
@@ -438,7 +451,9 @@ template <typename Type> class List
 
         Node *old_last = previousOf(&end_);
         Node *new_last = previousOf(old_last);
-        delete old_last;
+        
+        old_last->~Node();
+        delete[] reinterpret_cast<char*>(old_last);
 
         connect(new_last, &end_);
 
@@ -475,8 +490,7 @@ template <typename Type> class List
     // Insert()
     iterator Insert(const_iterator pos, const_reference value)
     {
-        Node *new_node = new Node;
-        new_node->value_ = value;
+        Node* new_node = create_node(value);
 
         Node *next = pos.get();
         Node *previous = previousOf(next);
@@ -549,8 +563,7 @@ template <typename Type> class List
     {
         Node *old_first = nextOf(&rend_);
 
-        Node *new_first = new Node;
-        new_first->value_ = data;
+        Node *new_first = create_node(data);
 
         connect(&rend_, new_first);
         connect(new_first, old_first);
@@ -562,8 +575,7 @@ template <typename Type> class List
     {
         Node *old_first = nextOf(&rend_);
 
-        Node *new_first = new Node;
-        new_first->value_ = std::move(data);
+        Node *new_first = create_node(std::move(data));
 
         connect(&rend_, new_first);
         connect(new_first, old_first);
@@ -578,7 +590,8 @@ template <typename Type> class List
         Node *old_first = nextOf(&rend_);
         Node *new_first = nextOf(old_first);
 
-        delete old_first;
+        old_first->~Node();
+        delete[] reinterpret_cast<char*>(old_first);
 
         connect(&rend_, new_first);
 
@@ -640,7 +653,8 @@ template <typename Type> class List
         Node* previous = previousOf(pos.get());
         Node* next = nextOf(pos.get());
 
-        delete pos.get();
+        pos.get()->~Node();
+        delete[] reinterpret_cast<char*>(pos.get());
         --size_;
 
         connect(previous, next);
@@ -669,8 +683,7 @@ template <typename Type> class List
     // Emplace()
     template <class... Args> iterator Emplace(const_iterator pos, Args &&...args)
     {
-        Node *new_node = new Node;
-        new_node->value_ = value_type(std::forward<Args>(args)...);
+        Node* new_node = create_node(std::forward<Args>(args)...);
 
         Node *next = pos.get();
         Node *previous = previousOf(next);
@@ -685,9 +698,7 @@ template <typename Type> class List
     // Emplace_back()
     template <class... Args> reference Emplace_back(Args &&...args)
     {
-        Node *new_last = new Node;
-        new_last->value_ = value_type(std::forward<Args>(args)...);
-
+        Node* new_last = create_node(std::forward<Args>(args)...);
         Node *old_last = previousOf(&end_);
 
         connect(old_last, new_last);
@@ -699,9 +710,7 @@ template <typename Type> class List
     // Emplace_front()
     template <class... Args> reference Emplace_front(Args &&...args)
     {
-        Node *new_first = new Node;
-        new_first->value_ = value_type(std::forward<Args>(args)...);
-
+        Node *new_first = create_node(std::forward<Args>(args)...);
         Node *old_first = nextOf(&rend_);
 
         connect(&rend_, new_first);
