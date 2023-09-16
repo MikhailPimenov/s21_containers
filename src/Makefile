@@ -40,7 +40,7 @@ SOURCES+=tests/vector/insert_many.cc
 # SOURCES+=tests/map/lookup.cc
 SOURCES+=tests/map/insert_many.cc
 
-SOURCES+=tests/multiset/constructors.cc
+# SOURCES+=tests/multiset/constructors.cc
 # SOURCES+=tests/multiset/erase.cc
 # SOURCES+=tests/multiset/capacity.cc
 # SOURCES+=tests/multiset/modifiers.cc
@@ -53,6 +53,7 @@ SOURCES+=tests/multiset/constructors.cc
 # SOURCES+=tests/multimap/modifiers.cc
 # SOURCES+=tests/multimap/lookup.cc
 # SOURCES+=tests/multimap/iterator.cc
+SOURCES+=tests/multimap/insert_many.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 

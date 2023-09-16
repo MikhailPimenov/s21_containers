@@ -10,29 +10,29 @@
 
 
 //  GCOVR_EXCL_START
-    template <typename Key, typename Value>
-    bool operator==(const std::pair<const Key, Value>& left, const std::pair<const Key, Value>& right) {
-        return (left.first == right.first && right.second == left.second);
-    }
+    // template <typename Key, typename Value>
+    // bool operator==(const std::pair<const Key, Value>& left, const std::pair<const Key, Value>& right) {
+    //     return (left.first == right.first && right.second == left.second);
+    // }
 
-    template <typename Key, typename Value>
-    bool operator!=(const std::pair<const Key, Value>& left, const std::pair<const Key, Value>& right) {
-        return !(left == right);
-    }
+    // template <typename Key, typename Value>
+    // bool operator!=(const std::pair<const Key, Value>& left, const std::pair<const Key, Value>& right) {
+    //     return !(left == right);
+    // }
 
-    template <typename Key, typename Value>
-    std::ostream& operator<<(std::ostream& out, const std::pair<const Key, Value>& object) {
-        assert(0);
-        out<< "{ " << object.first << ": " << object.second << "}\n";
-        return out;
-    }
+    // template <typename Key, typename Value>
+    // std::ostream& operator<<(std::ostream& out, const std::pair<const Key, Value>& object) {
+    //     assert(0);
+    //     out<< "{ " << object.first << ": " << object.second << "}\n";
+    //     return out;
+    // }
 
-    template <typename Key, typename Value>
-    std::ostream& operator<<(std::ostream& out, typename s21::Map<const Key, Value>::iterator it) {
-        assert(0);
-        out<< "{ " << *it << "}\n";
-        return out;
-    }
+    // template <typename Key, typename Value>
+    // std::ostream& operator<<(std::ostream& out, typename s21::Map<const Key, Value>::iterator it) {
+    //     assert(0);
+    //     out<< "{ " << *it << "}\n";
+    //     return out;
+    // }
 
 namespace
 {
