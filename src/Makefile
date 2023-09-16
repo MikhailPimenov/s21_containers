@@ -46,6 +46,7 @@ SOURCES+=tests/map/insert_many.cc
 # SOURCES+=tests/multiset/modifiers.cc
 # SOURCES+=tests/multiset/iterator.cc
 # SOURCES+=tests/multiset/lookup.cc
+SOURCES+=tests/multiset/insert_many.cc
 
 # SOURCES+=tests/multimap/constructors.cc
 # SOURCES+=tests/multimap/capacity.cc
