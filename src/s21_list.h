@@ -473,8 +473,8 @@ public:
     size_type Max_size() const noexcept {
 #if defined(__APPLE__) || defined(__MACH__) 
         if constexpr(sizeof(void*) == 4) 
-            return (std::pow(2.0, 31.0) / sizeof(Node) - 2.0) / 2.0;
-        return (std::pow(2.0, 63.0) / sizeof(Node) - 2.0) / 2.0;
+            return (std::pow(2.0, 31.0) / sizeof(Node) - 2.0) * 2.0;
+        return (std::pow(2.0, 63.0) / sizeof(Node) - 2.0) * 2.0;
 #else
         if constexpr(sizeof(void*) == 4) 
             return std::pow(2.0, 31.0) / sizeof(Node) - 2.0;
