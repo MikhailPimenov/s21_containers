@@ -471,7 +471,7 @@ public:
 
     // Max_size()
     size_type Max_size() const noexcept {
-#ifdef __APPLE__ || __MACH__ 
+#if defined(__APPLE__) || defined(__MACH__) 
         if constexpr(sizeof(void*) == 4) 
             return (std::pow(2.0, 31.0) / sizeof(Node) - 2.0) / 2.0;
         return (std::pow(2.0, 63.0) / sizeof(Node) - 2.0) / 2.0;
@@ -479,7 +479,7 @@ public:
         if constexpr(sizeof(void*) == 4) 
             return std::pow(2.0, 31.0) / sizeof(Node) - 2.0;
         return std::pow(2.0, 63.0) / sizeof(Node) - 2.0;
-#endif // __APPLE__ || __MACH__
+#endif // defined(__APPLE__) || defined(__MACH__) 
     }
     // Resize()
     void Resize(size_type count, const_reference value)
