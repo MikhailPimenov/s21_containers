@@ -8,6 +8,7 @@
 
 // GCOVR_EXCL_START
 
+
 template<typename Type>
 bool operator==(const s21::Vector<Type>& s21_vector, const std::vector<Type>& vector) {
     if (s21_vector.Size() != vector.size())
