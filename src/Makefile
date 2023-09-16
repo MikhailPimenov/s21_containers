@@ -73,6 +73,7 @@ SOURCES+=tests/multimap/insert_many.cc
 # SOURCES+=tests/set/erase.cc
 # SOURCES+=tests/set/iterator.cc
 # SOURCES+=tests/set/lookup.cc
+SOURCES+=tests/set/insert_many.cc
 
 
 # SOURCES=*/*.cc
