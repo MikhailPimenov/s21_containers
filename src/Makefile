@@ -19,6 +19,8 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/stack/constructors.cc
 # SOURCES+=tests/stack/methods.cc
 
+SOURCES+=tests/array/access.cc
+
 # SOURCES+=tests/queue/constructors.cc
 # SOURCES+=tests/queue/methods.cc
 # SOURCES+=tests/queue/insert_many.cc
@@ -29,7 +31,7 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/vector/capacity.cc
 # SOURCES+=tests/vector/iterator.cc
 # SOURCES+=tests/vector/other.cc
-SOURCES+=tests/vector/insert_many.cc
+# SOURCES+=tests/vector/insert_many.cc
 
 # SOURCES+=tests/map/constructors.cc
 # SOURCES+=tests/map/capacity.cc
@@ -38,9 +40,9 @@ SOURCES+=tests/vector/insert_many.cc
 # SOURCES+=tests/map/iterator.cc
 # SOURCES+=tests/map/balance.cc
 # SOURCES+=tests/map/lookup.cc
-SOURCES+=tests/map/insert_many.cc
+# SOURCES+=tests/map/insert_many.cc
 
-SOURCES+=tests/multiset/constructors.cc
+# SOURCES+=tests/multiset/constructors.cc
 # SOURCES+=tests/multiset/erase.cc
 # SOURCES+=tests/multiset/capacity.cc
 # SOURCES+=tests/multiset/modifiers.cc
