@@ -20,6 +20,7 @@ SOURCES=tests/item.cc
 # SOURCES+=tests/stack/methods.cc
 
 SOURCES+=tests/array/access.cc
+SOURCES+=tests/array/constructors.cc
 
 # SOURCES+=tests/queue/constructors.cc
 # SOURCES+=tests/queue/methods.cc
