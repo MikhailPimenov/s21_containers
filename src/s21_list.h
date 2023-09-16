@@ -590,7 +590,8 @@ public:
     }
     template <typename... Args>
     iterator Insert_many(const_iterator pos, Args&&... args) {
-        return insert_many(pos, std::forward<Args>(args)...);
+        insert_many(pos, std::forward<Args>(args)...);
+        return static_cast<const_iterator>(pos);
     }
 
     void Assign(size_type count, const_reference value)

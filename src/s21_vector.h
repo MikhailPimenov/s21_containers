@@ -730,6 +730,26 @@ public:
         return insert_many_back(std::forward<Args>(args)...);
     }
 
+    template <typename Last>
+    iterator insert_many(const_iterator pos, Last last) {
+        return Insert(pos, last);
+    }
+    template <typename First, class... Args>
+    iterator insert_many(const_iterator pos, First first, Args&&... args) {
+        iterator it = insert_many(pos, std::forward<Args>(args)...);
+        return Insert(static_cast<const_iterator>(it), first);
+    }
+    template <typename... Args>
+    iterator Insert_many(const_iterator pos, Args&&... args) {
+        const auto shift = sizeof...(Args);
+        iterator it = insert_many(pos, std::forward<Args>(args)...);
+        return it + shift;
+    }
+    template <typename... Args>
+    iterator Insert_many(iterator pos, Args&&... args) {
+        return Insert_many(static_cast<const_iterator>(pos), std::forward<Args>(args)...);
+    }
+
     private:
     template<class InputIt>
     static size_type getDistance(InputIt first, InputIt last) noexcept
