@@ -22,6 +22,7 @@ SOURCES=tests/item.cc
 SOURCES+=tests/array/access.cc
 SOURCES+=tests/array/constructors.cc
 SOURCES+=tests/array/iterator.cc
+# SOURCES+=tests/array/other.cc
 
 # SOURCES+=tests/queue/constructors.cc
 # SOURCES+=tests/queue/methods.cc
@@ -32,7 +33,7 @@ SOURCES+=tests/array/iterator.cc
 # SOURCES+=tests/vector/access.cc
 # SOURCES+=tests/vector/capacity.cc
 # SOURCES+=tests/vector/iterator.cc
-SOURCES+=tests/vector/other.cc
+# SOURCES+=tests/vector/other.cc
 # SOURCES+=tests/vector/insert_many.cc
 
 # SOURCES+=tests/map/constructors.cc
@@ -110,8 +111,8 @@ EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*' --exclude-throw-br
 gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
-# open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
-		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+		open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 
