@@ -21,6 +21,7 @@ SOURCES=tests/item.cc
 
 SOURCES+=tests/array/access.cc
 SOURCES+=tests/array/constructors.cc
+SOURCES+=tests/array/iterator.cc
 
 # SOURCES+=tests/queue/constructors.cc
 # SOURCES+=tests/queue/methods.cc
