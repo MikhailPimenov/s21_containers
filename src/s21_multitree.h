@@ -271,6 +271,26 @@ public:
         return {iterator(it, --(tree_.begin()), tree_.end(), --(it->end())), true};
     }
 
+    template <typename Last>
+    void insert_many(Vector<std::pair<iterator,bool>>& vector, Last last) {
+        vector.Push_back(Insert(std::forward<Last>(last)));
+    }   
+
+    template <typename First, class... Args>
+    void insert_many(Vector<std::pair<iterator,bool>>& vector, First first, Args&&... args) {
+        vector.Push_back(Insert(std::forward<First>(first)));
+        insert_many(vector, std::forward<Args>(args)...);
+    }
+
+    template <class... Args>
+    Vector<std::pair<iterator,bool>> Insert_many(Args&&... args) {
+        Vector<std::pair<iterator, bool>> result;
+        result.Reserve(sizeof...(Args));
+        insert_many(result, std::forward<Args>(args)...);
+        
+        return result;
+    }
+
     iterator Erase(const_iterator pos) {
         typename tree_type::iterator it = tree_.Find(keyGetter_(*pos));
         assert(it != tree_.end() && "Tried to erase not existing element!");

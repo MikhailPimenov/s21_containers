@@ -48,6 +48,7 @@ SOURCES+=tests/array/access.cc
 # SOURCES+=tests/multiset/modifiers.cc
 # SOURCES+=tests/multiset/iterator.cc
 # SOURCES+=tests/multiset/lookup.cc
+SOURCES+=tests/multiset/insert_many.cc
 
 # SOURCES+=tests/multimap/constructors.cc
 # SOURCES+=tests/multimap/capacity.cc
@@ -55,6 +56,7 @@ SOURCES+=tests/array/access.cc
 # SOURCES+=tests/multimap/modifiers.cc
 # SOURCES+=tests/multimap/lookup.cc
 # SOURCES+=tests/multimap/iterator.cc
+SOURCES+=tests/multimap/insert_many.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
@@ -73,6 +75,7 @@ SOURCES+=tests/array/access.cc
 # SOURCES+=tests/set/erase.cc
 # SOURCES+=tests/set/iterator.cc
 # SOURCES+=tests/set/lookup.cc
+SOURCES+=tests/set/insert_many.cc
 
 
 # SOURCES=*/*.cc
