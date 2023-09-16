@@ -32,7 +32,7 @@ SOURCES+=tests/array/iterator.cc
 # SOURCES+=tests/vector/access.cc
 # SOURCES+=tests/vector/capacity.cc
 # SOURCES+=tests/vector/iterator.cc
-# SOURCES+=tests/vector/other.cc
+SOURCES+=tests/vector/other.cc
 # SOURCES+=tests/vector/insert_many.cc
 
 # SOURCES+=tests/map/constructors.cc
