@@ -8,8 +8,6 @@
 namespace s21
 {
 
-
-
 template <typename Value, 
           typename Comparator = Utility::Less<Value>>
 class MultiSet : public MultiTree<Value,
@@ -22,7 +20,6 @@ class MultiSet : public MultiTree<Value,
                            Comparator,
                            Utility::KeyGetterSet<Value>>;
 public:
-    // using Base::Base;
     MultiSet() : Base() {}
     MultiSet(std::initializer_list<Value> list) : Base(list) {}
 

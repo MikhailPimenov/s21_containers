@@ -6,7 +6,8 @@
 
 namespace s21
 {
-
+    namespace Utility{
+    
 template <typename Key, typename Pair, typename ComparatorKey>
 class ComparatorMap {
 private:
@@ -22,17 +23,18 @@ public:
         return comparator_(left.first, right);
     }
 };
+    }
 
 template <typename Key, 
           typename Value, 
           typename Comparator = Utility::Less<const Key>>
 class Map : public Tree::Tree<Key,
                               std::pair<const Key, Value>, 
-                              ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>
+                              Utility::ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>
 {
     using Base = Tree::Tree<Key,
                             std::pair<const Key, Value>, 
-                            ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>;
+                            Utility::ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>;
     
 
 public:
