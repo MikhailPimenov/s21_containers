@@ -349,24 +349,20 @@ public:
     using comparator = Comparator;
 
     using node_handler = Utility::Handler<node_pointer, reference>;
-  private:
-    size_type size_; 
 
-private:
-    
-private:
-    node_pointer root_;
-    mutable node_type end_;      // non-existing element, element after last existing element
-    mutable node_type rend_;     // non-existing element, element before begin
-
-private:
-    comparator comparator_;
-
-  public:
     using iterator = TreeIterator<Tree<Key, Value, Comparator> >;
     using const_iterator = TreeIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
     using reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator> >;
     using const_reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
+
+private:
+    size_type size_; 
+
+    node_pointer root_;
+    mutable node_type end_;      // non-existing element, element after last existing element
+    mutable node_type rend_;     // non-existing element, element before begin
+
+    comparator comparator_;
 
 public:
     Tree() : size_{0ull}, root_{nullptr}, end_{}, rend_{}  {
@@ -817,7 +813,7 @@ private:
         // equal
         return std::make_pair(iterator(root), false);
     }
-public:
+private:
     bool unbalanced(node_pointer node) const noexcept {
         const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
         assert(difference <= 2 && "Critical disbalance!");
