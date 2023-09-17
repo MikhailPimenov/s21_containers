@@ -1,6 +1,6 @@
 CC=g++
-# STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g -Werror
-STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g
+STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g -Werror
+# STRICT_CFLAGS=-Wall -std=c++17 -Wextra -pedantic -g
 
 
 GCOVR_CFLAGS=-fprofile-arcs -ftest-coverage -fPIC
@@ -130,8 +130,8 @@ EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*' --exclude-throw-br
 gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
-		open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
-# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+# open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+		# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 

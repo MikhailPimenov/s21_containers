@@ -27,29 +27,12 @@ class VectorIteratorBase
 
   public:
     VectorIteratorBase(pointer p) noexcept : pointer_{p} {}
-
-    
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept 
-    //     : VectorIteratorBase(const_cast<Pointer>(other.pointer_)) 
-    // {
-
-    // }
-
     
     VectorIteratorBase(const VectorIteratorBase &other) noexcept 
         : VectorIteratorBase(other.pointer_) 
     {
 
     }
-
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept 
-    //     : VectorIteratorBase(const_cast<Pointer>(other.pointer_))
-    // {
-    //     other.pointer_ = nullptr;
-    // }
 
     VectorIteratorBase(VectorIteratorBase &&other) noexcept 
         : VectorIteratorBase(other.pointer_)
@@ -65,23 +48,6 @@ class VectorIteratorBase
 
     virtual VectorIteratorBase &operator++() noexcept = 0;
 
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
-    // {
-    //     pointer_ = other.pointer_;
-    //     return *this;
-    // }
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
-    // {
-    //     pointer_ = other.pointer_;
-    //     other.pointer_ = nullptr;
-    //     return *this;
-    // }
-
-
-
     VectorIteratorBase &operator=(const VectorIteratorBase &other) noexcept
     {
         pointer_ = other.pointer_;
@@ -94,8 +60,6 @@ class VectorIteratorBase
         other.pointer_ = nullptr;
         return *this;
     }
-
-
 
     reference operator*() const noexcept
     {
