@@ -130,8 +130,8 @@ EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*' --exclude-throw-br
 gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
-# open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
-		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+		open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 

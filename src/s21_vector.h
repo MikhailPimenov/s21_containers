@@ -611,7 +611,6 @@ template <typename Type> class Vector
     }
     const_iterator begin() const
     {
-        // return cbegin();
         return const_iterator(data_);
     }
  

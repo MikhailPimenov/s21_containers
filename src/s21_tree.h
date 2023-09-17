@@ -10,35 +10,35 @@ namespace s21 {
 namespace Tree {
 
 template <typename Value, typename size_type = std::size_t>
-struct Node {
+struct NodeAVL {
 public:
     Value value_;
 
-    Node* root_;
-    Node* left_;
-    Node* right_;
+    NodeAVL* root_;
+    NodeAVL* left_;
+    NodeAVL* right_;
 
     size_type lHeight_;
     size_type rHeight_;
 
 public:
-    Node(const Value& value = Value(), Node* root = nullptr, Node* left = nullptr, Node* right = nullptr, size_type lHeight = 0ull, size_type rHeight = 0ull)
+    NodeAVL(const Value& value = Value(), NodeAVL* root = nullptr, NodeAVL* left = nullptr, NodeAVL* right = nullptr, size_type lHeight = 0ull, size_type rHeight = 0ull)
         : value_{value}, root_{root}, left_{left}, right_{right}, lHeight_{lHeight}, rHeight_{rHeight} {}
-    Node(Value&& value, Node* root = nullptr, Node* left = nullptr, Node* right = nullptr, size_type lHeight = 0ull, size_type rHeight = 0ull)
+    NodeAVL(Value&& value, NodeAVL* root = nullptr, NodeAVL* left = nullptr, NodeAVL* right = nullptr, size_type lHeight = 0ull, size_type rHeight = 0ull)
         : value_{std::move(value)}, root_{root}, left_{left}, right_{right}, lHeight_{lHeight}, rHeight_{rHeight} {}
 
-    Node(const Node& other) : Node(other.value, other.root, other.left, other.right, other.lHeight, other.rHeight) {}
-    Node(Node&& other) : Node(std::move(other.value), other.root, other.left, other.right, other.lHeight, other.rHeight) {}
-    Node& operator=(const Node& other) {
+    NodeAVL(const NodeAVL& other) : NodeAVL(other.value, other.root, other.left, other.right, other.lHeight, other.rHeight) {}
+    NodeAVL(NodeAVL&& other) : NodeAVL(std::move(other.value), other.root, other.left, other.right, other.lHeight, other.rHeight) {}
+    NodeAVL& operator=(const NodeAVL& other) {
         if (this == &other)
             return *this;
 
-        Node temporary(other);
+        NodeAVL temporary(other);
         *this = std::move(other);
 
         return *this;
     }
-    Node& operator=(Node&& other) {
+    NodeAVL& operator=(NodeAVL&& other) {
         if (this == &other)
             return *this;
         
@@ -343,9 +343,9 @@ public:
     using pointer = value_type *;
     using const_pointer = const value_type *;
 
-    using node_type = Node<value_type, size_type>;
-    using node_pointer = Node<value_type, size_type>*;
-    using const_node_pointer = const Node<value_type, size_type>*;
+    using node_type = NodeAVL<value_type, size_type>;
+    using node_pointer = NodeAVL<value_type, size_type>*;
+    using const_node_pointer = const NodeAVL<value_type, size_type>*;
     using comparator = Comparator;
 
     using node_handler = Utility::Handler<node_pointer, reference>;
@@ -374,24 +374,6 @@ public:
             Insert(std::move(element));
     }
 
-private:
-    node_pointer copy_recursive(node_pointer source, node_pointer destination_root, node_pointer rend, node_pointer end) {
-        assert(source && "source should exist");
-        node_pointer destination = create_node(destination_root, source->value_);
-
-        if (source->left_ && source->left_ != rend) {
-            node_pointer left = copy_recursive(source->left_, destination, rend, end);
-            destination->left_ = left;
-        }
-        if (source->right_ && source->right_ != end) {
-            node_pointer right = copy_recursive(source->right_, destination, rend, end);
-            destination->right_ = right;
-        }
-
-        return destination;
-    }
-
-public:
     Tree(const Tree& other) : Tree() {
         if (!other.root_)
             return;
@@ -456,21 +438,6 @@ public:
 
         return *this;
     }
-
-
-private:
-    void deallocate(node_pointer* node) {
-        if((*node)->left_ && (*node)->left_ != &rend_)
-            deallocate(&(*node)->left_);
-
-        if((*node)->right_ && (*node)->right_ != &end_)
-            deallocate(&(*node)->right_);
-
-        delete *node;
-        *node = nullptr;
-    }
-
-public:
     ~Tree() {
         Clear();
     }
@@ -524,15 +491,174 @@ public:
         return const_iterator(&rend_);
     }
 
+    void Clear() noexcept {
+        if(root_)
+            deallocate(&root_);
+        size_ = 0ull;
+
+        end_.left_ = &rend_;
+        rend_.root_ = &end_;
+    }
+
+    std::pair<iterator, bool> Insert(const_reference value) {
+        if (!root_) {
+            root_ = create_node(nullptr, value);
+            updateReverseEnd();
+            updateEnd();
+            return std::make_pair(iterator(root_), true);
+        }
+        const auto [_, created] = insert_recursive(root_, value);
+        if (created) {
+            updateLeftHeight(root_);
+            updateRightHeight(root_);
+            if (unbalanced(root_))
+                balance(root_);
+        }
+        return {_, created};
+    }
+    std::pair<iterator, bool> Insert(value_type&& value) {
+        if (!root_) {
+            root_ = create_node(nullptr, std::move(value));
+            updateReverseEnd();
+            updateEnd();
+            return std::make_pair(iterator(root_), true);
+        }
+        const auto [_, created] = insert_recursive(root_, std::move(value));
+        if (created) {
+            updateLeftHeight(root_);
+            updateRightHeight(root_);
+            if (unbalanced(root_))
+                balance(root_);
+        }
+        return {_, created};
+    }
+    template <class... Args>
+    Vector<std::pair<iterator,bool>> Insert_many(Args&&... args) {
+        Vector<std::pair<iterator, bool>> result;
+        result.Reserve(sizeof...(Args));
+        insert_many(result, std::forward<Args>(args)...);
+        
+        return result;
+    }
+    iterator Erase(iterator pos) {
+        return Erase(static_cast<const_iterator>(pos));
+    }
+    iterator Erase(const_iterator pos) {
+        return Erase(*pos); 
+    }
+    iterator Erase(const_reference value) {
+        if (!root_)
+            assert(0 && "Trying to erase from empty tree!");
+
+        std::pair<iterator, node_pointer> result = extract_recursive(root_, value);
+        delete result.second;
+        result.second = nullptr;
+
+        return result.first;
+    }
+    node_handler Extract(const_iterator pos) {
+        if (!root_)
+            assert(0 && "Trying to extract from empty tree!");
+        const auto& [_, node] = extract_recursive(root_, *pos);
+        return node_handler(node);
+    }
+    node_handler Extract(iterator pos) {
+        return Extract(static_cast<const_iterator>(pos));
+    }
+    node_handler Extract(const_reference key) {
+        if (!root_)
+            assert(0 && "Trying to extract from empty tree!");
+        const auto& [_, node] = extract_recursive(root_, key);
+        return node_handler(node);
+    }    
+    iterator Find(const key_type& key) {
+        if (!root_)
+            return end();
+        return static_cast<iterator>(find_recursive(root_, key));
+    }
+    const_iterator Find(const key_type& key) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, key);
+    }
+
+    bool Contains(const key_type& key) const {
+        return Find(key) != end();
+    }
+    iterator Lower_bound(const key_type& key) {
+        if (!root_)
+            return end();
+        return static_cast<iterator>(find_recursive(root_, key, true, false, &end_));
+    }
+    const_iterator Lower_bound(const key_type& key) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, key, true, false, &end_);
+    }
+    iterator Upper_bound(const key_type& key) {
+        if (!root_)
+            return end();
+        return static_cast<iterator>(find_recursive(root_, key, false, true, &end_));
+    }
+    const_iterator Upper_bound(const key_type& key) const {
+        if (!root_)
+            return end();
+        return find_recursive(root_, key, false, true, &end_);
+    }
+
+    std::pair<iterator, iterator> Equal_range(const key_type& key) {
+        if (!root_)
+            return std::make_pair(end(), end());
+
+        iterator lower = Lower_bound(key);
+        iterator upper = Upper_bound(key);
+        return std::make_pair(lower, upper);
+    }
+    std::pair<const_iterator, const_iterator> Equal_range(const key_type& key) const {
+        if (!root_)
+            return std::make_pair(end(), end());
+
+        const_iterator lower = static_cast<const_iterator>(Lower_bound(key));
+        const_iterator upper = static_cast<const_iterator>(Upper_bound(key));
+        return std::make_pair(lower, upper);
+    }
+
+
+
+
 private:
-    //modifiers==============================================================
+    node_pointer copy_recursive(node_pointer source, node_pointer destination_root, node_pointer rend, node_pointer end) {
+        assert(source && "source should exist");
+        node_pointer destination = create_node(destination_root, source->value_);
+
+        if (source->left_ && source->left_ != rend) {
+            node_pointer left = copy_recursive(source->left_, destination, rend, end);
+            destination->left_ = left;
+        }
+        if (source->right_ && source->right_ != end) {
+            node_pointer right = copy_recursive(source->right_, destination, rend, end);
+            destination->right_ = right;
+        }
+
+        return destination;
+    }
+    void deallocate(node_pointer* node) {
+        if((*node)->left_ && (*node)->left_ != &rend_)
+            deallocate(&(*node)->left_);
+
+        if((*node)->right_ && (*node)->right_ != &end_)
+            deallocate(&(*node)->right_);
+
+        delete *node;
+        *node = nullptr;
+    }
     node_pointer create_node(node_pointer root, value_type&& value) {
-        node_pointer new_node = new Node(std::move(value), root);
+        node_pointer new_node = new NodeAVL(std::move(value), root);
         ++size_;
         return new_node;
     }
     node_pointer create_node(node_pointer root, const_reference value) {
-        node_pointer new_node = new Node(value, root);
+        node_pointer new_node = new NodeAVL(value, root);
         ++size_;
         return new_node;
     }
@@ -699,6 +825,11 @@ private:
 
         rightRightBalance(root);
     }
+    bool unbalanced(node_pointer node) const noexcept {
+        const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
+        assert(difference <= 2 && "Critical disbalance!");
+        return difference > 1;
+    }
     void balance(node_pointer root) noexcept {
         if (leftRightCase(root))
             leftRightBalance(root);
@@ -711,6 +842,7 @@ private:
         else
             assert(0 && "Unknown type of unbalanced case!");
     }
+
     void updateLeftHeight(node_pointer node) {
         assert(node && "Node should exist!");
         if (!node->left_ || node->left_ == &rend_) {
@@ -725,6 +857,7 @@ private:
                 node->lHeight_ = 1ull + node->left_->rHeight_;
         }
     }
+
     void updateRightHeight(node_pointer node) {
         assert(node && "Node should exist!");
         if (!node->right_ || node->right_ == &end_) {
@@ -813,56 +946,7 @@ private:
         // equal
         return std::make_pair(iterator(root), false);
     }
-private:
-    bool unbalanced(node_pointer node) const noexcept {
-        const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
-        assert(difference <= 2 && "Critical disbalance!");
-        return difference > 1;
-    }
 
-public:
-
-    void Clear() noexcept {
-        if(root_)
-            deallocate(&root_);
-        size_ = 0ull;
-
-        end_.left_ = &rend_;
-        rend_.root_ = &end_;
-    }
-
-    std::pair<iterator, bool> Insert(const_reference value) {
-        if (!root_) {
-            root_ = create_node(nullptr, value);
-            updateReverseEnd();
-            updateEnd();
-            return std::make_pair(iterator(root_), true);
-        }
-        const auto [_, created] = insert_recursive(root_, value);
-        if (created) {
-            updateLeftHeight(root_);
-            updateRightHeight(root_);
-            if (unbalanced(root_))
-                balance(root_);
-        }
-        return {_, created};
-    }
-    std::pair<iterator, bool> Insert(value_type&& value) {
-        if (!root_) {
-            root_ = create_node(nullptr, std::move(value));
-            updateReverseEnd();
-            updateEnd();
-            return std::make_pair(iterator(root_), true);
-        }
-        const auto [_, created] = insert_recursive(root_, std::move(value));
-        if (created) {
-            updateLeftHeight(root_);
-            updateRightHeight(root_);
-            if (unbalanced(root_))
-                balance(root_);
-        }
-        return {_, created};
-    }
 
 
     template <typename Last>
@@ -875,17 +959,7 @@ public:
         vector.Push_back(Insert(std::forward<First>(first)));
         insert_many(vector, std::forward<Args>(args)...);
     }
-     
 
-    template <class... Args>
-    Vector<std::pair<iterator,bool>> Insert_many(Args&&... args) {
-        Vector<std::pair<iterator, bool>> result;
-        result.Reserve(sizeof...(Args));
-        insert_many(result, std::forward<Args>(args)...);
-        
-        return result;
-    }
-private:
     std::pair<iterator, node_pointer> extract_recursive(node_pointer root, const_reference value) {
         assert(root && "root should exist!");
 
@@ -1066,40 +1140,6 @@ private:
         return std::make_pair(it_result, result);
     }
 
-public:
-    iterator Erase(iterator pos) {
-        return Erase(static_cast<const_iterator>(pos));
-    }
-    iterator Erase(const_iterator pos) {
-        return Erase(*pos); 
-    }
-    iterator Erase(const_reference value) {
-        if (!root_)
-            assert(0 && "Trying to erase from empty tree!");
-
-        std::pair<iterator, node_pointer> result = extract_recursive(root_, value);
-        delete result.second;
-        result.second = nullptr;
-
-        return result.first;
-    }
-    node_handler Extract(const_iterator pos) {
-        if (!root_)
-            assert(0 && "Trying to extract from empty tree!");
-        const auto& [_, node] = extract_recursive(root_, *pos);
-        return node_handler(node);
-    }
-    node_handler Extract(iterator pos) {
-        return Extract(static_cast<const_iterator>(pos));
-    }
-    node_handler Extract(const_reference key) {
-        if (!root_)
-            assert(0 && "Trying to extract from empty tree!");
-        const auto& [_, node] = extract_recursive(root_, key);
-        return node_handler(node);
-    }
-
-protected:
     const_iterator find_recursive(node_pointer root, const key_type& key, bool lowerBound = false, bool upperBound = false, node_pointer bound = nullptr) const {
         assert(root && "root should exist!");
 
@@ -1132,60 +1172,6 @@ protected:
             return const_iterator(root);
         }
     }
-
-public:
-    iterator Find(const key_type& key) {
-        if (!root_)
-            return end();
-        return static_cast<iterator>(find_recursive(root_, key));
-    }
-    const_iterator Find(const key_type& key) const {
-        if (!root_)
-            return end();
-        return find_recursive(root_, key);
-    }
-
-    bool Contains(const key_type& key) const {
-        return Find(key) != end();
-    }
-    iterator Lower_bound(const key_type& key) {
-        if (!root_)
-            return end();
-        return static_cast<iterator>(find_recursive(root_, key, true, false, &end_));
-    }
-    const_iterator Lower_bound(const key_type& key) const {
-        if (!root_)
-            return end();
-        return find_recursive(root_, key, true, false, &end_);
-    }
-    iterator Upper_bound(const key_type& key) {
-        if (!root_)
-            return end();
-        return static_cast<iterator>(find_recursive(root_, key, false, true, &end_));
-    }
-    const_iterator Upper_bound(const key_type& key) const {
-        if (!root_)
-            return end();
-        return find_recursive(root_, key, false, true, &end_);
-    }
-
-    std::pair<iterator, iterator> Equal_range(const key_type& key) {
-        if (!root_)
-            return std::make_pair(end(), end());
-
-        iterator lower = Lower_bound(key);
-        iterator upper = Upper_bound(key);
-        return std::make_pair(lower, upper);
-    }
-    std::pair<const_iterator, const_iterator> Equal_range(const key_type& key) const {
-        if (!root_)
-            return std::make_pair(end(), end());
-
-        const_iterator lower = static_cast<const_iterator>(Lower_bound(key));
-        const_iterator upper = static_cast<const_iterator>(Upper_bound(key));
-        return std::make_pair(lower, upper);
-    }
-
 };
 
 }  // namespace Tree
