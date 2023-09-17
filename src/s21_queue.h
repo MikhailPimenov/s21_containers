@@ -6,77 +6,46 @@ namespace s21 {
 
 template <typename Type, typename Container = List<Type>>
 class Queue {
-public:
-    using container_type = Container;
-    using value_type = typename Container::value_type;
-    using size_type	= typename Container::size_type;
-    using reference	= typename Container::reference;
-    using const_reference = typename Container::const_reference;
+ public:
+  using container_type = Container;
+  using value_type = typename Container::value_type;
+  using size_type = typename Container::size_type;
+  using reference = typename Container::reference;
+  using const_reference = typename Container::const_reference;
 
-private:
-    Container queue_;
+ private:
+  Container queue_;
 
-public:
-    Queue() : queue_(Container()) { }
-    explicit Queue(const Container& cont) : queue_(cont) { }
-    explicit Queue(Container&& cont) : queue_(std::move(cont)) { }
-    Queue(const Queue& other) = default;
-    Queue(Queue&& other) = default;
-    ~Queue() = default;
+ public:
+  Queue() : queue_(Container()) {}
+  explicit Queue(const Container& cont) : queue_(cont) {}
+  explicit Queue(Container&& cont) : queue_(std::move(cont)) {}
+  Queue(const Queue& other) = default;
+  Queue(Queue&& other) = default;
+  ~Queue() = default;
 
-    template< class InputIt >
-    Queue(InputIt first, InputIt last) : queue_(first, last) { }
+  template <class InputIt>
+  Queue(InputIt first, InputIt last) : queue_(first, last) {}
 
-    Queue& operator=(const Queue& other) = default;
-    reference Front() 
-    { 
-        return *(queue_.begin()); 
-    }
-    const_reference Front() const 
-    { 
-        return *(queue_.cbegin()); 
-    }
-    reference Back() 
-    { 
-        return *(queue_.rbegin()); 
-    }
-    const_reference Back() const 
-    { 
-        return *(queue_.crbegin()); 
-    }
-    bool Empty() const noexcept 
-    { 
-        return queue_.Empty(); 
-    }
-    size_type Size() const noexcept 
-    { 
-        return queue_.Size(); 
-    }
-    void Push(const value_type& value) 
-    {
-        queue_.Push_back(value);
-    }
-    void Push(value_type&& value) 
-    {
-        queue_.Push_back(std::move(value));
-    }
-    template<class... Args>
-    decltype(auto) Emplace(Args&&... args) 
-    {
-        return queue_.Emplace_back(std::forward<Args>(args)...);
-    }
-    template <class... Args>
-    void Insert_many_back(Args&&... args) {
-        return queue_.Insert_many_back(std::forward<Args>(args)...);
-    }
-    void Pop() noexcept 
-    {
-        queue_.Pop_front();
-    }
-    void Swap(Queue& other) 
-    {
-        queue_.Swap(other.queue_);
-    }
+  Queue& operator=(const Queue& other) = default;
+  reference Front() { return *(queue_.begin()); }
+  const_reference Front() const { return *(queue_.cbegin()); }
+  reference Back() { return *(queue_.rbegin()); }
+  const_reference Back() const { return *(queue_.crbegin()); }
+  bool Empty() const noexcept { return queue_.Empty(); }
+  size_type Size() const noexcept { return queue_.Size(); }
+  void Push(const value_type& value) { queue_.Push_back(value); }
+  void Push(value_type&& value) { queue_.Push_back(std::move(value)); }
+  template <class... Args>
+  decltype(auto) Emplace(Args&&... args) {
+    return queue_.Emplace_back(std::forward<Args>(args)...);
+  }
+  template <class... Args>
+  void Insert_many_back(Args&&... args) {
+    return queue_.Insert_many_back(std::forward<Args>(args)...);
+  }
+  void Pop() noexcept { queue_.Pop_front(); }
+  void Swap(Queue& other) { queue_.Swap(other.queue_); }
 };
 
 }  //  namespace s21
