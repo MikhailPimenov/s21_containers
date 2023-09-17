@@ -61,53 +61,23 @@ public:
 
 
 
-
-
-
 template <typename Tree, typename Pointer, typename Reference, typename Node_pointer, typename Difference_type>
 class TreeIteratorBase
 {
   public:
     using difference_type = Difference_type;
-    // using value_type = Value_type;
-    //using key_type = Key_type;
     using pointer = Pointer;
     using reference = Reference;
     using size_type = typename Tree::size_type;
     using iterator_category = std::bidirectional_iterator_tag;
     using node_pointer = Node_pointer;
 
-private:
-
-
-
-    // template <typename OtherVector, typename OtherPointer, typename OtherReference, typename OtherDifference_type, typename OtherValue_type>
-    // friend class VectorIteratorBase;  // to be able to compare iterator and const_iterator
-
-
   public:
     TreeIteratorBase(node_pointer p) noexcept : pointer_{p} {}
-
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
-    //     : VectorIteratorBase(const_cast<Pointer>(other.pointer_))
-    // {
-
-    // }
-
 
     TreeIteratorBase(const TreeIteratorBase &other) noexcept
         : TreeIteratorBase(other.pointer_) {
     }
-
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
-    //     : VectorIteratorBase(const_cast<Pointer>(other.pointer_))
-    // {
-    //     other.pointer_ = nullptr;
-    // }
 
     TreeIteratorBase(TreeIteratorBase &&other) noexcept
         : TreeIteratorBase(other.pointer_) {
@@ -119,35 +89,6 @@ private:
         using namespace std; // to enable ADL
         swap(left.pointer_, right.pointer_);
     }
-
-    // MapIteratorBase &operator++() noexcept
-    // {
-    //     pointer_;
-    //     ++
-    // }
-
-    // MapIteratorBase &operator--() noexcept
-    // {
-    //     --
-    // }
-
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) noexcept
-    // {
-    //     pointer_ = other.pointer_;
-    //     return *this;
-    // }
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &operator=(VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &&other) noexcept
-    // {
-    //     pointer_ = other.pointer_;
-    //     other.pointer_ = nullptr;
-    //     return *this;
-    // }
-
-
 
     TreeIteratorBase &operator=(const TreeIteratorBase &other) noexcept
     {
@@ -162,18 +103,6 @@ private:
         return *this;
     }
 
-
-
-
-
-
-
-
-
-
- 
-    //          0 1 2
-    // 6 7 8            2 1 0
     TreeIteratorBase& operator++() noexcept  // ++i
     {
         if (!this->pointer_->right_) {
@@ -207,12 +136,7 @@ private:
         }
 
         return *this;
-    }
-    //                4
-    //      2                   8
-    //                       6
-    //                      5       
-    //                                         
+    }                                       
 
     TreeIteratorBase& operator--() noexcept  // ++i
     {
@@ -251,11 +175,6 @@ private:
         return *this;
     }
 
-
-    // reference operator*() noexcept
-    // {
-    //     return pointer_->Get(shift_);
-    // }
     reference operator*() const noexcept
     {
         return pointer_->value_;
@@ -265,11 +184,6 @@ private:
     {
         return &(pointer_->value_);
     }
-
-    //pointer operator->() const noexcept
-    //{
-    //    return &(pointer_->Get(shift_));
-    //}
 
     size_type LeftHeight() const noexcept
     {
@@ -281,22 +195,10 @@ private:
         return pointer_->rHeight_;
     }
 
-
-    // template <typename OtherPointer, typename OtherReference> // to be able to compare iterator and const_iterator
-    // bool operator==(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) const noexcept
-    // {
-    //     return pointer_ == other.pointer_;
-    // }
     bool operator==(const TreeIteratorBase &other) const noexcept
     {
         return pointer_ == other.pointer_;
     }
-
-    // template <typename OtherPointer, typename OtherReference>
-    // bool operator!=(const VectorIteratorBase<Vector, OtherPointer, OtherReference, Difference_type, Value_type> &other) const noexcept
-    // {
-    //     return !(*this == other);
-    // }
 
     bool operator!=(const TreeIteratorBase &other) const noexcept
     {
@@ -308,8 +210,6 @@ private:
         return pointer_;
     }
 
-
-
   protected:
     node_pointer pointer_;
 };
@@ -317,19 +217,14 @@ private:
 template <typename Tree,
           typename Pointer = typename Tree::pointer, 
           typename Reference = typename Tree::reference, 
-          typename Node_pointer = typename Tree::base_node_pointer>
+          typename Node_pointer = typename Tree::node_pointer>
 class TreeIterator : public TreeIteratorBase<Tree, 
                                              Pointer, 
                                              Reference, 
                                              Node_pointer, 
                                              typename Tree::difference_type>
 {
-    // template<typename K, typename V, typename C>
-    // friend class Map;  // to compare const_iterator with iterator
-
-    // template<typename V, typename C, typename N>
     friend Tree;  // to compare const_iterator with iterator
-
 
   private:
     using Base = TreeIteratorBase<Tree, Pointer, Reference, Node_pointer, typename Tree::difference_type>;
@@ -337,9 +232,6 @@ class TreeIterator : public TreeIteratorBase<Tree,
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
     using typename Base::node_pointer;
     using typename Base::reference;
-
-    // template<typename VectorType, typename PointerType, typename ReferenceType>
-    // friend class VectorIterator;  // to compare const_iterator with iterator
 
   public:
     using Base::Base;
@@ -354,7 +246,6 @@ class TreeIterator : public TreeIteratorBase<Tree,
         Base::operator--();
         return *this;
     }
-    // TODO: postfix form ++ -- + tests
 
     TreeIterator operator++(int) noexcept {
         TreeIterator temp = *this;
@@ -374,7 +265,6 @@ class TreeIterator : public TreeIteratorBase<Tree,
     operator int() const = delete;
 
     // to enable creating iterator from const_iterator via static_cast
-// private:
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
     explicit operator TreeIterator<Tree, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
     {
@@ -385,7 +275,7 @@ class TreeIterator : public TreeIteratorBase<Tree,
 template <typename Tree, 
           typename Pointer = typename Tree::pointer, 
           typename Reference = typename Tree::reference, 
-          typename Node_pointer = typename Tree::base_node_pointer>
+          typename Node_pointer = typename Tree::node_pointer>
 class TreeReverseIterator : public TreeIteratorBase<Tree, 
                                                     Pointer, 
                                                     Reference, 
@@ -437,13 +327,6 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
     }
 };
 
-
-
-
-
-
-
-
 template <typename Key,
           typename Value, 
           typename Comparator> 
@@ -461,11 +344,8 @@ public:
     using const_pointer = const value_type *;
 
     using node_type = Node<value_type, size_type>;
-    using base_node_type = Node<value_type, size_type>;
     using node_pointer = Node<value_type, size_type>*;
-    using base_node_pointer = Node<value_type, size_type>*;
     using const_node_pointer = const Node<value_type, size_type>*;
-    using const_base_node_pointer = const Node<value_type, size_type>*;
     using comparator = Comparator;
 
     using node_handler = Utility::Handler<node_pointer, reference>;
@@ -475,7 +355,7 @@ public:
 private:
     
 private:
-    base_node_pointer root_;
+    node_pointer root_;
     mutable node_type end_;      // non-existing element, element after last existing element
     mutable node_type rend_;     // non-existing element, element before begin
 
@@ -484,9 +364,9 @@ private:
 
   public:
     using iterator = TreeIterator<Tree<Key, Value, Comparator> >;
-    using const_iterator = TreeIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
+    using const_iterator = TreeIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
     using reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator> >;
-    using const_reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_base_node_pointer>;
+    using const_reverse_iterator = TreeReverseIterator<Tree<Key, Value, Comparator>, const_pointer, const_reference, const_node_pointer>;
 
 public:
     Tree() : size_{0ull}, root_{nullptr}, end_{}, rend_{}  {
@@ -499,16 +379,16 @@ public:
     }
 
 private:
-    base_node_pointer copy_recursive(base_node_pointer source, base_node_pointer destination_root, node_pointer rend, node_pointer end) {
+    node_pointer copy_recursive(node_pointer source, node_pointer destination_root, node_pointer rend, node_pointer end) {
         assert(source && "source should exist");
-        base_node_pointer destination = create_node(destination_root, source->value_);
+        node_pointer destination = create_node(destination_root, source->value_);
 
         if (source->left_ && source->left_ != rend) {
-            base_node_pointer left = copy_recursive(source->left_, destination, rend, end);
+            node_pointer left = copy_recursive(source->left_, destination, rend, end);
             destination->left_ = left;
         }
         if (source->right_ && source->right_ != end) {
-            base_node_pointer right = copy_recursive(source->right_, destination, rend, end);
+            node_pointer right = copy_recursive(source->right_, destination, rend, end);
             destination->right_ = right;
         }
 
@@ -572,10 +452,6 @@ public:
             rend_.left_ = nullptr;
         }
 
-
-        // other.end_.root_ = nullptr;
-        // other.end_.left_ = &(other.rend_);
-        // other.rend_.root_ = &(other.end_);
         other.root_ = nullptr;
         other.updateEnd();
         other.updateReverseEnd();
@@ -587,7 +463,7 @@ public:
 
 
 private:
-    void deallocate(base_node_pointer* node) {
+    void deallocate(node_pointer* node) {
         if((*node)->left_ && (*node)->left_ != &rend_)
             deallocate(&(*node)->left_);
 
@@ -614,9 +490,6 @@ public:
         return root_->lHeight_ > root_->rHeight_ ? root_->lHeight_ : root_->rHeight_;
     }
 
-    // Map<int, float> m1;
-    // Map<int, float>::iterator azaza = m1.begin();
-    // ++azaza;
     // iterators============================================================
     iterator begin() {                                          // existing beginning
         return size_ ? iterator(rend_.root_) : end();
@@ -657,42 +530,23 @@ public:
 
 private:
     //modifiers==============================================================
-    base_node_pointer create_node(base_node_pointer root, value_type&& value) {
-        base_node_pointer new_node = new Node(std::move(value), root);
+    node_pointer create_node(node_pointer root, value_type&& value) {
+        node_pointer new_node = new Node(std::move(value), root);
         ++size_;
         return new_node;
-
-
-        // char* preallocated_buffer = new char[sizeof(node_type)]; // no constructors were called
-        // pointer new_value = reinterpret_cast<pointer>(preallocated_buffer);
-        // new (new_value) value_type(std::move(value));
-        // base_node_pointer new_node = reinterpret_cast<node_pointer>(new_value);
-        // new_node->root_ = root;
-        // ++size_;
-        // return new_node;
     }
-    base_node_pointer create_node(base_node_pointer root, const_reference value) {
-        base_node_pointer new_node = new Node(value, root);
+    node_pointer create_node(node_pointer root, const_reference value) {
+        node_pointer new_node = new Node(value, root);
         ++size_;
         return new_node;
-
-
-        // char* preallocated_buffer = new char[sizeof(node_type)]; // no constructors were called
-        // pointer new_value = reinterpret_cast<pointer>(preallocated_buffer);
-        // new (new_value) value_type(value);
-        // base_node_pointer new_node = reinterpret_cast<node_pointer>(new_value);
-        // new_node->root_ = root;
-        // ++size_;
-        // return new_node;
     }
     void updateEnd() {
-        // assert(root_ && "Root should always exist!");
         if (!root_) {
             end_.left_ = &rend_;
             rend_.root_ = &end_;
             return;
         }
-        base_node_pointer new_end = root_;
+        node_pointer new_end = root_;
         while (new_end->right_ != nullptr && new_end->right_ != &end_) {
             new_end = new_end->right_;
         }
@@ -702,20 +556,19 @@ private:
         end_.left_ = nullptr;
     }
     void updateReverseEnd() {
-        // assert(root_ && "Root should always exist!");
         if (!root_) {
             end_.left_ = &rend_;
             rend_.root_ = &end_;
             return;
         }
-        base_node_pointer new_end = root_;
+        node_pointer new_end = root_;
         while (new_end->left_ && new_end->left_ != &rend_) {
             new_end = new_end->left_;
         }
         rend_.root_ = new_end;
         new_end->left_ = &rend_;     // otherwise it will not stop when if (new_end->left_)
     }
-    bool leftLeftCase(base_node_pointer root) const noexcept {
+    bool leftLeftCase(node_pointer root) const noexcept {
         if (root->lHeight_ - root->rHeight_ != 2ull)
             return false;
         if (!root->left_)
@@ -724,7 +577,7 @@ private:
             return false;
         return true;
     }
-    bool rightRightCase(base_node_pointer root) const noexcept {
+    bool rightRightCase(node_pointer root) const noexcept {
         if (root->rHeight_ - root->lHeight_ != 2ull)
             return false;
         if (!root->right_)
@@ -733,7 +586,7 @@ private:
             return false;
         return true;
     }
-    bool leftRightCase(base_node_pointer root) const noexcept {
+    bool leftRightCase(node_pointer root) const noexcept {
         if (root->lHeight_ - root->rHeight_ != 2ull)
             return false;
         if (!root->left_)
@@ -742,7 +595,7 @@ private:
             return false;
         return true;
     }
-    bool rightLeftCase(base_node_pointer root) const noexcept {
+    bool rightLeftCase(node_pointer root) const noexcept {
         if (root->rHeight_ - root->lHeight_ != 2ull)
             return false;
         if (!root->right_)
@@ -752,11 +605,11 @@ private:
 
         return true;
     }
-    void leftLeftBalance(base_node_pointer root) {
+    void leftLeftBalance(node_pointer root) {
         assert(root->left_ && "left_ should exist!");
-        base_node_pointer root_root = root->root_;
-        base_node_pointer pivot = root->left_;
-        base_node_pointer b = pivot->right_;
+        node_pointer root_root = root->root_;
+        node_pointer pivot = root->left_;
+        node_pointer b = pivot->right_;
 
         pivot->right_ = root;
         root->root_ = pivot;
@@ -778,11 +631,11 @@ private:
         updateLeftHeight(root);         // order matters
         updateRightHeight(pivot);       // order matters
     }
-    void rightRightBalance(base_node_pointer root) {
+    void rightRightBalance(node_pointer root) {
         assert(root->right_ && "right_ should exist!");
-        base_node_pointer root_root = root->root_;
-        base_node_pointer pivot = root->right_;
-        base_node_pointer b = pivot->left_;
+        node_pointer root_root = root->root_;
+        node_pointer pivot = root->right_;
+        node_pointer b = pivot->left_;
 
         pivot->left_ = root;
         root->root_ = pivot;
@@ -804,13 +657,13 @@ private:
         updateRightHeight(root);        // order matters
         updateLeftHeight(pivot);        // order matters
     }
-    void leftRightBalance(base_node_pointer root) {
+    void leftRightBalance(node_pointer root) {
         assert(root->left_ && "left_ should exist!");       
         assert(root->left_->right_ && "left_->right_ should exist!");
 
-        base_node_pointer child = root->left_;
-        base_node_pointer pivot = child->right_;
-        base_node_pointer c = pivot->left_;
+        node_pointer child = root->left_;
+        node_pointer pivot = child->right_;
+        node_pointer c = pivot->left_;
 
         pivot->left_ = child;
         child->root_ = pivot;
@@ -827,13 +680,13 @@ private:
 
         leftLeftBalance(root);
     }
-    void rightLeftBalance(base_node_pointer root) {
+    void rightLeftBalance(node_pointer root) {
         assert(root->right_ && "right_ should exist!");
         assert(root->right_->left_ && "right_->left_ should exist!");
 
-        base_node_pointer child = root->right_;
-        base_node_pointer pivot = child->left_;
-        base_node_pointer c = pivot->right_;
+        node_pointer child = root->right_;
+        node_pointer pivot = child->left_;
+        node_pointer c = pivot->right_;
 
         pivot->right_ = child;
         child->root_ = pivot;
@@ -850,7 +703,7 @@ private:
 
         rightRightBalance(root);
     }
-    void balance(base_node_pointer root) noexcept {
+    void balance(node_pointer root) noexcept {
         if (leftRightCase(root))
             leftRightBalance(root);
         else if (rightLeftCase(root))
@@ -862,7 +715,7 @@ private:
         else
             assert(0 && "Unknown type of unbalanced case!");
     }
-    void updateLeftHeight(base_node_pointer node) {
+    void updateLeftHeight(node_pointer node) {
         assert(node && "Node should exist!");
         if (!node->left_ || node->left_ == &rend_) {
             node->lHeight_ = 0ull;
@@ -876,7 +729,7 @@ private:
                 node->lHeight_ = 1ull + node->left_->rHeight_;
         }
     }
-    void updateRightHeight(base_node_pointer node) {
+    void updateRightHeight(node_pointer node) {
         assert(node && "Node should exist!");
         if (!node->right_ || node->right_ == &end_) {
             node->rHeight_ = 0ull;
@@ -890,7 +743,7 @@ private:
         }
     }
 
-    std::pair<iterator, bool> insert_recursive(base_node_pointer root, const_reference value) {
+    std::pair<iterator, bool> insert_recursive(node_pointer root, const_reference value) {
         assert(root && "Root should always exist!");
         // root always exists
         if (comparator_(value, root->value_)) {
@@ -925,10 +778,9 @@ private:
             }
         }
         // equal
-        // size_ += root->Push_back(value);
         return std::make_pair(iterator(root), false);
     }
-    std::pair<iterator, bool> insert_recursive(base_node_pointer root, value_type&& value) {
+    std::pair<iterator, bool> insert_recursive(node_pointer root, value_type&& value) {
         assert(root && "Root should always exist!");
         // root always exists
         if (comparator_(value, root->value_)) {
@@ -963,11 +815,10 @@ private:
             }
         }
         // equal
-        // size_ += root->Push_back(value);
         return std::make_pair(iterator(root), false);
     }
 public:
-    bool unbalanced(base_node_pointer node) const noexcept {
+    bool unbalanced(node_pointer node) const noexcept {
         const auto difference = node->lHeight_ > node->rHeight_ ? (node->lHeight_ - node->rHeight_) : (node->rHeight_ - node->lHeight_);
         assert(difference <= 2 && "Critical disbalance!");
         return difference > 1;
@@ -1039,22 +890,12 @@ public:
         return result;
     }
 private:
-    //modifiers==============================================================
-    //                      4
-    //         2                                          6
-    //  1           3                  5                              7
-    //   1.5                   4.5             5.5               6.5         8
-    //    1.6               4.1           5.4        5.8      6.1         7.5          8.5
-    //          1.8                               5.7                             8.2        9
-    //       1.7                                                                8.1
-
-    // std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const key_type& key) {
-    std::pair<iterator, base_node_pointer> extract_recursive(base_node_pointer root, const_reference value) {
+    std::pair<iterator, node_pointer> extract_recursive(node_pointer root, const_reference value) {
         assert(root && "root should exist!");
 
         if (comparator_(value, root->value_)) {  // pos < root->value_
             if ((root)->left_ && (root)->left_ != &rend_) {
-                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->left_, value);
+                const std::pair<iterator, node_pointer> result = extract_recursive(root->left_, value);
                 updateLeftHeight(root);
                 if (unbalanced(root))
                     balance(root);
@@ -1066,7 +907,7 @@ private:
 
         } else if (comparator_(root->value_, value)) {
             if ((root)->right_ && (root)->right_ != &end_) {
-                const std::pair<iterator, base_node_pointer> result = extract_recursive(root->right_, value);
+                const std::pair<iterator, node_pointer> result = extract_recursive(root->right_, value);
                 updateRightHeight(root);
                 if (unbalanced(root))
                     balance(root);
@@ -1080,9 +921,9 @@ private:
         // found
         iterator it_result(root);
         ++it_result;
-        base_node_pointer result = root;
+        node_pointer result = root;
 
-        base_node_pointer new_node = nullptr;
+        node_pointer new_node = nullptr;
         bool no_replace = true;
 
         if ((root)->left_ && (root)->left_ != &rend_) {
@@ -1122,7 +963,7 @@ private:
                 if (new_node->left_)
                     new_node->left_->root_ = new_node->root_;
 
-                base_node_pointer temp = new_node->root_;
+                node_pointer temp = new_node->root_;
                 while (temp != (root)->left_) {
                     updateRightHeight(temp);
                     temp = temp->root_;
@@ -1184,7 +1025,7 @@ private:
                 if (new_node->right_)
                     new_node->right_->root_ = new_node->root_;
 
-                base_node_pointer temp = new_node->root_;
+                node_pointer temp = new_node->root_;
                 while (temp != (root)->right_) {
                     updateLeftHeight(temp);
                     temp = temp->root_;
@@ -1240,7 +1081,7 @@ public:
         if (!root_)
             assert(0 && "Trying to erase from empty tree!");
 
-        std::pair<iterator, base_node_pointer> result = extract_recursive(root_, value);
+        std::pair<iterator, node_pointer> result = extract_recursive(root_, value);
         delete result.second;
         result.second = nullptr;
 
@@ -1255,7 +1096,6 @@ public:
     node_handler Extract(iterator pos) {
         return Extract(static_cast<const_iterator>(pos));
     }
-    // base_node_pointer Extract(const key_type& key) {
     node_handler Extract(const_reference key) {
         if (!root_)
             assert(0 && "Trying to extract from empty tree!");
@@ -1263,15 +1103,8 @@ public:
         return node_handler(node);
     }
 
-    // node_type Extract(const_iterator position );
-// (1)	(since C++17)
-// node_type extract( const Key& k );
-
-
-
 protected:
-    const_iterator find_recursive(base_node_pointer root, const key_type& key, bool lowerBound = false, bool upperBound = false, base_node_pointer bound = nullptr) const {
-    // const_iterator find_recursive(base_node_pointer root, const_reference key, bool lowerBound = false, bool upperBound = false, base_node_pointer bound = nullptr) const {
+    const_iterator find_recursive(node_pointer root, const key_type& key, bool lowerBound = false, bool upperBound = false, node_pointer bound = nullptr) const {
         assert(root && "root should exist!");
 
         if (comparator_(key, root->value_)) {  // key < root->value_
@@ -1305,11 +1138,6 @@ protected:
     }
 
 public:
-    // iterator find(const_reference value) {
-    //     if (!root_)
-    //         return end();
-    //     return static_cast<iterator>(find_recursive(root_, value));
-    // }
     iterator Find(const key_type& key) {
         if (!root_)
             return end();
@@ -1320,9 +1148,6 @@ public:
             return end();
         return find_recursive(root_, key);
     }
-
-    // template< class K > iterator find( const K& x );
-    // template< class K > const_iterator find( const K& x ) const;
 
     bool Contains(const key_type& key) const {
         return Find(key) != end();
@@ -1348,7 +1173,6 @@ public:
         return find_recursive(root_, key, false, true, &end_);
     }
 
-    // template< class K > bool contains( const K& x ) const;
     std::pair<iterator, iterator> Equal_range(const key_type& key) {
         if (!root_)
             return std::make_pair(end(), end());
@@ -1365,10 +1189,6 @@ public:
         const_iterator upper = static_cast<const_iterator>(Upper_bound(key));
         return std::make_pair(lower, upper);
     }
-    //template< class K >
-    //std::pair<iterator,iterator> equal_range( const K& x );
-    //template< class K >
-    //std::pair<const_iterator,const_iterator> equal_range( const K& x ) const;
 
 };
 

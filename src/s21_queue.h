@@ -6,7 +6,7 @@ namespace s21 {
 
 template <typename Type, typename Container = List<Type>>
 class Queue {
-private:
+public:
     using container_type = Container;
     using value_type = typename Container::value_type;
     using size_type	= typename Container::size_type;
