@@ -130,8 +130,6 @@ TEST(array, T11At)
 TEST(array, T12AtOutOfRange)
 {
     const s21::Array<Item, 3> s21_array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
-    const std::array<Item, 3> array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
-
     EXPECT_THROW(s21_array.At(99), std::out_of_range);
 }
 

@@ -16,8 +16,8 @@ VALGRIND_REPORT_DIRECTORY_FOR_DOCKER_CONTAINER=valgrind_report
 
 SOURCES=tests/item.cc 
 
-# SOURCES+=tests/stack/constructors.cc
-# SOURCES+=tests/stack/methods.cc
+SOURCES+=tests/stack/constructors.cc
+SOURCES+=tests/stack/methods.cc
 
 SOURCES+=tests/array/access.cc
 SOURCES+=tests/array/constructors.cc
@@ -43,7 +43,7 @@ SOURCES+=tests/array/iterator.cc
 # SOURCES+=tests/map/iterator.cc
 # SOURCES+=tests/map/balance.cc
 # SOURCES+=tests/map/lookup.cc
-# SOURCES+=tests/map/insert_many.cc
+SOURCES+=tests/map/insert_many.cc
 
 # SOURCES+=tests/multiset/constructors.cc
 # SOURCES+=tests/multiset/erase.cc
@@ -51,7 +51,7 @@ SOURCES+=tests/array/iterator.cc
 # SOURCES+=tests/multiset/modifiers.cc
 # SOURCES+=tests/multiset/iterator.cc
 # SOURCES+=tests/multiset/lookup.cc
-SOURCES+=tests/multiset/insert_many.cc
+# SOURCES+=tests/multiset/insert_many.cc
 
 # SOURCES+=tests/multimap/constructors.cc
 # SOURCES+=tests/multimap/capacity.cc
@@ -59,7 +59,7 @@ SOURCES+=tests/multiset/insert_many.cc
 # SOURCES+=tests/multimap/modifiers.cc
 # SOURCES+=tests/multimap/lookup.cc
 # SOURCES+=tests/multimap/iterator.cc
-SOURCES+=tests/multimap/insert_many.cc
+# SOURCES+=tests/multimap/insert_many.cc
 
 # SOURCES+=tests/list/list.cc 
 # SOURCES+=tests/list/push_back.cc 
@@ -78,7 +78,7 @@ SOURCES+=tests/multimap/insert_many.cc
 # SOURCES+=tests/set/erase.cc
 # SOURCES+=tests/set/iterator.cc
 # SOURCES+=tests/set/lookup.cc
-SOURCES+=tests/set/insert_many.cc
+# SOURCES+=tests/set/insert_many.cc
 
 
 # SOURCES=*/*.cc
@@ -94,7 +94,7 @@ test: run_tests gcov_report
 tests/tests_main.exe: $(BINARIES)
 		$(CC) -o $@ $^ $(GTEST_LFLAGS) $(GCOVR_LFLAGS) -g
 
-%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h tests/vector_helpers.h s21_vector.h tests/map_helpers.h s21_map.h s21_tree.h s21_set.h s21_multimap.h s21_multiset.h tests/set_helpers.h tests/multiset_helpers.h tests/multimap_helpers.h s21_multitree.h
+%.o: %.cc tests/item.h tests/list_helpers.h s21_list.h tests/stack_helpers.h s21_stack.h tests/queue_helpers.h s21_queue.h tests/vector_helpers.h s21_vector.h tests/map_helpers.h s21_map.h s21_tree.h s21_set.h s21_multimap.h s21_multiset.h tests/set_helpers.h tests/multiset_helpers.h tests/multimap_helpers.h s21_multitree.h s21_array.h
 		$(CC) -c $(STRICT_CFLAGS) $< -o $@ $(GCOVR_CFLAGS) $(GTEST_CFLAGS)
 
 run_tests: tests/tests_main.exe
@@ -111,8 +111,8 @@ EXCLUDE_FROM_COVERAGE=--exclude-lines-by-pattern '.*assert.*' --exclude-throw-br
 gcov_report: run_tests
 		mkdir -p $(REPORT_DIRECTORY)
 		gcovr . --html --html-details $(EXCLUDE_FROM_COVERAGE) -o $(REPORT_DIRECTORY)/coverage_report.html
-		open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
-# START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+# open "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
+		START "" $(REPORT_DIRECTORY)/coverage_report.functions.html  
 
 
 

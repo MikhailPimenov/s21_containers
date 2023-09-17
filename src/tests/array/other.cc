@@ -11,49 +11,37 @@
 namespace
 {
 
-TEST(Vector, T0OperatorEqual)
+TEST(Array, T0OperatorEqual)
 {
     s21::Array<Item, 4> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::array<Item, 4> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     
-    s21::Array<Item, 2> s21_vector(s21_source.begin(), s21_source.end());
-    std::array<Item, 2> vector(source.begin(), source.end());
-
-    EXPECT_TRUE(s21_vector == vector);
+    EXPECT_EQ(s21_source, source);
 }   
 
-TEST(Vector, T1OperatorEqual)
+TEST(Array, T1OperatorEqual)
 {
     s21::Array<Item, 4> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
-    std::array<Item, 4> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444), Item(55, 'e', 0.55555555) };
-    
-    s21::Array<Item, 0> s21_vector(s21_source.begin(), s21_source.end());
-    std::array<Item, 4> vector(source.begin(), source.end());
+    std::array<Item, 4> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(55, 'e', 0.55555555) };  
 
-    EXPECT_FALSE(s21_vector == vector);
+    EXPECT_NE(s21_source, source);
 }   
 
-TEST(Vector, T2OperatorEqual)
+TEST(Array, T2OperatorEqual)
 {
     s21::Array<Item, 4> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
     std::array<Item, 4> source { Item(6666), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
-    
-    s21::Array<Item, 4> s21_vector(s21_source.begin(), s21_source.end());
-    std::array<Item, 4> vector(source.begin(), source.end());
 
-    EXPECT_FALSE(s21_vector == vector);
+    EXPECT_TRUE(s21_source != source);
 }   
 
-TEST(Vector, T3OperatorEqual)
+TEST(Array, T2OperatorEqual)
 {
     s21::Array<Item, 4> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
-    s21::Array<Item, 4> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(44, 'd', 0.44444) };
-    
-    s21::Array<Item, 4> s21_vector(s21_source.begin(), s21_source.end());
-    s21::Array<Item, 4> vector(source.begin(), source.end());
+    std::array<Item, 3> source { Item(6666), Item(22, 'b'), Item(44, 'd', 0.44444) };
 
-    EXPECT_TRUE(s21_vector == vector);
-}   
+    EXPECT_TRUE(s21_source != source);
+} 
 
 TEST(Vector, T4OperatorEqual)
 {
@@ -111,6 +99,22 @@ TEST(Vector, T8OperatorNotEqual)
 
     EXPECT_TRUE(s21_vector != vector);
 }   
+
+
+TEST(Array, T0Swap0)
+{
+    s21::Array<Item, 9> s21_array1 { Item(0), Item(111), Item(222, 'q', 0.222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    s21::Array<Item, 9> s21_array2 { Item(0), Item(111), Item(222), Item(333), Item(444), Item(555), Item(666), Item(777), Item(888) };
+    
+    const s21::Array<Item, 9> s21_array1_copy = s21_array1;
+    const s21::Array<Item, 9> s21_array2_copy = s21_array2;
+
+    s21_array1.Swap(s21_array2);
+
+    EXPECT_EQ(s21_array1, s21_array2_copy);
+    EXPECT_EQ(s21_array2, s21_array1_copy);
+}
+
 
 }  // namespace
 

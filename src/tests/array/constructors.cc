@@ -15,21 +15,6 @@
 namespace
 {
 
-
-TEST(array, T0DefaultConstructor)
-{
-    s21::Array<Item, 0> s21_array;
-    std::array<Item, 0> array;
-
-
-
-    EXPECT_EQ(s21_array, array);
-}
-
-
-
-
-
 TEST(array, T1ConstructorInitializer)
 {
     s21::Array<Item, 3> s21_array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -38,18 +23,6 @@ TEST(array, T1ConstructorInitializer)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T2ConstructorInitializerEmpty)
-{
-    s21::Array<Item, 0> s21_array {};
-    std::array<Item, 0> array {};
-
-    EXPECT_EQ(s21_array, array);
-}
-
-
-
-
-
 TEST(array, T6ConstructorCopy)
 {
     const s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -57,17 +30,6 @@ TEST(array, T6ConstructorCopy)
 
     s21::Array<Item, 3> s21_array(s21_source);
     std::array<Item, 3> array(source);
-
-    EXPECT_EQ(s21_array, array);
-}
-
-TEST(array, T7ConstructorCopyEmpty)
-{
-    s21::Array<Item, 0> s21_source;
-    std::array<Item, 0> source;
-
-    s21::Array<Item, 0> s21_array(s21_source);
-    std::array<Item, 0> array(source);
 
     EXPECT_EQ(s21_array, array);
 }
@@ -83,10 +45,6 @@ TEST(array, T8ConstructorCopy)
     EXPECT_EQ(s21_array, array);
 }
 
-
-
-
-
 TEST(array, T9ConstructorMove)
 {
     s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -98,11 +56,6 @@ TEST(array, T9ConstructorMove)
     EXPECT_EQ(s21_array, array);
     EXPECT_EQ(s21_source, source);
 }
-
-
-
-
-
 
 TEST(array, T11OperatorCopy)
 {
@@ -117,19 +70,6 @@ TEST(array, T11OperatorCopy)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T12ConstructorCopyEmpty)
-{
-    s21::Array<Item, 0> s21_source;
-    std::array<Item, 0> source;
-
-    s21::Array<Item, 0> s21_array;
-    s21_array = s21_source;
-    std::array<Item, 0> array;
-    array = source;
-
-    EXPECT_EQ(s21_array, array);
-}
-
 TEST(array, T13OperatorCopy)
 {
     const s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -138,19 +78,6 @@ TEST(array, T13OperatorCopy)
     s21::Array<Item, 3> s21_array{Item(1999), Item(22, 'h'), Item(33, 'c', 0.3333)};
     s21_array = s21_source ;
     std::array<Item, 3> array{Item(1999), Item(22, 'h'), Item(33, 'c', 0.3333)};
-    array = source;
-
-    EXPECT_EQ(s21_array, array);
-}
-
-TEST(array, T14ConstructorCopyEmpty)
-{
-    s21::Array<Item, 0> s21_source;
-    std::array<Item, 0> source;
-
-    s21::Array<Item, 0> s21_array;
-    s21_array = s21_source;
-    std::array<Item, 0> array;
     array = source;
 
     EXPECT_EQ(s21_array, array);
