@@ -3,7 +3,7 @@
 
 #include <initializer_list>
 #include "s21_multitree.h"
-#include "s21_comparator.h"
+#include "s21_utility.h"
 
 namespace s21
 {
@@ -11,16 +11,16 @@ namespace s21
 
 
 template <typename Value, 
-          typename Comparator = Less<Value>>
+          typename Comparator = Utility::Less<Value>>
 class MultiSet : public MultiTree<Value,
                                   Value, 
                                   Comparator,
-                                  KeyGetterSet<Value>>
+                                  Utility::KeyGetterSet<Value>>
 {
     using Base = MultiTree<Value,
                            Value, 
                            Comparator,
-                           KeyGetterSet<Value>>;
+                           Utility::KeyGetterSet<Value>>;
 public:
     // using Base::Base;
     MultiSet() : Base() {}

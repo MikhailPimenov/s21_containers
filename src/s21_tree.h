@@ -2,7 +2,7 @@
 #define _TESTS_S21_TREE_H_
 
 #include <cassert>
-#include "s21_comparator.h"
+#include "s21_utility.h"
 #include "s21_vector.h"
 
 namespace s21 {
@@ -10,7 +10,7 @@ namespace s21 {
 namespace Tree {
 
 template <typename Value, typename size_type = std::size_t>
-class Node {
+struct Node {
 public:
     Value value_;
 
@@ -398,8 +398,6 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
     using typename Base::difference_type;   // otherwise everywhere in this class 'typename Base::difference_type' instead of 'difference_type'
     using typename Base::node_pointer;
     using typename Base::reference;
-//     // template<typename VectorType, typename PointerType, typename ReferenceType>
-//     // friend class VectorIterator;  // to compare const_iterator with iterator
 
   public:
     using Base::Base;
@@ -432,7 +430,6 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
 
     operator int() const = delete;
 
-// private:
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
     explicit operator TreeReverseIterator<Tree, OtherPointer, OtherReference, OtherNode_pointer>() const noexcept
     {
@@ -450,9 +447,6 @@ class TreeReverseIterator : public TreeIteratorBase<Tree,
 template <typename Key,
           typename Value, 
           typename Comparator> 
-
-// template <typename Value, 
-//           typename Comparator> 
 class Tree
 {
 
@@ -474,7 +468,7 @@ public:
     using const_base_node_pointer = const Node<value_type, size_type>*;
     using comparator = Comparator;
 
-    using node_handler = Handler<node_pointer, reference>;
+    using node_handler = Utility::Handler<node_pointer, reference>;
   private:
     size_type size_; 
 

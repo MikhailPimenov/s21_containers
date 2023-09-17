@@ -2,13 +2,13 @@
 #define _S21_SET_H_
 
 #include "s21_tree.h"
-#include "s21_comparator.h"
+#include "s21_utility.h"
 
 namespace s21
 {
 
 template <typename Value, 
-          typename Comparator = Less<Value>>
+          typename Comparator = Utility::Less<Value>>
 class Set : public Tree::Tree<Value,
                               Value, 
                               Comparator>

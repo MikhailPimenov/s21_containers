@@ -198,8 +198,11 @@ template <typename Type, std::size_t N> class Array
     } 
 };
 
-template <typename Type, std::size_t N> 
-bool operator==(const Array<Type, N> &left, const Array<Type, N> &right) {
+template <typename Type, std::size_t N1, std::size_t N2> 
+constexpr bool operator==(const Array<Type, N1> &left, const Array<Type, N2> &right) {
+    if constexpr (N1 != N2)
+        return false;
+
     auto left_iterator = left.cbegin();
     auto right_iterator = right.cbegin();
 
@@ -215,17 +218,7 @@ bool operator==(const Array<Type, N> &left, const Array<Type, N> &right) {
 }
 
 template <typename Type, std::size_t N1, std::size_t N2> 
-bool operator==(const Array<Type, N1>&, const Array<Type, N2>&) {
-    return false;
-}
-
-template <typename Type, std::size_t N> 
-bool operator!=(const Array<Type, N> &left, const Array<Type, N> &right) {
-    return !(left == right);
-}
-
-template <typename Type, std::size_t N1, std::size_t N2> 
-bool operator!=(const Array<Type, N1> &left, const Array<Type, N2> &right) {
+constexpr bool operator!=(const Array<Type, N1> &left, const Array<Type, N2> &right) {
     return !(left == right);
 }
 

@@ -7,7 +7,7 @@
 #include <new>
 #include <cmath>
 
-#include "s21_comparator.h"
+#include "s21_utility.h"
 
 namespace s21
 {
@@ -36,72 +36,58 @@ class ListIteratorBase
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
     ListIteratorBase(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) noexcept 
-        : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_)) 
-    {
-
-    }
+        : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_)) {}
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
     ListIteratorBase(ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &&other) noexcept 
-        : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_))
-    {
+        : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_)) {
         other.node_pointer_ = nullptr;
     }
 
-    friend void swap(ListIteratorBase &left, ListIteratorBase &right)
-    {
+    friend void swap(ListIteratorBase &left, ListIteratorBase &right) {
         using namespace std; // to enable ADL
         swap(left.node_pointer_, right.node_pointer_);
     }
 
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
-    ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &operator=(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) noexcept
-    {
+    ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &operator=(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) noexcept {
         node_pointer_ = other.node_pointer_;
         return *this;
     }
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
-    ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &operator=(ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &&other) noexcept
-    {
+    ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &operator=(ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &&other) noexcept {
         node_pointer_ = other.node_pointer_;
         other.node_pointer_ = nullptr;
         return *this;
     }
 
-    reference operator*() const
-    {
+    reference operator*() const {
         return node_pointer_->value_;
     }
 
-    pointer operator->() const
-    {
+    pointer operator->() const {
         return &(node_pointer_->value_);
     }
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer> // to be able to compare iterator and const_iterator
-    bool operator==(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) const noexcept
-    {
+    bool operator==(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) const noexcept {
         return node_pointer_ == other.node_pointer_;
     }
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
-    bool operator!=(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) const noexcept
-    {
+    bool operator!=(const ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type> &other) const noexcept {
         return !(*this == other);
     }
 
-    explicit operator bool() const
-    {
+    explicit operator bool() const {
         return node_pointer_;
     }
 
     template <typename OtherPointer, typename OtherReference, typename OtherNode_pointer>
-    operator ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type>() const noexcept
-    {
+    operator ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type>() const noexcept {
         return ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer, Difference_type, Value_type>(node_pointer_);
-        // return VectorIteratorBase(pointer_);
     }
 
   private:
@@ -125,28 +111,23 @@ class ListIterator : public ListIteratorBase<List, Pointer, Reference, typename 
   public:
     using Base::Base;
 
-    ListIterator &operator++()
-    {
+    ListIterator &operator++() {
         this->node_pointer_ = this->node_pointer_->next_;
-        // assert(this && "this was nullptr!");
         return *this;
     }
 
-    ListIterator operator++(int)
-    {
+    ListIterator operator++(int) {
         ListIterator temporary(*this);
         this->node_pointer_ = this->node_pointer_->next_;
         return temporary;
     }
 
-    ListIterator &operator--()
-    {
+    ListIterator &operator--() {
         this->node_pointer_ = this->node_pointer_->previous_;
         return *this;
     }
 
-    ListIterator operator--(int)
-    {
+    ListIterator operator--(int) {
         ListIterator temporary(*this);
         this->node_pointer_ = this->node_pointer_->previous_;
         return temporary;
@@ -164,27 +145,23 @@ class ListReverseIterator : public ListIteratorBase<List, Pointer, Reference, ty
   public:
     using Base::Base;
 
-    ListReverseIterator &operator++()
-    {
+    ListReverseIterator &operator++() {
         this->node_pointer_ = this->node_pointer_->previous_;
         return *this;
     }
 
-    ListReverseIterator operator++(int)
-    {
+    ListReverseIterator operator++(int) {
         ListReverseIterator temporary(*this);
         this->node_pointer_ = this->node_pointer_->previous_;
         return temporary;
     }
 
-    ListReverseIterator &operator--()
-    {
+    ListReverseIterator &operator--() {
         this->node_pointer_ = this->node_pointer_->next_;
         return *this;
     }
 
-    ListReverseIterator operator--(int)
-    {
+    ListReverseIterator operator--(int) {
         ListReverseIterator temporary(*this);
         this->node_pointer_ = this->node_pointer_->next_;
         return temporary;
@@ -202,11 +179,9 @@ template <typename Type> class List
     using reference = value_type &;
     using const_reference = const value_type &;
     using pointer = value_type *;
-
     using const_pointer = const value_type *;
     using node_pointer = Node *;
-
-    using node_type = Handler<node_pointer, reference>;
+    using node_type = Utility::Handler<node_pointer, reference>;
 
   public:
     friend class ListIterator<List<Type>>;
@@ -221,23 +196,10 @@ template <typename Type> class List
     using const_reverse_iterator = ListReverseIterator<List<Type>, const_pointer, const_reference>;
 
   private:
-    struct Node
-    {
-        // template <typename T> friend void List<T>::connect(typename List<T>::Node *, typename List<T>::Node *);
-
-        // template <typename T> friend typename List<T>::Node *List<T>::previousOf(typename List<T>::Node *);
-
-        // template <typename T> friend typename List<T>::Node *List<T>::nextOf(typename List<T>::Node *);
-
-        friend iterator;
-        friend const_iterator;
-        friend reverse_iterator;
-        friend const_reverse_iterator;
-
+    struct Node {
       public:
         value_type value_;
 
-    //   private:
         Node *next_;
         Node *previous_;
 
@@ -255,36 +217,30 @@ template <typename Type> class List
     size_type size_;
 
   public:
-    List() : end_{}, rend_{}, size_{0ull}
-    {
+    List() : end_{}, rend_{}, size_{0ull} {
         connect(&rend_, &end_);
     };
 
-    explicit List(size_type count) : List(count, value_type())
-    {      
-    }
+    explicit List(size_type count) : List(count, value_type()) {}
 
-    List(size_type count, const_reference value) : List()
-    {
+    List(size_type count, const_reference value) : List() {
         for (size_type i = 0ull; i < count; ++i)
             Push_back(value);
     }
 
-    template <typename InputIterator> List(InputIterator first, InputIterator last) : List()
-    {
+    template <typename InputIterator> 
+    List(InputIterator first, InputIterator last) : List() {
         for (auto it = first; it != last; ++it)
             Push_back(*it);
     }
 
-    // TODO: refactor rule of 5
-    List(const List &other) : List()
-    {
+
+    List(const List &other) : List() {
         for (auto it = other.cbegin(); it != other.cend(); ++it)
             Push_back(*it);
     }
-    // TODO: refactor rule of 5
-    List(List &&other) : size_{other.size_}
-    {
+
+    List(List &&other) : size_{other.size_} {
         Node *other_first = nextOf(&(other.rend_));
         Node *other_last = previousOf(&(other.end_));
 
@@ -295,21 +251,17 @@ template <typename Type> class List
         other.size_ = 0ull;
     }
 
-    // TODO: refactor rule of 5
-    List &operator=(const List &other)
-    {
+    List &operator=(const List &other) {
         if (this == &other)
             return *this;
 
         List copy(other);
-        *this = std::move(copy); // operator=(List&&)
+        *this = std::move(copy); 
         return *this;
     }
 
-    // TODO: refactor rule of 5
-    List &operator=(List &&other)
-    {
-        if (this == &other) // TODO: remove??
+    List &operator=(List &&other) {
+        if (this == &other) 
             return *this;
 
         Clear();
@@ -328,111 +280,69 @@ template <typename Type> class List
         return *this;
     }
 
-    List(const std::initializer_list<value_type> &list) : List()
-    {
+    List(const std::initializer_list<value_type> &list) : List() {
         for (const auto &element : list)
             Push_back(element);
     };
 
-    ~List()
-    {
+    ~List() {
         Clear();
     }
 
-    void Clear()
-    {
+    void Clear() {
         while (!Empty())
             Pop_back();
     }
 
-    bool Empty() const noexcept
-    {
+    bool Empty() const noexcept {
         return size_ == 0ull;
     }
 
-    size_type Size() const
-    {
+    size_type Size() const {
         return size_;
     }
 
-    iterator begin()
-    {
+    iterator begin() {
         return ++iterator(&rend_);
     }
 
-    reverse_iterator rbegin()
-    {
+    reverse_iterator rbegin() {
         return ++reverse_iterator(&end_);
     }
 
-    const_iterator begin() const
-    {
+    const_iterator begin() const {
         return ++const_iterator(&rend_);
     }
 
-    const_iterator cbegin() const
-    {
+    const_iterator cbegin() const {
         return begin();
     }
 
-    const_reverse_iterator crbegin() const
-    {
+    const_reverse_iterator crbegin() const {
         return ++const_reverse_iterator(&end_);
     }
 
-    iterator end()
-    {
+    iterator end() {
         return iterator(&end_);
     }
 
-    reverse_iterator rend()
-    {
+    reverse_iterator rend() {
         return reverse_iterator(&rend_);
     }
 
-    const_iterator end() const
-    {
+    const_iterator end() const {
         return const_iterator(&end_);
     }
 
-    const_iterator cend() const
-    {
+    const_iterator cend() const {
         return end();
     }
 
-    const_reverse_iterator crend() const
-    {
+    const_reverse_iterator crend() const {
         return const_reverse_iterator(&rend_);
     }
 
-private:
-    Node* create_node(const_reference data) {
-        // char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
-        // pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-        // new (new_data) value_type(data);
-        // return reinterpret_cast<Node*>(new_data);
-        return new Node(data);
-    }
-
-    Node* create_node(value_type&& data) {
-        // char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
-        // pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-        // new (new_data) value_type(std::move(data));
-        // return reinterpret_cast<Node*>(new_data);
-        return new Node(std::move(data));
-    }
-    template <class... Args>
-    Node* create_node(Args&&... args) {
-        // char* preallocated_buffer = new char[sizeof(Node)]; // no constructors were called
-        // pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-        // new (new_data) value_type(std::forward<Args>(args)...);
-        // return reinterpret_cast<Node*>(new_data);
-        return new Node(std::forward<Args>(args)...);
-    }
-
-public:
-    void Push_back(const_reference data)
-    {
+    void Push_back(const_reference data) {
         Node *old_last = previousOf(&end_);
         Node* new_last = create_node(data);
 
@@ -442,8 +352,7 @@ public:
         ++size_;
     };
 
-    void Push_back(value_type&& data)
-    {
+    void Push_back(value_type&& data) {
         Node *old_last = previousOf(&end_);
         Node* new_last = create_node(std::move(data));
 
@@ -453,23 +362,18 @@ public:
         ++size_;
     };
 
-    void Pop_back()
-    {
+    void Pop_back() {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
         Node *old_last = previousOf(&end_);
         Node *new_last = previousOf(old_last);
         
-        // old_last->~Node();
-        // delete[] reinterpret_cast<char*>(old_last);
         delete old_last;
-
         connect(new_last, &end_);
 
         --size_;
     }
 
-    // Max_size()
     size_type Max_size() const noexcept {
 #if defined(__APPLE__) || defined(__MACH__) 
         if constexpr(sizeof(void*) == 4) 
@@ -481,9 +385,8 @@ public:
         return std::pow(2.0, 63.0) / sizeof(Node) - 2.0;
 #endif // defined(__APPLE__) || defined(__MACH__) 
     }
-    // Resize()
-    void Resize(size_type count, const_reference value)
-    {
+
+    void Resize(size_type count, const_reference value) {
         assert(static_cast<signed long long>(count) >= 0 && "Probably negative number of elements!");
 
         if (count == size_)
@@ -496,14 +399,12 @@ public:
             for (size_type i = 0ull; i < count - size_; ++i)
                 Push_back(value);
     }
-    void Resize(size_type count)
-    {
+
+    void Resize(size_type count) {
         Resize(count, value_type());
     }
 
-    // Insert()
-    iterator Insert(const_iterator pos, const_reference value)
-    {
+    iterator Insert(const_iterator pos, const_reference value) {
         Node* new_node = create_node(value);
 
         Node *next = pos.get();
@@ -514,8 +415,8 @@ public:
         ++size_;
         return iterator(new_node);
     }
-    iterator Insert(const_iterator pos, size_type count, const_reference value)
-    {
+
+    iterator Insert(const_iterator pos, size_type count, const_reference value) {
         assert(static_cast<signed long long>(count) >= 0 && "Probably negative number of elements!");
         for (size_type i = 0ull; i < count; ++i)
             Insert(pos, value);
@@ -526,11 +427,11 @@ public:
 
         return result;
     }
-    template <typename InputIterator> iterator Insert(const_iterator pos, InputIterator first, InputIterator last)
-    {
+
+    template <typename InputIterator> 
+    iterator Insert(const_iterator pos, InputIterator first, InputIterator last) {
         size_type count = 0ull;
-        for (InputIterator it = first; it != last; ++it)
-        {
+        for (InputIterator it = first; it != last; ++it) {
             Insert(pos, *it);
             ++count;
         }
@@ -541,8 +442,8 @@ public:
 
         return result;
     }
-    iterator Insert(const_iterator pos, const std::initializer_list<Type> &list)
-    {
+
+    iterator Insert(const_iterator pos, const std::initializer_list<Type> &list) {
         for (const auto &element : list)
             Insert(pos, element);
 
@@ -553,74 +454,38 @@ public:
         return result;
     }
 
-    template <typename Last>
-    void insert_many_back(Last last) {
-        Push_back(std::forward<Last>(last));
-    }
-
-    template <typename First, class... Args>
-    void insert_many_back(First first, Args&&... args) {
-        Push_back(std::forward<First>(first));
-        insert_many_back(std::forward<Args>(args)...);
-    }
-
     template <class... Args>
     void Insert_many_back(Args&&... args) {
-        // constexpr auto size = sizeof...(Args);
         return insert_many_back(std::forward<Args>(args)...);
     }
 
-    template <typename Last>
-    void insert_many_front(Last last) {
-        Push_front(std::forward<Last>(last));
-    }
-    template <typename First, class... Args>
-    void insert_many_front(First first, Args&&... args) {
-        insert_many_front(std::forward<Args>(args)...);
-        Push_front(std::forward<First>(first));
-    }
     template <typename... Args>
     void Insert_many_front(Args&&... args) {
         return insert_many_front(std::forward<Args>(args)...);
     }
 
-    template <typename Last>
-    iterator insert_many(const_iterator pos, Last last) {
-        return Insert(pos, last);
-    }
-    template <typename First, class... Args>
-    iterator insert_many(const_iterator pos, First first, Args&&... args) {
-        iterator it = insert_many(pos, std::forward<Args>(args)...);
-        return Insert(it, first);
-    }
     template <typename... Args>
     iterator Insert_many(const_iterator pos, Args&&... args) {
         insert_many(pos, std::forward<Args>(args)...);
         return static_cast<const_iterator>(pos);
     }
 
-    void Assign(size_type count, const_reference value)
-    {
+    void Assign(size_type count, const_reference value) {
         List temporary(count, value);
-        *this = temporary; // operator=(List&&)
+        *this = std::move(temporary); 
     }
 
-    template <typename InputIterator> void Assign(InputIterator first, InputIterator last)
-    {
+    template <typename InputIterator> void Assign(InputIterator first, InputIterator last) {
         List temporary(first, last);
-        *this = temporary; // operator=(List&&)
+        *this = std::move(temporary);
     }
 
-    void Assign(const std::initializer_list<value_type> &list)
-    {
+    void Assign(const std::initializer_list<value_type> &list) {
         List temporary(list);
-        *this = temporary; // operator=(List&&)
+        *this = std::move(temporary); 
     };
 
-    // Merge()
-    // Push_front()
-    void Push_front(const_reference data)
-    {
+    void Push_front(const_reference data) {
         Node *old_first = nextOf(&rend_);
 
         Node *new_first = create_node(data);
@@ -631,8 +496,7 @@ public:
         ++size_;
     };
 
-    void Push_front(value_type&& data)
-    {
+    void Push_front(value_type&& data) {
         Node *old_first = nextOf(&rend_);
 
         Node *new_first = create_node(std::move(data));
@@ -643,24 +507,20 @@ public:
         ++size_;
     };
 
-    void Pop_front()
-    {
+    void Pop_front() {
         assert(size_ >= 1ull && "Pop_back() from empty list!");
 
         Node *old_first = nextOf(&rend_);
         Node *new_first = nextOf(old_first);
 
-        // old_first->~Node();
-        // delete[] reinterpret_cast<char*>(old_first);
         delete old_first;
 
         connect(&rend_, new_first);
 
         --size_;
     }
-    // Swap()
-    void Swap(List& other) noexcept 
-    {
+
+    void Swap(List& other) noexcept {
         Node* other_first = nextOf(&(other.rend_));
         Node* other_last = previousOf(&(other.end_));
 
@@ -683,47 +543,35 @@ public:
         
         std::swap(size_, other.size_);
     }
-
    
-    // Front()
-    reference Front()
-    {
+    reference Front() {
         assert(!Empty() && "Front() from empty list!");
         return *begin();
     }
-    const_reference Front() const
-    {
+    const_reference Front() const {
         assert(!Empty() && "Front() from empty list!");
         return *cbegin();
     }
-    // Back()
-    reference Back()
-    {
+    reference Back() {
         assert(!Empty() && "Back() from empty list!");
         return *(--end());
     }
-    const_reference Back() const
-    {
+    const_reference Back() const {
         assert(!Empty() && "Back() from empty list!");
         return *(--cend());
     }
 
-    // Erase()
-    iterator Erase(const_iterator pos)
-    {
+    iterator Erase(const_iterator pos) {
         Node* previous = previousOf(pos.get());
         Node* next = nextOf(pos.get());
 
-        // pos.get()->~Node();
-        // delete[] reinterpret_cast<char*>(pos.get());
         delete pos.get();
         --size_;
 
         connect(previous, next);
         return iterator(next);
     }
-    iterator Erase(const_iterator first, const_iterator last)
-    {
+    iterator Erase(const_iterator first, const_iterator last) {
         while(first != last) 
             first = Erase(first);
 
@@ -739,12 +587,8 @@ public:
         return node_type(pos.get());
 
     }
-    // Sort()
-    // Unique()
-    // Splice()
-    // Emplace()
-    template <class... Args> iterator Emplace(const_iterator pos, Args &&...args)
-    {
+
+    template <class... Args> iterator Emplace(const_iterator pos, Args &&...args) {
         Node* new_node = create_node(std::forward<Args>(args)...);
 
         Node *next = pos.get();
@@ -757,9 +601,8 @@ public:
         return iterator(new_node);
     }
 
-    // Emplace_back()
-    template <class... Args> reference Emplace_back(Args &&...args)
-    {
+    template <class... Args> 
+    reference Emplace_back(Args &&...args) {
         Node* new_last = create_node(std::forward<Args>(args)...);
         Node *old_last = previousOf(&end_);
 
@@ -769,9 +612,9 @@ public:
 
         return new_last->value_;
     }
-    // Emplace_front()
-    template <class... Args> reference Emplace_front(Args &&...args)
-    {
+
+    template <class... Args> 
+    reference Emplace_front(Args &&...args) {
         Node *new_first = create_node(std::forward<Args>(args)...);
         Node *old_first = nextOf(&rend_);
 
@@ -783,27 +626,72 @@ public:
     }
 
   private:
-    void connect(Node *node, Node *next_node)
-    {
+    void connect(Node *node, Node *next_node) {
         assert(node && "node was nullptr!");
         assert(next_node && "next_node was nullptr!");
         node->next_ = next_node;
         next_node->previous_ = node;
     }
-    Node *previousOf(Node *node)
-    {
+    Node *previousOf(Node *node) {
         assert(node && "node was nullptr!");
         return node->previous_;
     }
-    Node *nextOf(Node *node)
-    {
+    Node *nextOf(Node *node) {
         assert(node && "node was nullptr!");
         return node->next_;
     }
+
+
+    Node* create_node(const_reference data) {
+        return new Node(data);
+    }
+
+    Node* create_node(value_type&& data) {
+        return new Node(std::move(data));
+    }
+    template <class... Args>
+    Node* create_node(Args&&... args) {
+        return new Node(std::forward<Args>(args)...);
+    }
+
+
+
+
+    template <typename Last>
+    void insert_many_back(Last last) {
+        Push_back(std::forward<Last>(last));
+    }
+    template <typename First, class... Args>
+    void insert_many_back(First first, Args&&... args) {
+        Push_back(std::forward<First>(first));
+        insert_many_back(std::forward<Args>(args)...);
+    }
+
+
+    template <typename Last>
+    void insert_many_front(Last last) {
+        Push_front(std::forward<Last>(last));
+    }
+    template <typename First, class... Args>
+    void insert_many_front(First first, Args&&... args) {
+        insert_many_front(std::forward<Args>(args)...);
+        Push_front(std::forward<First>(first));
+    }
+
+
+    template <typename Last>
+    iterator insert_many(const_iterator pos, Last last) {
+        return Insert(pos, last);
+    }
+    template <typename First, class... Args>
+    iterator insert_many(const_iterator pos, First first, Args&&... args) {
+        iterator it = insert_many(pos, std::forward<Args>(args)...);
+        return Insert(it, first);
+    }
+
 };
 
-template <typename Type> bool operator==(const List<Type> &left, const List<Type> &right)
-{
+template <typename Type> bool operator==(const List<Type> &left, const List<Type> &right) {
     if (left.Size() != right.Size())
         return false;
 

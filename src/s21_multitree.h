@@ -6,7 +6,7 @@
 #include <initializer_list>
 #include "s21_list.h"
 #include "s21_tree.h"
-#include "s21_comparator.h"
+#include "s21_utility.h"
 
 #include <iostream> // TODO: remove
 

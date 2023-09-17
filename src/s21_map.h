@@ -1,19 +1,8 @@
 #ifndef _S21_MAP_H_
 #define _S21_MAP_H_
 
-// #include <cassert>
-// #include <initializer_list>
-// #include <iterator>
-// #include <new>
-// #include <cstring>
-// #include <vector>
-
-// #include "s21_list.h"
-// #include "s21_vector.h"
-// #include "tests/vector_helpers.h"   // TODO: remove from here and add everywhere map is printed
-
 #include "s21_tree.h"
-#include "s21_comparator.h"
+#include "s21_utility.h"
 
 namespace s21
 {
@@ -36,7 +25,7 @@ public:
 
 template <typename Key, 
           typename Value, 
-          typename Comparator = Less<const Key>>
+          typename Comparator = Utility::Less<const Key>>
 class Map : public Tree::Tree<Key,
                               std::pair<const Key, Value>, 
                               ComparatorMap<const Key, std::pair<const Key, Value>, Comparator>>

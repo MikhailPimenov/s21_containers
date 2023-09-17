@@ -15,7 +15,7 @@
 namespace
 {
 
-TEST(array, T1ConstructorInitializer)
+TEST(Array, T1ConstructorInitializer)
 {
     s21::Array<Item, 3> s21_array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     std::array<Item, 3> array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -23,7 +23,7 @@ TEST(array, T1ConstructorInitializer)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T6ConstructorCopy)
+TEST(Array, T6ConstructorCopy)
 {
     const s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     const std::array<Item, 3> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -34,7 +34,7 @@ TEST(array, T6ConstructorCopy)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T8ConstructorCopy)
+TEST(Array, T8ConstructorCopy)
 {
     const s21::Array<Item, 2> s21_source{Item(33, 'i', 0.3333), Item(33, 'c', 0.3333)};
     const std::array<Item, 2> source{Item(33, 'i', 0.3333), Item(33, 'c', 0.3333)};
@@ -45,7 +45,7 @@ TEST(array, T8ConstructorCopy)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T9ConstructorMove)
+TEST(Array, T9ConstructorMove)
 {
     s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     std::array<Item, 3> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -57,7 +57,7 @@ TEST(array, T9ConstructorMove)
     EXPECT_EQ(s21_source, source);
 }
 
-TEST(array, T11OperatorCopy)
+TEST(Array, T11OperatorCopy)
 {
     const s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     const std::array<Item, 3> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -70,7 +70,7 @@ TEST(array, T11OperatorCopy)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T13OperatorCopy)
+TEST(Array, T13OperatorCopy)
 {
     const s21::Array<Item, 3> s21_source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     const std::array<Item, 3> source { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
@@ -83,7 +83,7 @@ TEST(array, T13OperatorCopy)
     EXPECT_EQ(s21_array, array);
 }
 
-TEST(array, T15ConstructorCopySelf)
+TEST(Array, T15ConstructorCopySelf)
 {
     s21::Array<Item, 3> s21_array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
     auto &a = s21_array;
@@ -96,6 +96,13 @@ TEST(array, T15ConstructorCopySelf)
     EXPECT_EQ(s21_array, array);
 }
 
+TEST(Array, T16Constructor)
+{
+    s21::Array<Item, 5> s21_array { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333) };
+    std::array<Item, 5> s21_array_expected { Item(11), Item(22, 'b'), Item(33, 'c', 0.3333), Item(), Item(), };
+
+    EXPECT_EQ(s21_array, s21_array_expected);
+}
 
 }  // namespace
 
