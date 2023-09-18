@@ -1,8 +1,5 @@
 # s21_containers
 
-> При старте работы над проектом просим вас постараться хронометрировать время работы над проектом.
-> По завершении работы над проектом просим вас ответить на два вопроса [в этом опросе](https://forms.gle/1mNrKimJ1c7g8XLj6)
-
 Implementation of the s21_containers.h. library.
 
 The russian version of the task can be found in the repository.
@@ -17,7 +14,7 @@ The russian version of the task can be found in the repository.
 3. [Chapter III](#chapter-iii) \
    3.1. [Part 1](#part-1-implementation-of-the-s21_containersh-library)  
    3.2. [Part 2](#part-2-bonus-implementation-of-the-s21_containersplush-library)  
-   3.3. [Part 3](#part-3-bonus-implementation-of-the-modified-emplace-methods)
+   3.3. [Part 3](#part-3-bonus-implementation-of-the-insert_many-method)
 
 
 ## Chapter I
@@ -123,19 +120,21 @@ List of classes to be implemented additionally: `array`, `multiset`.
 - Provide a Makefile for testing the library (with targets clean, test)
 - The classical implementation of containers should be considered as a basis, but the final choice of the algorithm remains free.
 
-### Part 3. Bonus. Implementation of the modified `emplace` methods
+### Part 3. Bonus. Implementation of the `insert_many` method.
 
 You need to complete the classes with the appropriate methods, according to the table:
 
 | Modifiers      | Definition                                      | Containers |
 |----------------|-------------------------------------------------| -------------------------------------------|
-| `iterator emplace(const_iterator pos, Args&&... args)`          | inserts new elements into the container directly before `pos`  | List, Vector |
-| `void emplace_back(Args&&... args)`          | appends new elements to the end of the container  | List, Vector, Queue |
-| `void emplace_front(Args&&... args)`          | appends new elements to the top of the container  | List, Stack |
-| `vector<std::pair<iterator,bool>> emplace(Args&&... args)`          | inserts new elements into the container  | Map, Set, Multiset |
+| `iterator insert_many(const_iterator pos, Args&&... args)`          | inserts new elements into the container directly before `pos`  | List, Vector |
+| `void insert_many_back(Args&&... args)`          | appends new elements to the end of the container  | List, Vector, Queue |
+| `void insert_many_front(Args&&... args)`          | appends new elements to the top of the container  | List, Stack |
+| `vector<std::pair<iterator,bool>> insert_many(Args&&... args)`          | inserts new elements into the container  | Map, Set, Multiset |
 
-Note: the arguments are the already created elements that should be inserted into the appropriate container.
+Note: the arguments are the already created elements of the appropriate container that should be inserted into this container.
 
-*Tip 1*: notice that each of these methods uses an Args&&... args - Parameter pack construct. This construct allows a variable number of parameters to be passed to a function or method. So, when calling a method defined as `iterator emplace(const_iterator pos, Args&&... args)`, you can write either `emplace(pos, arg1, arg2)` or `emplace(pos, arg1, arg2, arg3)`.
+*Tip 1*: notice that each of these methods uses an Args&&... args - Parameter pack construct. This construct allows a variable number of parameters to be passed to a function or method. So, when calling a method defined as `iterator insert_many(const_iterator pos, Args&&... args)`, you can write either `insert_many(pos, arg1, arg2)` or `insert_many(pos, arg1, arg2, arg3)`.
 
 *Tip 2*: remember to test methods for different cases, including boundary ones.
+
+💡 [Tap here](https://forms.yandex.ru/cloud/64181a7dc09c02252de7a4f3/) **to leave your feedback on the project**. Pedago Team really tries to make your educational experience better.
