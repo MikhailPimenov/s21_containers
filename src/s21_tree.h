@@ -363,8 +363,8 @@ class Tree {
 
  public:
   Tree() : size_{0ull}, root_{nullptr}, end_{}, rend_{} {
-    end_.left_ = &rend_;
-    rend_.root_ = &end_;
+    updateEnd();
+    updateReverseEnd();
   }
   Tree(std::initializer_list<value_type> list) : Tree() {
     for (auto&& element : list) Insert(std::move(element));
@@ -390,18 +390,8 @@ class Tree {
     if (this == &other) return *this;
 
     Clear();
-
     Swap(other);
 
-    // end_.right_ = nullptr;
-    // end_.left_ = nullptr;
-    // rend_.right_ = nullptr;
-    // rend_.left_ = nullptr;
-    // updateEnd();
-    // updateReverseEnd();
-
-    // other.updateEnd();
-    // other.updateReverseEnd();
     return *this;
   }
   ~Tree() { Clear(); }
@@ -415,41 +405,30 @@ class Tree {
   void Swap(Tree& other) noexcept {
     if (this == &other) return;
 
-    node_pointer left = root_ ? root_->left_ : nullptr;
-    node_pointer right = root_ ? root_->right_ : nullptr;
     node_pointer begin = rend_.root_;
     node_pointer rbegin = end_.root_;
-    node_pointer other_left = other.root_ ? other.root_->left_ : nullptr;
-    node_pointer other_right = other.root_ ? other.root_->right_ : nullptr;
     node_pointer other_begin = other.rend_.root_;
     node_pointer other_rbegin = other.end_.root_;
 
     std::swap(root_, other.root_);
     std::swap(size_, other.size_);
 
-    if (root_) root_->left_ = other_left;
-    if (other_left) other_left->root_ = root_;
-
-    if (root_) root_->right_ = other_right;
-    if (other_right) other_right->root_ = root_;
-
     rend_.root_ = other_begin;
-    if (other_begin) other_begin->left_ = &rend_;
+    if (other_begin) 
+        other_begin->left_ = &rend_;
 
     end_.root_ = other_rbegin;
-    if (other_rbegin) other_rbegin->right_ = &end_;
+    if (other_rbegin) 
+        other_rbegin->right_ = &end_;
 
-    if (other.root_) other.root_->left_ = left;
-    if (left) left->root_ = other.root_;
-
-    if (other.root_) other.root_->right_ = right;
-    if (right) right->root_ = other.root_;
 
     other.rend_.root_ = begin;
-    if (begin) begin->left_ = &(other.rend_);
+    if (begin) 
+        begin->left_ = &(other.rend_);
 
     other.end_.root_ = rbegin;
-    if (rbegin) rbegin->right_ = &(other.end_);
+    if (rbegin) 
+        rbegin->right_ = &(other.end_);
 
     // set left and right to nullptr for end_ and rend_ if needed. They are not
     // nullptr for empty tree to allow --begin() give rend_
@@ -494,8 +473,8 @@ class Tree {
     if (root_) deallocate(&root_);
     size_ = 0ull;
 
-    end_.left_ = &rend_;
-    rend_.root_ = &end_;
+    updateEnd();
+    updateReverseEnd();
   }
 
   std::pair<iterator, bool> Insert(const_reference value) {
@@ -648,6 +627,11 @@ class Tree {
     if (!root_) {
       end_.left_ = &rend_;
       rend_.root_ = &end_;
+
+      end_.right_ = nullptr;
+      end_.root_ = nullptr;
+      rend_.left_ = nullptr;
+      rend_.right_ = nullptr;
       return;
     }
     node_pointer new_end = root_;
@@ -664,6 +648,11 @@ class Tree {
     if (!root_) {
       end_.left_ = &rend_;
       rend_.root_ = &end_;
+
+      end_.right_ = nullptr;
+      end_.root_ = nullptr;
+      rend_.left_ = nullptr;
+      rend_.right_ = nullptr;
       return;
     }
     node_pointer new_end = root_;
