@@ -414,21 +414,16 @@ class Tree {
     std::swap(size_, other.size_);
 
     rend_.root_ = other_begin;
-    if (other_begin) 
-        other_begin->left_ = &rend_;
+    if (other_begin) other_begin->left_ = &rend_;
 
     end_.root_ = other_rbegin;
-    if (other_rbegin) 
-        other_rbegin->right_ = &end_;
-
+    if (other_rbegin) other_rbegin->right_ = &end_;
 
     other.rend_.root_ = begin;
-    if (begin) 
-        begin->left_ = &(other.rend_);
+    if (begin) begin->left_ = &(other.rend_);
 
     other.end_.root_ = rbegin;
-    if (rbegin) 
-        rbegin->right_ = &(other.end_);
+    if (rbegin) rbegin->right_ = &(other.end_);
 
     // set left and right to nullptr for end_ and rend_ if needed. They are not
     // nullptr for empty tree to allow --begin() give rend_
