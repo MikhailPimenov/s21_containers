@@ -34,26 +34,20 @@ class ListIteratorBase {
  public:
   ListIteratorBase(node_pointer node_pointer) : node_pointer_{node_pointer} {}
 
-  template <
-      typename OtherPointer, typename OtherReference,
-      typename OtherNode_pointer>  // to be able to compare iterator and
-                                   // const_iterator
-                                   ListIteratorBase(
-                                       const ListIteratorBase<
-                                           List, OtherPointer, OtherReference,
-                                           OtherNode_pointer, Difference_type,
-                                           Value_type> &other) noexcept
+  template <typename OtherPointer, typename OtherReference,
+            typename OtherNode_pointer>  // to be able to compare iterator and
+                                         // const_iterator
+  ListIteratorBase(const ListIteratorBase<List, OtherPointer, OtherReference,
+                                          OtherNode_pointer, Difference_type,
+                                          Value_type> &other) noexcept
       : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_)) {}
 
-  template <
-      typename OtherPointer, typename OtherReference,
-      typename OtherNode_pointer>  // to be able to compare iterator and
-                                   // const_iterator
-                                   ListIteratorBase(
-                                       ListIteratorBase<
-                                           List, OtherPointer, OtherReference,
-                                           OtherNode_pointer, Difference_type,
-                                           Value_type> &&other) noexcept
+  template <typename OtherPointer, typename OtherReference,
+            typename OtherNode_pointer>  // to be able to compare iterator and
+                                         // const_iterator
+  ListIteratorBase(
+      ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer,
+                       Difference_type, Value_type> &&other) noexcept
       : ListIteratorBase(const_cast<node_pointer>(other.node_pointer_)) {
     other.node_pointer_ = nullptr;
   }
@@ -63,34 +57,26 @@ class ListIteratorBase {
     swap(left.node_pointer_, right.node_pointer_);
   }
 
-  template <
-      typename OtherPointer, typename OtherReference,
-      typename OtherNode_pointer>  // to be able to compare iterator and
-                                   // const_iterator
-                                   ListIteratorBase<
-                                       List, OtherPointer, OtherReference,
-                                       OtherNode_pointer, Difference_type,
-                                       Value_type> &
-                                   operator=(const ListIteratorBase<
-                                             List, OtherPointer, OtherReference,
-                                             OtherNode_pointer, Difference_type,
-                                             Value_type> &other) noexcept {
+  template <typename OtherPointer, typename OtherReference,
+            typename OtherNode_pointer>  // to be able to compare iterator and
+                                         // const_iterator
+  ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer,
+                   Difference_type, Value_type>
+      &operator=(const ListIteratorBase<List, OtherPointer, OtherReference,
+                                        OtherNode_pointer, Difference_type,
+                                        Value_type> &other) noexcept {
     node_pointer_ = other.node_pointer_;
     return *this;
   }
 
-  template <
-      typename OtherPointer, typename OtherReference,
-      typename OtherNode_pointer>  // to be able to compare iterator and
-                                   // const_iterator
-                                   ListIteratorBase<
-                                       List, OtherPointer, OtherReference,
-                                       OtherNode_pointer, Difference_type,
-                                       Value_type> &
-                                   operator=(ListIteratorBase<
-                                             List, OtherPointer, OtherReference,
-                                             OtherNode_pointer, Difference_type,
-                                             Value_type> &&other) noexcept {
+  template <typename OtherPointer, typename OtherReference,
+            typename OtherNode_pointer>  // to be able to compare iterator and
+                                         // const_iterator
+  ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer,
+                   Difference_type, Value_type> &
+  operator=(
+      ListIteratorBase<List, OtherPointer, OtherReference, OtherNode_pointer,
+                       Difference_type, Value_type> &&other) noexcept {
     node_pointer_ = other.node_pointer_;
     other.node_pointer_ = nullptr;
     return *this;
@@ -100,15 +86,12 @@ class ListIteratorBase {
 
   pointer operator->() const { return &(node_pointer_->value_); }
 
-  template <
-      typename OtherPointer, typename OtherReference,
-      typename OtherNode_pointer>  // to be able to compare iterator and
-                                   // const_iterator
-                                   bool operator==(
-                                       const ListIteratorBase<
-                                           List, OtherPointer, OtherReference,
-                                           OtherNode_pointer, Difference_type,
-                                           Value_type> &other) const noexcept {
+  template <typename OtherPointer, typename OtherReference,
+            typename OtherNode_pointer>  // to be able to compare iterator and
+                                         // const_iterator
+  bool operator==(const ListIteratorBase<List, OtherPointer, OtherReference,
+                                         OtherNode_pointer, Difference_type,
+                                         Value_type> &other) const noexcept {
     return node_pointer_ == other.node_pointer_;
   }
 

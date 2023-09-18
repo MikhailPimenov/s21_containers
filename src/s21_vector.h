@@ -62,12 +62,9 @@ class VectorIteratorBase {
   template <typename OtherPointer,
             typename OtherReference>  // to be able to compare iterator and
                                       // const_iterator
-                                      bool operator==(
-                                          const VectorIteratorBase<
-                                              Vector, OtherPointer,
-                                              OtherReference, Difference_type,
-                                              Value_type>& other)
-                                          const noexcept {
+  bool operator==(const VectorIteratorBase<Vector, OtherPointer, OtherReference,
+                                           Difference_type, Value_type>& other)
+      const noexcept {
     return pointer_ == other.pointer_;
   }
 
@@ -141,8 +138,7 @@ class VectorIterator
   }
   template <typename IntegralType>  // otherwise for iterator + 1 operator+(int,
                                     // int) is called
-                                    VectorIterator operator+(
-                                        IntegralType n) const noexcept {
+  VectorIterator operator+(IntegralType n) const noexcept {
     return VectorIterator(this->pointer_ + n);
   }
   template <typename IntegralType>

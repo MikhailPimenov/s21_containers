@@ -43,21 +43,19 @@ class Map : public Tree::Tree<
   Value& operator[](typename Base::key_type&& key) {
     typename Base::iterator it = this->Find(key);
     if (it == this->end()) {
-        const auto& [it_inserted, _] = this->Insert(std::make_pair(key, Value()));
-        it = it_inserted;
+      const auto& [it_inserted, _] = this->Insert(std::make_pair(key, Value()));
+      it = it_inserted;
     }
-    return it->second; 
+    return it->second;
   }
   Value& At(typename Base::key_type&& key) {
     typename Base::iterator it = this->Find(key);
-    if (it == this->end())
-        throw std::out_of_range("Not found in set!");
+    if (it == this->end()) throw std::out_of_range("Not found in set!");
     return it->second;
   }
   const Value& At(typename Base::key_type&& key) const {
     typename Base::const_iterator it = this->Find(key);
-    if (it == this->end())
-        throw std::out_of_range("Not found in set!");
+    if (it == this->end()) throw std::out_of_range("Not found in set!");
     return it->second;
   }
 };

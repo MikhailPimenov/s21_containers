@@ -137,9 +137,8 @@ TEST(Map, T1ClearEmpty) {
   EXPECT_EQ(s21_map, map);
 }
 
-
 TEST(Map, T0Swap) {
-  s21::Map<int, Item> s21_map1 {
+  s21::Map<int, Item> s21_map1{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {30, Item(30, 'c', 0.3)}, {40, Item(40, 'd', 0.4)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
@@ -148,20 +147,20 @@ TEST(Map, T0Swap) {
   };
   const s21::Map<int, Item> s21_copy1(s21_map1);
 
-  s21::Map<int, Item> s21_map2 {
+  s21::Map<int, Item> s21_map2{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
       {90, Item(90, 'i', 0.9)},
   };
   const s21::Map<int, Item> s21_copy2(s21_map2);
-  
+
   s21_map1.Swap(s21_map2);
   EXPECT_EQ(s21_map1, s21_copy2);
   EXPECT_EQ(s21_map2, s21_copy1);
 }
 
 TEST(Map, T1Swap) {
-  s21::Map<int, Item> s21_map1 {
+  s21::Map<int, Item> s21_map1{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {30, Item(30, 'c', 0.3)}, {40, Item(40, 'd', 0.4)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
@@ -170,13 +169,13 @@ TEST(Map, T1Swap) {
   };
   const s21::Map<int, Item> s21_copy1(s21_map1);
 
-  s21::Map<int, Item> s21_map2 {
+  s21::Map<int, Item> s21_map2{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
       {90, Item(90, 'i', 0.9)},
   };
   const s21::Map<int, Item> s21_copy2(s21_map2);
-  
+
   s21_map2.Swap(s21_map1);
   EXPECT_EQ(s21_map1, s21_copy2);
   EXPECT_EQ(s21_map2, s21_copy1);
@@ -186,20 +185,20 @@ TEST(Map, T2SwapEmpty) {
   s21::Map<int, Item> s21_map1;
   const s21::Map<int, Item> s21_copy1(s21_map1);
 
-  s21::Map<int, Item> s21_map2 {
+  s21::Map<int, Item> s21_map2{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
       {90, Item(90, 'i', 0.9)},
   };
   const s21::Map<int, Item> s21_copy2(s21_map2);
-  
+
   s21_map2.Swap(s21_map1);
   EXPECT_EQ(s21_map1, s21_copy2);
   EXPECT_EQ(s21_map2, s21_copy1);
 }
 
 TEST(Map, T3SwapEmpty) {
-  s21::Map<int, Item> s21_map1 {
+  s21::Map<int, Item> s21_map1{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {30, Item(30, 'c', 0.3)}, {40, Item(40, 'd', 0.4)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
@@ -210,14 +209,14 @@ TEST(Map, T3SwapEmpty) {
 
   s21::Map<int, Item> s21_map2;
   const s21::Map<int, Item> s21_copy2(s21_map2);
-  
+
   s21_map2.Swap(s21_map1);
   EXPECT_EQ(s21_map1, s21_copy2);
   EXPECT_EQ(s21_map2, s21_copy1);
 }
 
 TEST(Map, T4SwapSelf) {
-  s21::Map<int, Item> s21_map1 {
+  s21::Map<int, Item> s21_map1{
       {10, Item(10, 'a', 0.1)}, {20, Item(20, 'b', 0.2)},
       {30, Item(30, 'c', 0.3)}, {40, Item(40, 'd', 0.4)},
       {50, Item(50, 'e', 0.5)}, {60, Item(60, 'f', 0.6)},
@@ -226,7 +225,6 @@ TEST(Map, T4SwapSelf) {
   };
   const s21::Map<int, Item> s21_copy1(s21_map1);
 
-  
   s21_map1.Swap(s21_map1);
   EXPECT_EQ(s21_map1, s21_copy1);
 }
@@ -239,14 +237,13 @@ TEST(Map, T5SwapEmptySelf) {
   EXPECT_EQ(s21_map1, s21_copy1);
 }
 
-
 TEST(Map, T6SwapEmpty) {
   s21::Map<int, Item> s21_map1;
   const s21::Map<int, Item> s21_copy1(s21_map1);
 
   s21::Map<int, Item> s21_map2;
   const s21::Map<int, Item> s21_copy2(s21_map2);
-  
+
   s21_map2.Swap(s21_map1);
   EXPECT_EQ(s21_map1, s21_copy2);
   EXPECT_EQ(s21_map2, s21_copy1);
