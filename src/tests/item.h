@@ -2,9 +2,6 @@
 #define _TESTS_ITEM_H_
 
 #include <iostream>
-// namespace std {
-//   class ostream;
-// }
 
 class Item {
  protected:

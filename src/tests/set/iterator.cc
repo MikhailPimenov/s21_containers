@@ -1,9 +1,5 @@
 #include <gtest/gtest.h>
 
-// #include <stack>
-// #include <list>
-// #include <vector>
-// #include <deque>
 #include <set>
 
 #include "../../s21_set.h"

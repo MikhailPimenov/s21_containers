@@ -17,7 +17,7 @@ TEST(Stack, T0DefaultConstructor) {
   s21::Stack<Item> s21_stack;
   std::stack<Item> stack;
 
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
 }
 
 TEST(Stack, T1ConstructorContainer) {
@@ -27,7 +27,7 @@ TEST(Stack, T1ConstructorContainer) {
   std::list<Item> list{Item(11), Item(22), Item(33)};
   std::stack<Item, std::list<Item>> stack(list);
 
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
 }
 
 TEST(Stack, T2ConstructorContainer) {
@@ -37,7 +37,7 @@ TEST(Stack, T2ConstructorContainer) {
   std::list<Item> list;
   std::stack<Item, std::list<Item>> stack(list);
 
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
 }
 
 TEST(Stack, T3ConstructorContainerMove) {
@@ -47,7 +47,7 @@ TEST(Stack, T3ConstructorContainerMove) {
   std::list<Item> list{Item(11), Item(22), Item(33)};
   std::stack<Item, std::list<Item>> stack(std::move(list));
 
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
   EXPECT_TRUE(s21_list.Empty());
   EXPECT_TRUE(list.empty());
 }
@@ -61,8 +61,8 @@ TEST(Stack, T4ConstructorCopy) {
   std::stack<Item, std::list<Item>> source(std::move(list));
   std::stack<Item, std::list<Item>> destination(source);
 
-  EXPECT_TRUE(s21_source == source);
-  EXPECT_TRUE(s21_destination == destination);
+  EXPECT_EQ(s21_source, source);
+  EXPECT_EQ(s21_destination, destination);
 }
 
 TEST(Stack, T5ConstructorMove) {
@@ -76,8 +76,8 @@ TEST(Stack, T5ConstructorMove) {
   std::stack<Item, std::list<Item>> destination(std::move(source));
 
   EXPECT_TRUE(s21_source.Empty());
-  EXPECT_TRUE(s21_destination == s21_copy);
-  EXPECT_TRUE(s21_destination == destination);
+  EXPECT_EQ(s21_destination, s21_copy);
+  EXPECT_EQ(s21_destination, destination);
 }
 
 TEST(Stack, T6ConstructorIterator) {
@@ -85,7 +85,7 @@ TEST(Stack, T6ConstructorIterator) {
   s21::Stack<Item> s21_stack(source.cbegin(), source.cend());
 
   std::stack<Item, std::list<Item>> stack(source);
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
 }
 
 TEST(Stack, T7ConstructorIterator) {
@@ -93,7 +93,7 @@ TEST(Stack, T7ConstructorIterator) {
   s21::Stack<Item> s21_stack(source.cbegin(), source.cend());
 
   std::stack<Item, std::vector<Item>> stack(source);
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
 }
 
 TEST(Stack, T8ConstructorIterator) {
@@ -101,7 +101,7 @@ TEST(Stack, T8ConstructorIterator) {
   s21::Stack<Item> s21_stack(source.cbegin(), source.cend());
 
   std::stack<Item> stack(source);
-  EXPECT_TRUE(s21_stack == stack);
+  EXPECT_EQ(s21_stack, stack);
 }
 
 }  // namespace

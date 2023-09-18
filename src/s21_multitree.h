@@ -2,7 +2,6 @@
 #define _S21_MULTITREE_H_
 
 #include <initializer_list>
-#include <iostream>  // TODO: remove
 #include <utility>
 
 #include "s21_list.h"

@@ -5,7 +5,6 @@
 #include <set>
 
 #include "../s21_set.h"
-// #include "../s21_vector.h"
 
 // GCOVR_EXCL_START
 
@@ -26,18 +25,6 @@ bool operator==(const s21::Set<Type, Comparator>& s21_set,
 
   return true;
 }
-
-// template<typename Key, typename Type>
-// std::ostream& operator<<(std::ostream& out, const s21::Map<Key, Type>&
-// s21_map) {
-//     out << "Map " << s21_map.Size()  << ' '  << s21_map.Height() << "\n";
-//     for (typename s21::Map<Key, Type>::const_iterator it = s21_map.cbegin();
-//     it != s21_map.cend(); ++it)
-//         out << "{" << (*it).first << '-' << it.LeftHeight() << '-' <<
-//         it.RightHeight() <<  " : " << (*it).second << "} ";
-
-//     return out;
-// }
 
 // GCOVR_EXCL_STOP
 

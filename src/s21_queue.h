@@ -1,5 +1,6 @@
 #ifndef _S21_QUEUE_H_
 #define _S21_QUEUE_H_
+
 #include "s21_list.h"
 
 namespace s21 {
