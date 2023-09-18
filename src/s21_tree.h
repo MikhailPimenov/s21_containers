@@ -393,13 +393,15 @@ class Tree {
 
     Swap(other);
 
-    end_.right_ = nullptr;
-    end_.left_ = nullptr;
-    rend_.right_ = nullptr;
-    rend_.left_ = nullptr;
+    // end_.right_ = nullptr;
+    // end_.left_ = nullptr;
+    // rend_.right_ = nullptr;
+    // rend_.left_ = nullptr;
+    // updateEnd();
+    // updateReverseEnd();
 
-    other.updateEnd();
-    other.updateReverseEnd();
+    // other.updateEnd();
+    // other.updateReverseEnd();
     return *this;
   }
   ~Tree() { Clear(); }
