@@ -332,6 +332,11 @@ class MultiTree {
   size_type Size() const noexcept { return size_; }
   size_type Height() const noexcept { return tree_.Height(); }
 
+  void Swap(MultiTree& other) noexcept {
+    tree_.Swap(other.tree_);
+    std::swap(size_, other.size_);
+  }
+
   iterator Find(const key_type& key) {
     typename tree_type::iterator it = tree_.Find(key);
     return iterator(it, --(tree_.begin()), tree_.end(), it->begin());

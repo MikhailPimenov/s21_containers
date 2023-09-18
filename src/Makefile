@@ -44,6 +44,7 @@ SOURCES+=tests/map/iterator.cc
 SOURCES+=tests/map/balance.cc
 SOURCES+=tests/map/lookup.cc
 SOURCES+=tests/map/insert_many.cc
+SOURCES+=tests/map/access.cc
 
 SOURCES+=tests/multiset/constructors.cc
 SOURCES+=tests/multiset/erase.cc

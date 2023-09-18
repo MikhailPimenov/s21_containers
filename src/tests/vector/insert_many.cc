@@ -156,3 +156,5 @@ TEST(Vector, T3InsertMany) {
 }
 
 }  // namespace
+
+// GCOVR_EXCL_STOP

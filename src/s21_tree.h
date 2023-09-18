@@ -384,47 +384,22 @@ class Tree {
     *this = std::move(temporary);
     return *this;
   }
+  
   Tree& operator=(Tree&& other) noexcept {
     if (this == &other) return *this;
 
     Clear();
 
-    root_ = other.root_;
-    size_ = other.size_;
+    Swap(other);
 
-    if (other.root_) {
-      if (other.root_->left_ != &(other.rend_)) {
-        other.root_->left_->root_ = root_;
-        root_->left_ = other.root_->left_;
-      }
-      if (other.root_->right_ != &(other.end_)) {
-        other.root_->right_->root_ = root_;
-        root_->right_ = other.root_->right_;
-      }
-    }
+    end_.right_ = nullptr;
+    end_.left_ = nullptr;
+    rend_.right_ = nullptr;
+    rend_.left_ = nullptr;
 
-    if (other.rend_.root_) {
-      other.rend_.root_->left_ = &rend_;
-    }
-    rend_.root_ = other.rend_.root_;
 
-    if (other.end_.root_) {
-      other.end_.root_->right_ = &end_;
-    }
-    end_.root_ = other.end_.root_;
-
-    if (other.root_) {
-      end_.right_ = nullptr;
-      end_.left_ = nullptr;
-      rend_.right_ = nullptr;
-      rend_.left_ = nullptr;
-    }
-
-    other.root_ = nullptr;
     other.updateEnd();
     other.updateReverseEnd();
-    other.size_ = 0ull;
-
     return *this;
   }
   ~Tree() { Clear(); }
@@ -434,6 +409,69 @@ class Tree {
     if (!root_) return 0ull;
     return root_->lHeight_ > root_->rHeight_ ? root_->lHeight_
                                              : root_->rHeight_;
+  }
+  void Swap(Tree& other) noexcept {
+    if (this == &other) return;
+  
+    node_pointer left   = root_ ? root_->left_  : nullptr;
+    node_pointer right  = root_ ? root_->right_ : nullptr;
+    node_pointer begin  = rend_.root_;
+    node_pointer rbegin = end_.root_;
+    node_pointer other_left   = other.root_ ? other.root_->left_  : nullptr;
+    node_pointer other_right  = other.root_ ? other.root_->right_ : nullptr;
+    node_pointer other_begin  = other.rend_.root_;
+    node_pointer other_rbegin = other.end_.root_;
+
+
+    std::swap(root_, other.root_);
+    std::swap(size_, other.size_);
+
+    if (root_)
+        root_->left_ = other_left;
+    if (other_left)
+        other_left->root_ = root_;
+
+    if (root_)
+        root_->right_ = other_right;
+    if (other_right)
+        other_right->root_ = root_;
+
+    rend_.root_ = other_begin;
+    if (other_begin)
+        other_begin->left_ = &rend_;
+    
+    end_.root_ = other_rbegin;
+    if (other_rbegin)
+        other_rbegin->right_ = &end_;
+
+
+
+
+    if (other.root_)
+        other.root_->left_ = left;
+    if (left)
+        left->root_ = other.root_;
+
+    if (other.root_)
+        other.root_->right_ = right;
+    if (right)
+        right->root_ = other.root_;
+
+    other.rend_.root_ = begin;
+    if (begin)
+        begin->left_ = &(other.rend_);
+
+    other.end_.root_ = rbegin;
+    if (rbegin)
+        rbegin->right_ = &(other.end_);
+
+    // set left and right to nullptr for end_ and rend_ if needed. They are not nullptr for empty tree to allow --begin() give rend_
+    updateEnd();
+    updateReverseEnd();
+
+    // set left and right to nullptr for end_ and rend_ if needed. They are not nullptr for empty tree to allow --begin() give rend_
+    other.updateEnd();
+    other.updateReverseEnd();
   }
 
   // iterators============================================================
@@ -544,7 +582,6 @@ class Tree {
     if (!root_) return end();
     return find_recursive(root_, key);
   }
-
   bool Contains(const key_type& key) const { return Find(key) != end(); }
   iterator Lower_bound(const key_type& key) {
     if (!root_) return end();
