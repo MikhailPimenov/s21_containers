@@ -325,11 +325,15 @@ class Vector {
     return result - 1;
   }
 
-  // void allocate(size_type exact_count) {
-  //   assert(!data_ && "Possible memory leak!");
-  //   data_ = new value_type[exact_count];
-  //   capacity_ = exact_count;
-  // }
+  void allocate(size_type exact_count) {
+    assert(!data_ && "Possible memory leak!");
+
+    char* preallocated_buffer =
+        new char[sizeof(value_type) *
+                 exact_count];  // no constructors were called
+    data_ = reinterpret_cast<pointer>(preallocated_buffer);
+    capacity_ = exact_count;
+  }
   void reallocate(size_type exact_count) {
     char* preallocated_buffer =
         new char[sizeof(value_type) *
@@ -337,9 +341,8 @@ class Vector {
     size_type new_size = size_;
     pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
     
-    if (data_)
-      for (size_type i = 0; i < size_; ++i)
-        new (new_data + i) value_type(data_[i]);
+    for (size_type i = 0; i < size_; ++i)
+      new (new_data + i) value_type(data_[i]);
 
     deallocate();
     data_ = new_data;
@@ -347,8 +350,6 @@ class Vector {
     capacity_ = exact_count;
   }
   void deallocate() noexcept {
-    if (!data_)
-      return;
     for (size_type i = 0; i < size_; ++i)
       data_->~value_type();
     delete[] reinterpret_cast<char*>(data_);
@@ -362,7 +363,7 @@ class Vector {
 
   explicit Vector(size_type count, const_reference value)
       : capacity_{calculate_capacity(count)}, size_{count}, data_{nullptr} {
-    reallocate(capacity_);
+    allocate(capacity_);
 
     for (size_type i = 0; i < count; ++i)
       new (data_ + i) value_type(value);
@@ -373,7 +374,7 @@ class Vector {
       : capacity_{calculate_capacity(initializer.size())},
         size_{initializer.size()},
         data_{nullptr} {
-    reallocate(capacity_);
+    allocate(capacity_);
 
     size_type i = 0;
     for (auto&& element : initializer) {
@@ -407,7 +408,7 @@ class Vector {
   constexpr Vector(InputIt first, InputIt last) : Vector() {
     const size_type count = getDistance(first, last);
     capacity_ = calculate_capacity(count);
-    reallocate(capacity_);
+    allocate(capacity_);
 
     size_type i = 0;
     while (first != last) {
@@ -543,6 +544,7 @@ class Vector {
       // *it = *(it - shift); // incorrect, *it was not constructed
 
       new (it.operator->()) value_type(*(it - shift));
+      (it - shift)->~value_type();
       --it;
     }
     it -= (shift - 1);
@@ -682,6 +684,7 @@ class Vector {
     assert(it - 2 < end() && "Shifting is out of range!");
     const iterator result = it - shift;
     while (it < end()) {
+      (it - shift)->~value_type();
       *(it - shift) = *it; // incorrect
       ++it;
     }
