@@ -325,19 +325,21 @@ class Vector {
     return result - 1;
   }
 
-  void allocate(size_type exact_count) {
-    assert(!data_ && "Possible memory leak!");
-    data_ = new value_type[exact_count];
-    capacity_ = exact_count;
-  }
+  // void allocate(size_type exact_count) {
+  //   assert(!data_ && "Possible memory leak!");
+  //   data_ = new value_type[exact_count];
+  //   capacity_ = exact_count;
+  // }
   void reallocate(size_type exact_count) {
     char* preallocated_buffer =
         new char[sizeof(value_type) *
                  exact_count];  // no constructors were called
     size_type new_size = size_;
     pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-    for (size_type i = 0; i < size_; ++i)
-      new (new_data + i) value_type(data_[i]);
+    
+    if (data_)
+      for (size_type i = 0; i < size_; ++i)
+        new (new_data + i) value_type(data_[i]);
 
     deallocate();
     data_ = new_data;
@@ -345,7 +347,11 @@ class Vector {
     capacity_ = exact_count;
   }
   void deallocate() noexcept {
-    delete[] data_;
+    if (!data_)
+      return;
+    for (size_type i = 0; i < size_; ++i)
+      data_->~value_type();
+    delete[] reinterpret_cast<char*>(data_);
     data_ = nullptr;
     capacity_ = 0;
     size_ = 0;
@@ -356,9 +362,10 @@ class Vector {
 
   explicit Vector(size_type count, const_reference value)
       : capacity_{calculate_capacity(count)}, size_{count}, data_{nullptr} {
-    allocate(capacity_);
+    reallocate(capacity_);
 
-    for (size_type i = 0; i < count; ++i) data_[i] = value;
+    for (size_type i = 0; i < count; ++i)
+      new (data_ + i) value_type(value);
   }
   ~Vector() { deallocate(); }
 
@@ -366,11 +373,12 @@ class Vector {
       : capacity_{calculate_capacity(initializer.size())},
         size_{initializer.size()},
         data_{nullptr} {
-    allocate(capacity_);
+    reallocate(capacity_);
 
     size_type i = 0;
-    for (const auto& element : initializer) {
-      data_[i] = element;
+    for (auto&& element : initializer) {
+      // data_[i] = element;
+      new (data_ + i) value_type(std::move(element));
       ++i;
     }
   }
@@ -399,11 +407,13 @@ class Vector {
   constexpr Vector(InputIt first, InputIt last) : Vector() {
     const size_type count = getDistance(first, last);
     capacity_ = calculate_capacity(count);
-    allocate(capacity_);
+    reallocate(capacity_);
 
     size_type i = 0;
     while (first != last) {
-      data_[i] = *first;
+      // data_[i] = *first;
+      new (data_ + i) value_type(*first);
+      
       ++i;
       ++first;
     }
@@ -528,7 +538,11 @@ class Vector {
     size_ += shift;
     auto it = end() - 1;
     while (it - shift + 1 > pos_untill) {
-      *it = *(it - shift);
+      
+      // for elements after size_ no constructors were called, so *it is not constructed:
+      // *it = *(it - shift); // incorrect, *it was not constructed
+
+      new (it.operator->()) value_type(*(it - shift));
       --it;
     }
     it -= (shift - 1);
@@ -544,7 +558,9 @@ class Vector {
     const size_type new_size = size_ + 1;
     checkReallocateUpdatingIterator(new_size, pos);
     auto it = shiftBack(1, pos);
-    *it = std::move(value);
+    // for *it no constructors were called:
+    // *it = std::move(value);  // incorrect, *it was not constructed
+    new (it.operator->()) value_type(std::move(value));
     return it;
   }
 
@@ -555,7 +571,8 @@ class Vector {
     auto it = shiftBack(count, pos);
     const auto it_result = it;
     for (size_type i = 0; i < count; ++i) {
-      *it = value;
+      // *it = value;
+      new (it.operator->()) value_type(value);
       ++it;
     }
 
@@ -623,7 +640,8 @@ class Vector {
     const auto it_result = it;
 
     while (first != last) {
-      *it = *first;
+      // *it = *first;
+      new (it.operator->()) value_type(*first);
       ++it;
       ++first;
     }
@@ -637,8 +655,10 @@ class Vector {
     checkReallocateUpdatingIterator(new_size, pos);
     auto it = shiftBack(list.size(), pos);
     const auto it_result = it;
-    for (auto& element : list) {
-      *it = std::move(element);
+    for (auto&& element : list) {
+      // incorrect: no constructors for *it were called:
+      // *it = std::move(element);  // incorrect
+      new (it.operator->()) value_type(std::move(element));
       ++it;
     }
 
@@ -650,7 +670,9 @@ class Vector {
     const size_type new_size = size_ + 1;
     checkReallocateUpdatingIterator(new_size, pos);
     auto it = shiftBack(1, pos);
-    *it = value_type(std::forward<Args>(args)...);
+    // incorrect: no constructors for *it were called:
+    // *it = value_type(std::forward<Args>(args)...); // incorrect
+    new (it.operator->()) value_type(std::forward<Args>(args)...);
     return it;
   }
 
@@ -660,7 +682,7 @@ class Vector {
     assert(it - 2 < end() && "Shifting is out of range!");
     const iterator result = it - shift;
     while (it < end()) {
-      *(it - shift) = *it;
+      *(it - shift) = *it; // incorrect
       ++it;
     }
     size_ -= shift;

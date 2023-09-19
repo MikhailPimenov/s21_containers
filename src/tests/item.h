@@ -8,13 +8,14 @@ class Item {
   int number_;
   char symbol_;
   double fraction_;
-
+  long long* array_;
  public:
   explicit Item(int number = 0, char symbol = 'a',
                 double fraction = 0.5);  // just to test emplace-functions which
                                          // take variadic number of arguments
   Item(const Item &other);
   Item(Item &&other);
+  ~Item();
 
   Item &operator=(const Item &other);
   Item &operator=(Item &&other);
