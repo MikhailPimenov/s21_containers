@@ -8,7 +8,7 @@ class Item {
   int number_;
   char symbol_;
   double fraction_;
-  long long* array_;
+  char* array_;
  public:
   explicit Item(int number = 0, char symbol = 'a',
                 double fraction = 0.5);  // just to test emplace-functions which
@@ -23,6 +23,7 @@ class Item {
   bool operator!=(const Item &right) const;
 
   int number() const;
+  bool empty() const noexcept;
 
   friend std::ostream &operator<<(std::ostream &out, const Item &object);
 };

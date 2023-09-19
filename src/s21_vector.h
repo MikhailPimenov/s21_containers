@@ -351,7 +351,7 @@ class Vector {
   }
   void deallocate() noexcept {
     for (size_type i = 0; i < size_; ++i)
-      data_->~value_type();
+      (data_ + i)->~value_type();
     delete[] reinterpret_cast<char*>(data_);
     data_ = nullptr;
     capacity_ = 0;
@@ -536,7 +536,7 @@ class Vector {
   }
   iterator shiftBack(size_type shift, const_iterator pos_untill) {
     assert(size_ + shift <= capacity_ && "Shifting is out of range!");
-    size_ += shift;
+    size_type new_size = size_ + shift; 
     auto it = end() - 1;
     while (it - shift + 1 > pos_untill) {
       
@@ -548,6 +548,8 @@ class Vector {
       --it;
     }
     it -= (shift - 1);
+    // it -= (shift+1);
+    size_ = new_size;
     return it;
   }
 
@@ -596,13 +598,13 @@ class Vector {
   }
 
   template <typename Last>
-  iterator insert_many(const_iterator pos, Last last) {
-    return Insert(pos, last);
+  iterator insert_many(const_iterator pos, Last&& last) {
+    return Insert(pos, std::forward<Last>(last));
   }
   template <typename First, class... Args>
-  iterator insert_many(const_iterator pos, First first, Args&&... args) {
+  iterator insert_many(const_iterator pos, First&& first, Args&&... args) {
     iterator it = insert_many(pos, std::forward<Args>(args)...);
-    return Insert(static_cast<const_iterator>(it), first);
+    return Insert(static_cast<const_iterator>(it), std::forward<First>(first));
   }
   template <typename... Args>
   iterator Insert_many(const_iterator pos, Args&&... args) {
@@ -684,8 +686,9 @@ class Vector {
     assert(it - 2 < end() && "Shifting is out of range!");
     const iterator result = it - shift;
     while (it < end()) {
-      (it - shift)->~value_type();
-      *(it - shift) = *it; // incorrect
+      // (it - shift)->~value_type();
+      *(it - shift) = *it; // incorrect?
+      it->~value_type();
       ++it;
     }
     size_ -= shift;
