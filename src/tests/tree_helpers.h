@@ -19,4 +19,4 @@ inline bool minimalHeightAVL(std::size_t size, std::size_t height) {
 
 // GCOVR_EXCL_STOP
 
-#endif  //  _TESTS_MAP_HELPERS_H_
+#endif  //  _TESTS_TREE_HELPERS_H_
