@@ -8,7 +8,8 @@ class Item {
   int number_;
   char symbol_;
   double fraction_;
-  char* array_;
+  char *array_;
+
  public:
   explicit Item(int number = 0, char symbol = 'a',
                 double fraction = 0.5);  // just to test emplace-functions which

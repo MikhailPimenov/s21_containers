@@ -1,3 +1,5 @@
+#include "../item.h"
+
 #include <gtest/gtest.h>
 
 #include <deque>
@@ -6,7 +8,6 @@
 #include <vector>
 
 #include "../../s21_vector.h"
-#include "../item.h"
 #include "../vector_helpers.h"
 
 // GCOVR_EXCL_START
@@ -53,9 +54,6 @@ TEST(ItemTest, T1MoveOperator) {
   EXPECT_EQ(i2, copy);
   EXPECT_TRUE(i.empty());
 }
-
-
-
 
 }  // namespace
 

@@ -316,7 +316,6 @@ class Vector {
   size_type capacity_;
   size_type size_;
   pointer data_;
-  
 
  public:
   Vector() : capacity_{0ull}, size_{0ull}, data_{nullptr} {}
@@ -325,8 +324,7 @@ class Vector {
       : capacity_{calculate_capacity(count)}, size_{count}, data_{nullptr} {
     allocate(capacity_);
 
-    for (size_type i = 0ull; i < count; ++i)
-      new (data_ + i) value_type(value);
+    for (size_type i = 0ull; i < count; ++i) new (data_ + i) value_type(value);
   }
   ~Vector() { deallocate(); }
 
@@ -372,13 +370,12 @@ class Vector {
     size_type i = 0ull;
     while (first != last) {
       new (data_ + i) value_type(*first);
-      
+
       ++i;
       ++first;
     }
     size_ = count;
   }
-
 
   Vector& operator=(const Vector& other) {
     // using namespace std;    // to enable ADL
@@ -482,9 +479,6 @@ class Vector {
   }
 
  private:
-  
-  
-
  public:
   constexpr iterator Insert(const_iterator pos, const_reference value) {
     return Insert(pos, 1ull, value);
@@ -514,12 +508,10 @@ class Vector {
     return it_result;
   }
 
-
   template <class... Args>
   void Insert_many_back(Args&&... args) {
     return insert_many_back(std::forward<Args>(args)...);
   }
-
 
   template <typename... Args>
   iterator Insert_many(const_iterator pos, Args&&... args) {
@@ -532,8 +524,6 @@ class Vector {
     return Insert_many(static_cast<const_iterator>(pos),
                        std::forward<Args>(args)...);
   }
-
-  
 
  public:
   template <class InputIt>
@@ -581,8 +571,6 @@ class Vector {
   }
 
  private:
-  
-
  public:
   constexpr iterator Erase(const_iterator pos) {
     return shiftForward(1ull, pos + 1ull);
@@ -617,10 +605,10 @@ class Vector {
     size_ = new_size;
   };
 
-  constexpr void Pop_back() { 
+  constexpr void Pop_back() {
     assert(size_ && "Pop_back from empty vector!");
     (end() - 1ull)->~value_type();
-    --size_; 
+    --size_;
   }
 
   constexpr void Resize(size_type count) { Resize(count, value_type()); }
@@ -662,9 +650,7 @@ class Vector {
     swap(capacity_, other.capacity_);
   }
 
-
-
-private:
+ private:
   static size_type calculate_capacity(size_type count) {
     size_type result = 1ull;
     while (result <= count) result <<= 1ull;
@@ -685,7 +671,7 @@ private:
                  exact_count];  // no constructors were called
     size_type new_size = size_;
     pointer new_data = reinterpret_cast<pointer>(preallocated_buffer);
-    
+
     for (size_type i = 0ull; i < size_; ++i)
       new (new_data + i) value_type(data_[i]);
 
@@ -695,8 +681,7 @@ private:
     capacity_ = exact_count;
   }
   void deallocate() noexcept {
-    for (size_type i = 0ull; i < size_; ++i)
-      (data_ + i)->~value_type();
+    for (size_type i = 0ull; i < size_; ++i) (data_ + i)->~value_type();
     delete[] reinterpret_cast<char*>(data_);
     data_ = nullptr;
     capacity_ = 0ull;
@@ -713,9 +698,8 @@ private:
   }
   iterator shiftBack(size_type shift, const_iterator pos_untill) {
     assert(size_ + shift <= capacity_ && "Shifting is out of range!");
-    if (!shift)
-      return static_cast<iterator>(pos_untill);
-    size_type new_size = size_ + shift; 
+    if (!shift) return static_cast<iterator>(pos_untill);
+    size_type new_size = size_ + shift;
     auto it = end() - 1ull;
     while (it >= pos_untill) {
       new ((it + shift).operator->()) value_type(*it);
@@ -728,8 +712,7 @@ private:
   }
   iterator shiftForward(size_type shift, const_iterator pos_untill) {
     iterator it(static_cast<iterator>(pos_untill));
-    if (!shift)
-      return it;
+    if (!shift) return it;
     it -= shift;
     const iterator result = it;
     while (it < end() - shift) {
@@ -777,7 +760,6 @@ private:
     }
     return count;
   }
-
 };
 
 template <typename Type>

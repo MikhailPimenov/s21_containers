@@ -18,7 +18,7 @@ TEST(Vector, T0Capacity) {
   vector.reserve(100);
 
   EXPECT_EQ(s21_vector, vector);
-  EXPECT_EQ(s21_vector.Capacity(), 127ull); // 2^n - 1
+  EXPECT_EQ(s21_vector.Capacity(), 127ull);  // 2^n - 1
 }
 
 TEST(Vector, T1Capacity) {
