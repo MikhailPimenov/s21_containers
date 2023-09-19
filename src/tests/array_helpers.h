@@ -1,5 +1,5 @@
-#ifndef _TESTS_VECTOR_HELPERS_H_
-#define _TESTS_VECTOR_HELPERS_H_
+#ifndef _TESTS_ARRAY_HELPERS_H_
+#define _TESTS_ARRAY_HELPERS_H_
 
 #include <array>
 #include <iostream>
@@ -25,7 +25,7 @@ bool operator==(const s21::Array<Type, N>& s21_array,
 }
 
 template <typename Type, std::size_t N>
-bool operator==(std::array<Type, N> array, s21::Array<Type, N> s21_array) {
+bool operator==(const std::array<Type, N>& array, const s21::Array<Type, N>& s21_array) {
   return s21_array == array;
 }
 
@@ -36,7 +36,7 @@ bool operator!=(const s21::Array<Type, N>& s21_array,
 }
 
 template <typename Type, std::size_t N>
-bool operator!=(std::array<Type, N> array, s21::Array<Type, N> s21_array) {
+bool operator!=(const std::array<Type, N>& array, const s21::Array<Type, N>& s21_array) {
   return !(s21_array == array);
 }
 
@@ -49,4 +49,4 @@ std::ostream& operator<<(std::ostream& out, const s21::Array<Type, N>& object) {
 
 // GCOVR_EXCL_STOP
 
-#endif  //  _TESTS_VECTOR_HELPERS_H_
+#endif  //  _TESTS_ARRAY_HELPERS_H_
