@@ -657,23 +657,23 @@ class List {
   }
 
   template <typename Last>
-  void insert_many_front(Last last) {
+  void insert_many_front(Last&& last) {
     Push_front(std::forward<Last>(last));
   }
   template <typename First, class... Args>
-  void insert_many_front(First first, Args &&...args) {
+  void insert_many_front(First&& first, Args &&...args) {
     insert_many_front(std::forward<Args>(args)...);
     Push_front(std::forward<First>(first));
   }
 
   template <typename Last>
-  iterator insert_many(const_iterator pos, Last last) {
-    return Insert(pos, last);
+  iterator insert_many(const_iterator pos, Last&& last) {
+    return Insert(pos, std::forward<Last>(last));
   }
   template <typename First, class... Args>
-  iterator insert_many(const_iterator pos, First first, Args &&...args) {
+  iterator insert_many(const_iterator pos, First&& first, Args &&...args) {
     iterator it = insert_many(pos, std::forward<Args>(args)...);
-    return Insert(it, first);
+    return Insert(it, std::forward<First>(first));
   }
 };
 
