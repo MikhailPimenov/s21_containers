@@ -11,8 +11,16 @@
 namespace s21 {
 
 template <typename TreeIterator, typename NodeIterator, typename Pointer,
-          typename Reference>
+          typename Reference, typename Difference_type, typename Size_type>
 class MultiTreeIteratorBase {
+public:
+  using difference_type = Difference_type;
+  using pointer = Pointer;
+  using reference = Reference;
+  using size_type = Size_type;
+  using iterator_category = std::bidirectional_iterator_tag;
+
+
  protected:
   TreeIterator treeIterator_;
   TreeIterator treeBeforeBegin_;
@@ -83,12 +91,12 @@ class MultiTreeIteratorBase {
   }
 };
 template <typename TreeIterator, typename NodeIterator, typename Pointer,
-          typename Reference>
+          typename Reference, typename Difference_type, typename Size_type>
 class MultiTreeIterator
     : public MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer,
-                                   Reference> {
+                                   Reference, Difference_type, Size_type> {
   using Base =
-      MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer, Reference>;
+      MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer, Reference, Difference_type, Size_type>;
 
  public:
   using Base::Base;
@@ -116,9 +124,9 @@ class MultiTreeIterator
   template <typename OtherTreeIterator, typename OtherNodeIterator,
             typename OtherPointer, typename OtherReference>
   explicit operator MultiTreeIterator<OtherTreeIterator, OtherNodeIterator,
-                                      OtherPointer, OtherReference>() {
+                                      OtherPointer, OtherReference, Difference_type, Size_type>() {
     return MultiTreeIterator<OtherTreeIterator, OtherNodeIterator, OtherPointer,
-                             OtherReference>(
+                             OtherReference, Difference_type, Size_type>(
         static_cast<OtherTreeIterator>(this->treeIterator_),
         static_cast<OtherTreeIterator>(this->treeBeforeBegin_),
         static_cast<OtherTreeIterator>(this->treeEnd_),
@@ -126,12 +134,12 @@ class MultiTreeIterator
   }
 };
 template <typename TreeIterator, typename NodeIterator, typename Pointer,
-          typename Reference>
+          typename Reference, typename Difference_type, typename Size_type>
 class MultiTreeReverseIterator
     : public MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer,
-                                   Reference> {
+                                   Reference, Difference_type, Size_type> {
   using Base =
-      MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer, Reference>;
+      MultiTreeIteratorBase<TreeIterator, NodeIterator, Pointer, Reference, Difference_type, Size_type>;
 
  public:
   using Base::Base;
@@ -159,9 +167,9 @@ class MultiTreeReverseIterator
   template <typename OtherTreeIterator, typename OtherNodeIterator,
             typename OtherPointer, typename OtherReference>
   explicit operator MultiTreeReverseIterator<
-      OtherTreeIterator, OtherNodeIterator, OtherPointer, OtherReference>() {
+      OtherTreeIterator, OtherNodeIterator, OtherPointer, OtherReference, Difference_type, Size_type>() {
     return MultiTreeReverseIterator<OtherTreeIterator, OtherNodeIterator,
-                                    OtherPointer, OtherReference>(
+                                    OtherPointer, OtherReference, Difference_type, Size_type>(
         static_cast<OtherTreeIterator>(this->treeIterator_),
         static_cast<OtherTreeIterator>(this->treeBeforeBegin_),
         static_cast<OtherTreeIterator>(this->treeEnd_),
@@ -216,19 +224,19 @@ class MultiTree {
  public:
   using iterator =
       MultiTreeIterator<typename tree_type::iterator,
-                        typename aggregator_type::iterator, pointer, reference>;
+                        typename aggregator_type::iterator, pointer, reference, difference_type, size_type>;
   using const_iterator =
       MultiTreeIterator<typename tree_type::const_iterator,
                         typename aggregator_type::const_iterator, const_pointer,
-                        const_reference>;
+                        const_reference, difference_type, size_type>;
   using reverse_iterator =
       MultiTreeReverseIterator<typename tree_type::iterator,
                                typename aggregator_type::iterator, pointer,
-                               reference>;
+                               reference, difference_type, size_type>;
   using const_reverse_iterator =
       MultiTreeReverseIterator<typename tree_type::const_iterator,
                                typename aggregator_type::const_iterator,
-                               const_pointer, const_reference>;
+                               const_pointer, const_reference, difference_type, size_type>;
 
  private:
   tree_type tree_;
