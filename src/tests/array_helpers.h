@@ -25,7 +25,8 @@ bool operator==(const s21::Array<Type, N>& s21_array,
 }
 
 template <typename Type, std::size_t N>
-bool operator==(const std::array<Type, N>& array, const s21::Array<Type, N>& s21_array) {
+bool operator==(const std::array<Type, N>& array,
+                const s21::Array<Type, N>& s21_array) {
   return s21_array == array;
 }
 
@@ -36,7 +37,8 @@ bool operator!=(const s21::Array<Type, N>& s21_array,
 }
 
 template <typename Type, std::size_t N>
-bool operator!=(const std::array<Type, N>& array, const s21::Array<Type, N>& s21_array) {
+bool operator!=(const std::array<Type, N>& array,
+                const s21::Array<Type, N>& s21_array) {
   return !(s21_array == array);
 }
 
