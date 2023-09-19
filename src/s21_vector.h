@@ -536,6 +536,8 @@ class Vector {
   }
   iterator shiftBack(size_type shift, const_iterator pos_untill) {
     assert(size_ + shift <= capacity_ && "Shifting is out of range!");
+    if (!shift)
+      return static_cast<iterator>(pos_untill);
     size_type new_size = size_ + shift; 
     auto it = end() - 1;
     while (it >= pos_untill) {
@@ -678,11 +680,21 @@ class Vector {
  private:
   iterator shiftForward(size_type shift, const_iterator pos_untill) {
     iterator it(static_cast<iterator>(pos_untill));
+    if (!shift)
+      return it;
     assert(it - 2 < end() && "Shifting is out of range!");
-    const iterator result = it - shift;
-    while (it < end()) {
+    it -= shift;
+    // const iterator result = it - shift;
+    const iterator result = it;
+    while (it < end() - shift) {
       // (it - shift)->~value_type();
-      *(it - shift) = *it; // incorrect?
+      // *(it - shift) = *it; // incorrect?
+      *it = *(it + shift); // incorrect?
+      // it->~value_type();
+      // (it + shift)->~value_type();
+      ++it;
+    }
+    while (it < end()) {
       it->~value_type();
       ++it;
     }
@@ -725,13 +737,19 @@ class Vector {
     size_ = new_size;
   };
 
-  constexpr void Pop_back() { --size_; }
+  constexpr void Pop_back() { 
+    assert(size_ && "Pop_back from empty vector!");
+    (end() - 1)->~value_type();
+    --size_; 
+  }
 
   constexpr void Resize(size_type count) { Resize(count, value_type()); }
   constexpr void Resize(size_type count, const_reference value) {
     if (count == size_) return;
 
     if (count < size_) {
+      for (iterator it = iterator(data_ + count); it < end(); ++it)
+        it->~value_type();
       size_ = count;
       return;
     }
