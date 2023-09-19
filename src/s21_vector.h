@@ -538,17 +538,12 @@ class Vector {
     assert(size_ + shift <= capacity_ && "Shifting is out of range!");
     size_type new_size = size_ + shift; 
     auto it = end() - 1;
-    while (it - shift + 1 > pos_untill) {
-      
-      // for elements after size_ no constructors were called, so *it is not constructed:
-      // *it = *(it - shift); // incorrect, *it was not constructed
-
-      new (it.operator->()) value_type(*(it - shift));
-      (it - shift)->~value_type();
+    while (it >= pos_untill) {
+      new ((it + shift).operator->()) value_type(*it);
+      it->~value_type();
       --it;
     }
-    it -= (shift - 1);
-    // it -= (shift+1);
+    ++it;
     size_ = new_size;
     return it;
   }
