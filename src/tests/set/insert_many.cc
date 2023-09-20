@@ -173,6 +173,38 @@ TEST(Set, T4InsertMany) {
   }
 }
 
+TEST(Set, T5InsertManyZero) {
+  s21::Set<Item, ComparatorItem> s21_set{
+      Item(111, 's', 0.111),
+      Item(44, 'a'),
+      Item(55),
+  };
+  s21::Set<Item, ComparatorItem> s21_set2 = s21_set;
+
+  s21::Set<Item, ComparatorItem> s21_set_expected{
+      Item(111, 's', 0.111),
+      Item(44, 'a'),
+      Item(55),
+  };
+
+  s21::Vector<std::pair<s21::Set<Item, ComparatorItem>::iterator, bool>> s21_result_expected;
+  s21::Vector<std::pair<s21::Set<Item, ComparatorItem>::iterator, bool>> s21_result = s21_set.Insert_many();
+
+  EXPECT_EQ(s21_set, s21_set_expected);
+  EXPECT_EQ(s21_set2, s21_set_expected);
+
+  EXPECT_EQ(s21_result.Size(), s21_result_expected.Size());
+  auto it = s21_result.begin();
+  auto it_expected = s21_result_expected.begin();
+
+  while (it != s21_result.end() && it_expected != s21_result_expected.end()) {
+    EXPECT_EQ(*(it->first), *(it_expected->first));
+    EXPECT_EQ(it->second, it_expected->second);
+    ++it;
+    ++it_expected;
+  }
+}
+
 }  // namespace
 
 //  GCOVR_EXCL_STOP

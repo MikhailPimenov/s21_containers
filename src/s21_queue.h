@@ -45,6 +45,9 @@ class Queue {
   void Insert_many_back(Args&&... args) {
     return queue_.Insert_many_back(std::forward<Args>(args)...);
   }
+  void Insert_many_back() {
+    return;
+  }
   void Pop() noexcept { queue_.Pop_front(); }
   void Swap(Queue& other) { queue_.Swap(other.queue_); }
 };

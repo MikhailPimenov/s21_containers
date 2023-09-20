@@ -510,6 +510,9 @@ class Tree {
 
     return result;
   }
+  Vector<std::pair<iterator, bool>> Insert_many() {
+    return Vector<std::pair<iterator, bool>>();
+  }
   iterator Erase(iterator pos) {
     return Erase(static_cast<const_iterator>(pos));
   }

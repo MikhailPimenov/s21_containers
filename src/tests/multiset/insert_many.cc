@@ -177,6 +177,40 @@ TEST(MultiSet, T4InsertMany) {
   }
 }
 
+TEST(MultiSet, T5InsertManyZero) {
+  s21::MultiSet<Item, ComparatorItem> s21_multiset{
+      Item(111, 's', 0.111),
+      Item(44, 'a'),
+      Item(44, 'a'),
+      Item(55),
+  };
+  s21::MultiSet<Item, ComparatorItem> s21_multiset2 = s21_multiset;
+
+  s21::MultiSet<Item, ComparatorItem> s21_multiset_expected{
+      Item(111, 's', 0.111),
+      Item(44, 'a'),
+      Item(44, 'a'),
+      Item(55),
+  };
+
+  s21::Vector<std::pair<s21::MultiSet<Item, ComparatorItem>::iterator, bool>> s21_result_expected;
+  s21::Vector<std::pair<s21::MultiSet<Item, ComparatorItem>::iterator, bool>> s21_result = s21_multiset.Insert_many();
+
+  EXPECT_EQ(s21_multiset, s21_multiset_expected);
+  EXPECT_EQ(s21_multiset2, s21_multiset_expected);
+
+  EXPECT_EQ(s21_result.Size(), s21_result_expected.Size());
+  auto it = s21_result.begin();
+  auto it_expected = s21_result_expected.begin();
+
+  while (it != s21_result.end() && it_expected != s21_result_expected.end()) {
+    EXPECT_EQ(*(it->first), *(it_expected->first));
+    EXPECT_EQ(it->second, it_expected->second);
+    ++it;
+    ++it_expected;
+  }
+}
+
 }  // namespace
 
 //  GCOVR_EXCL_STOP

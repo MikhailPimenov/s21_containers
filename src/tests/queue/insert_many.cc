@@ -10,7 +10,7 @@
 //  GCOVR_EXCL_START
 
 namespace {
-TEST(Queue, T0InsertMany) {
+TEST(Queue, T0InsertManyBack) {
   s21::List<Item> s21_list{Item(11), Item(22), Item(33)};
   s21::Queue<Item> s21_queue(s21_list);
 
@@ -23,7 +23,7 @@ TEST(Queue, T0InsertMany) {
   EXPECT_EQ(s21_queue, s21_queue_expected);
 }
 
-TEST(Queue, T1InsertManyEmpty) {
+TEST(Queue, T1InsertManyBackEmpty) {
   s21::List<Item> s21_queue;
 
   s21::List<Item> s21_queue_expected{
@@ -36,6 +36,18 @@ TEST(Queue, T1InsertManyEmpty) {
 
   EXPECT_EQ(s21_queue, s21_queue_expected);
 }
+
+TEST(Queue, T2InsertManyBackZero) {
+  s21::List<Item> s21_list{Item(11), Item(22), Item(33),};
+  s21::Queue<Item> s21_queue(s21_list);
+
+  s21::List<Item> s21_list2{Item(11),  Item(22),  Item(33),};
+  s21::Queue<Item> s21_queue_expected(s21_list2);
+  s21_queue.Insert_many_back();
+
+  EXPECT_EQ(s21_queue, s21_queue_expected);
+}
+
 
 }  // namespace
 

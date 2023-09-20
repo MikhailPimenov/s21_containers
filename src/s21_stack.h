@@ -54,6 +54,9 @@ class Stack {
   void Insert_many_front(Args&&... args) {
     return stack_.Insert_many_back(std::forward<Args>(args)...);
   }
+  void Insert_many_front() {
+    return;
+  }
   void Pop() noexcept { stack_.Pop_back(); }
   void Swap(Stack& other) { stack_.Swap(other.stack_); }
 };

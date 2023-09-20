@@ -124,7 +124,7 @@ TEST(List, T0InsertManyZero) {
   };
 
   s21::List<Item>::iterator s21_result =
-      s21_list.Insert_many();
+      s21_list.Insert_many(s21_list.end());
 
   EXPECT_EQ(s21_list, s21_list_expected);
   EXPECT_EQ(s21_result, s21_list.end());
@@ -217,6 +217,25 @@ TEST(List, T3InsertMany) {
   EXPECT_EQ(s21_list, s21_list_expected);
   EXPECT_EQ(*s21_result, Item(555, 'j', 0.555));
 }
+
+TEST(List, T4InsertManyZero) {
+  s21::List<Item> s21_list{
+      Item(999, 'h', 0.777), Item(888, 'i', 0.666), Item(999, 'q', 0.777),
+      Item(555, 'j', 0.555), Item(444, 'k', 0.333),
+  };
+
+  s21::List<Item> s21_list_expected{
+      Item(999, 'h', 0.777), Item(888, 'i', 0.666), Item(999, 'q', 0.777),
+      Item(555, 'j', 0.555), Item(444, 'k', 0.333),
+  };
+
+  s21::List<Item>::iterator s21_result = s21_list.Insert_many(--(--s21_list.end()));
+
+  EXPECT_EQ(s21_list, s21_list_expected);
+  EXPECT_EQ(*s21_result, Item(555, 'j', 0.555));
+}
+
+
 
 }  // namespace
 

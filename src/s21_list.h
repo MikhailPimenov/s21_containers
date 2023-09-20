@@ -456,14 +456,26 @@ class List {
     return insert_many_back(std::forward<Args>(args)...);
   }
 
+  void Insert_many_back() {
+    return;
+  }
+
   template <typename... Args>
   void Insert_many_front(Args &&...args) {
     return insert_many_front(std::forward<Args>(args)...);
+  }
+  
+  void Insert_many_front() {
+    return;
   }
 
   template <typename... Args>
   iterator Insert_many(const_iterator pos, Args &&...args) {
     insert_many(pos, std::forward<Args>(args)...);
+    return static_cast<const_iterator>(pos);
+  }
+
+  iterator Insert_many(const_iterator pos) {
     return static_cast<const_iterator>(pos);
   }
 

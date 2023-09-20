@@ -512,6 +512,9 @@ class Vector {
   void Insert_many_back(Args&&... args) {
     return insert_many_back(std::forward<Args>(args)...);
   }
+  void Insert_many_back() {
+    return;
+  }
 
   template <typename... Args>
   iterator Insert_many(const_iterator pos, Args&&... args) {
@@ -523,6 +526,12 @@ class Vector {
   iterator Insert_many(iterator pos, Args&&... args) {
     return Insert_many(static_cast<const_iterator>(pos),
                        std::forward<Args>(args)...);
+  }
+  iterator Insert_many(iterator pos) {
+    return pos;
+  }
+  iterator Insert_many(const_iterator pos) {
+    return static_cast<iterator>(pos);
   }
 
  public:

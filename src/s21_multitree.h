@@ -310,6 +310,10 @@ class MultiTree {
     return result;
   }
 
+  Vector<std::pair<iterator, bool>> Insert_many() {
+    return Vector<std::pair<iterator, bool>>();
+  }
+
   iterator Erase(const_iterator pos) {
     typename tree_type::iterator it = tree_.Find(keyGetter_(*pos));
     assert(it != tree_.end() && "Tried to erase not existing element!");
