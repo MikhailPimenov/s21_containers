@@ -902,12 +902,12 @@ class Tree {
   }
 
   template <typename Last>
-  void insert_many(Vector<std::pair<iterator, bool>>& vector, Last last) {
+  void insert_many(Vector<std::pair<iterator, bool>>& vector, Last&& last) {
     vector.Push_back(Insert(std::forward<Last>(last)));
   }
 
   template <typename First, class... Args>
-  void insert_many(Vector<std::pair<iterator, bool>>& vector, First first,
+  void insert_many(Vector<std::pair<iterator, bool>>& vector, First&& first,
                    Args&&... args) {
     vector.Push_back(Insert(std::forward<First>(first)));
     insert_many(vector, std::forward<Args>(args)...);

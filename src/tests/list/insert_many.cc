@@ -38,6 +38,21 @@ TEST(List, T1InsertManyEmptyBack) {
   EXPECT_EQ(s21_list, s21_list_expected);
 }
 
+TEST(List, T2InsertManyBackZero) {
+  s21::List<Item> s21_list{
+      Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
+  };
+
+  s21::List<Item> s21_list_expected{
+      Item(11), Item(22), Item(33),  Item(44),
+      Item(55), Item(66),
+  };
+
+  s21_list.Insert_many_back();
+
+  EXPECT_EQ(s21_list, s21_list_expected);
+}
+
 TEST(List, T0InsertManyFront) {
   s21::List<Item> s21_list{
       Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
@@ -67,6 +82,21 @@ TEST(List, T1InsertManyEmptyFront) {
   EXPECT_EQ(s21_list, s21_list_expected);
 }
 
+TEST(List, T0InsertManyFrontZero) {
+  s21::List<Item> s21_list{
+      Item(11), Item(22), Item(33), Item(44), Item(55), Item(66),
+  };
+
+  s21::List<Item> s21_list_expected{
+      Item(11), Item(22),
+      Item(33),  Item(44),  Item(55), Item(66),
+  };
+
+  s21_list.Insert_many_front();
+
+  EXPECT_EQ(s21_list, s21_list_expected);
+}
+
 TEST(List, T0InsertMany) {
   s21::List<Item> s21_list;
 
@@ -78,6 +108,23 @@ TEST(List, T0InsertMany) {
   s21::List<Item>::iterator s21_result =
       s21_list.Insert_many(s21_list.end(), Item(11), Item(22), Item(33),
                            Item(44), Item(55), Item(66), Item(666), Item(777));
+
+  EXPECT_EQ(s21_list, s21_list_expected);
+  EXPECT_EQ(s21_result, s21_list.end());
+}
+TEST(List, T0InsertManyZero) {
+  s21::List<Item> s21_list{
+      Item(11), Item(22), Item(33),  Item(44),
+      Item(55), Item(66), Item(666), Item(777),
+  };
+
+  s21::List<Item> s21_list_expected{
+      Item(11), Item(22), Item(33),  Item(44),
+      Item(55), Item(66), Item(666), Item(777),
+  };
+
+  s21::List<Item>::iterator s21_result =
+      s21_list.Insert_many();
 
   EXPECT_EQ(s21_list, s21_list_expected);
   EXPECT_EQ(s21_result, s21_list.end());
